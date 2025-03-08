@@ -1,0 +1,62 @@
+[
+  {
+    "id": 1,
+    "title": "Compose article",
+    "description": "This page represents a compose article and you will learn how to make such screen using Jetpack compose.",
+    "imageUrl": ""
+  },
+  {
+    "id": 2,
+    "title": "Quadrant",
+    "description": "In this section you will learn how to use compose wisely.",
+    "imageUrl": ""
+  },
+  {
+    "id": 3,
+    "title": "Tip Calculator",
+    "description": "In this codelab you will learn how to build a tip calculator app.",
+    "imageUrl": ""
+  },
+  {
+    "id": 4,
+    "title": "Art Space App",
+    "description": "In this section you will learn how to build an art space app.",
+    "imageUrl": ""
+  },
+  {
+    "id": 5,
+    "title": "Lemonade",
+    "description": "In this section you will learn how to build an art space app.",
+    "imageUrl": ""
+  },
+  {
+    "id": 6,
+    "title": "",
+    "description": "",
+    "imageUrl": ""
+  },
+  {
+    "id": 7,
+    "title": "",
+    "description": "",
+    "imageUrl": ""
+  },
+  {
+    "id": 8,
+    "title": "",
+    "description": "",
+    "imageUrl": ""
+  },
+  {
+    "id": 9,
+    "title": "",
+    "description": "",
+    "imageUrl": ""
+  },
+  {
+    "id": 10,
+    "title": "",
+    "description": "",
+    "imageUrl": ""
+  }
+]

@@ -1,0 +1,92 @@
+[
+  {
+    "id": 1,
+    "name": "John Smith",
+    "email": "john.smith@example.com",
+    "avatar": "https://randomuser.me/api/portraits/men/1.jpg"
+  },
+  {
+    "id": 2,
+    "name": "Emma Johnson",
+    "email": "emma.johnson@example.com",
+    "avatar": "https://randomuser.me/api/portraits/women/2.jpg"
+  },
+  {
+    "id": 3,
+    "name": "Michael Brown",
+    "email": "michael.brown@example.com",
+    "avatar": "https://randomuser.me/api/portraits/men/3.jpg"
+  },
+  {
+    "id": 4,
+    "name": "Olivia Davis",
+    "email": "olivia.davis@example.com",
+    "avatar": "https://randomuser.me/api/portraits/women/4.jpg"
+  },
+  {
+    "id": 5,
+    "name": "William Wilson",
+    "email": "william.wilson@example.com",
+    "avatar": "https://randomuser.me/api/portraits/men/5.jpg"
+  },
+  {
+    "id": 6,
+    "name": "Sophia Martinez",
+    "email": "sophia.martinez@example.com",
+    "avatar": "https://randomuser.me/api/portraits/women/6.jpg"
+  },
+  {
+    "id": 7,
+    "name": "James Taylor",
+    "email": "james.taylor@example.com",
+    "avatar": "https://randomuser.me/api/portraits/men/7.jpg"
+  },
+  {
+    "id": 8,
+    "name": "Isabella Anderson",
+    "email": "isabella.anderson@example.com",
+    "avatar": "https://randomuser.me/api/portraits/women/8.jpg"
+  },
+  {
+    "id": 9,
+    "name": "Benjamin Thomas",
+    "email": "benjamin.thomas@example.com",
+    "avatar": "https://randomuser.me/api/portraits/men/9.jpg"
+  },
+  {
+    "id": 10,
+    "name": "Mia Jackson",
+    "email": "mia.jackson@example.com",
+    "avatar": "https://randomuser.me/api/portraits/women/10.jpg"
+  },
+  {
+    "id": 11,
+    "name": "Jacob White",
+    "email": "jacob.white@example.com",
+    "avatar": "https://randomuser.me/api/portraits/men/11.jpg"
+  },
+  {
+    "id": 12,
+    "name": "Charlotte Harris",
+    "email": "charlotte.harris@example.com",
+    "avatar": "https://randomuser.me/api/portraits/women/12.jpg"
+  },
+  {
+    "id": 13,
+    "name": "Ethan Clark",
+    "email": "ethan.clark@example.com",
+    "avatar": "https://randomuser.me/api/portraits/men/13.jpg"
+  },
+  {
+    "id": 14,
+    "name": "Amelia Lewis",
+    "email": "amelia.lewis@example.com",
+    "avatar": "https://randomuser.me/api/portraits/women/14.jpg"
+  },
+  {
+    "id": 15,
+    "name": "Daniel Lee",
+    "email": "daniel.lee@example.com",
+    "avatar": "https://randomuser.me/api/portraits/men/15.jpg"
+  }
+]
