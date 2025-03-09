@@ -1,7 +1,7 @@
 # ComposeCodeLab
 
 ![Jetpack Compose](https://img.shields.io/badge/Jetpack%20Compose-Latest-brightgreen)
-![Kotlin](https://img.shields.io/badge/Kotlin-1.8.0-blue)
+![Kotlin](https://img.shields.io/badge/Kotlin-2.1.10-blue)
 ![LeetCode](https://img.shields.io/badge/LeetCode-Problems-orange)
 ![License](https://img.shields.io/badge/License-MIT-green)
 
@@ -62,7 +62,7 @@ The app features two main modules:
 ## 🔧 Requirements
 
 - Android Studio Arctic Fox or newer
-- Kotlin 1.8.0+
+- Kotlin 2.1.10+
 - Android SDK 21+
 - Gradle 7.0+
 
