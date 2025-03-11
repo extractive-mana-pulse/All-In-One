@@ -1,285 +1,213 @@
 package com.example.allinone.navigation
 
-import androidx.compose.animation.core.FastOutSlowInEasing
-import androidx.compose.animation.core.tween
-import androidx.compose.animation.expandHorizontally
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.animation.shrinkHorizontally
-import androidx.compose.animation.slideInVertically
-import androidx.compose.animation.slideOutVertically
+import android.annotation.SuppressLint
+import android.app.Activity
+import android.content.Intent
+import android.speech.RecognizerIntent
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.calculateEndPadding
 import androidx.compose.foundation.layout.calculateStartPadding
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.outlined.Help
+import androidx.compose.material.icons.outlined.Settings
+import androidx.compose.material3.DrawerValue
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalDrawerSheet
+import androidx.compose.material3.ModalNavigationDrawer
+import androidx.compose.material3.NavigationDrawerItem
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.example.allinone.screens.ArtSpace
-import com.example.allinone.screens.ComposeArticleScreen
-import com.example.allinone.screens.ComposeQuadrant
-import com.example.allinone.screens.HomeScreen
-import com.example.allinone.screens.Lemonade
-import com.example.allinone.screens.ProfileScreen
-import com.example.allinone.screens.Screens
-import com.example.allinone.screens.TaskManager
-import com.example.allinone.screens.TipTimeLayout
-import com.example.allinone.settings.SettingScreen
 import com.example.allinone.util.ui.BottomNavigationBar
+import com.example.allinone.util.ui.VisibilityOfUI
+import com.example.allinone.util.ui.searchBarUI
 
+@SuppressLint("RestrictedApi")
 @Composable
 fun NavigationGraph(
     navController: NavHostController = rememberNavController()
 ) {
-
     val navBackStackEntry by navController.currentBackStackEntryAsState()
+    val gesturesEnabledState = rememberSaveable { mutableStateOf(true) }
     val bottomBarState = rememberSaveable { (mutableStateOf(true)) }
     val topBarState = rememberSaveable { (mutableStateOf(true)) }
 
-    when (navBackStackEntry?.destination?.route) {
-        Screens.Home.route -> {
-            bottomBarState.value = true
-        }
-        Screens.Profile.route -> {
-            bottomBarState.value = true
-        }
-        Screens.Settings.route -> {
-            bottomBarState.value = true
-        }
-        Screens.ComposeArticleScreen.route -> {
-            bottomBarState.value = false
-        }
-        Screens.TipCalculator.route -> {
-            bottomBarState.value = false
-        }
-        Screens.Quadrant.route -> {
-            bottomBarState.value = false
-        }
-        Screens.ArtSpace.route -> {
-            bottomBarState.value = false
-        }
-        Screens.TaskManagerScreen.route -> {
-            bottomBarState.value = false
+    VisibilityOfUI(
+        gesturesEnabledState = gesturesEnabledState,
+        navBackStackEntry = navBackStackEntry,
+        bottomBarState = bottomBarState,
+        topBarState = topBarState
+    )
+
+    DetailedDrawerExample(
+        content = { innerPadding ->
+            NavHost(
+                navController = navController,
+                startDestination = Graph.HOME,
+                modifier = Modifier.padding(
+                    start = innerPadding.calculateStartPadding(LayoutDirection.Ltr),
+                    top = if (topBarState.value) innerPadding.calculateTopPadding() else 0.dp,
+                    end = innerPadding.calculateEndPadding(LayoutDirection.Ltr),
+                    bottom = if (bottomBarState.value) innerPadding.calculateBottomPadding() else 0.dp
+                )
+            ) {
+                appNavigationTest(navController = navController)
+            }
+        },
+        navController = navController,
+        bottomBarState = bottomBarState,
+        topBarState = topBarState,
+        gesturesEnabledState = gesturesEnabledState
+    )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun DetailedDrawerExample(
+    content: @Composable (PaddingValues) -> Unit,
+    navController: NavHostController = rememberNavController(),
+    bottomBarState: MutableState<Boolean>,
+    topBarState: MutableState<Boolean>,
+    gesturesEnabledState: MutableState<Boolean>
+) {
+    val scope = rememberCoroutineScope()
+    val context = LocalContext.current
+    var query by remember { mutableStateOf("") }
+    var active by remember { mutableStateOf(false) }
+    var searchHistory = remember { mutableStateListOf<String>() }
+    val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
+    val speechRecognizerLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            val data: Intent? = result.data
+            val spokenText: String? = data?.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS)?.get(0)
+            if (spokenText != null) query = spokenText
         }
     }
 
-    Scaffold(
-        bottomBar = {
-            BottomNavigationBar(
-                bottomBarState = bottomBarState,
-                navController = navController
-            )
+    ModalNavigationDrawer(
+        drawerContent = {
+            ModalDrawerSheet {
+                DrawerContent()
+            }
+        },
+        drawerState = drawerState,
+        gesturesEnabled = gesturesEnabledState.value
+    ) {
+        Scaffold(
+            topBar = {
+                AnimatedVisibility(
+                    visible = topBarState.value,
+                    content = {
+                        query = searchBarUI(
+                            active,
+                            query,
+                            searchHistory,
+                            scope,
+                            drawerState,
+                            context,
+                            speechRecognizerLauncher
+                        )
+                    }
+                )
+            },
+            bottomBar = {
+                BottomNavigationBar(
+                    bottomBarState = bottomBarState,
+                    navController = navController
+                )
+            }
+        ) { innerPadding ->
+            content(innerPadding)
         }
-    ) { innerPadding ->
-        NavHost(
-            navController = navController,
-            startDestination = Screens.Home.route,
-            modifier = Modifier.padding(
-                start = innerPadding.calculateStartPadding(LayoutDirection.Ltr),
-                // Only apply top padding if top bar is visible
-                top = if (topBarState.value) innerPadding.calculateTopPadding() else 0.dp,
-                end = innerPadding.calculateEndPadding(LayoutDirection.Ltr),
-                // Only apply bottom padding if bottom bar is visible
-                bottom = if (bottomBarState.value) innerPadding.calculateBottomPadding() else 0.dp
-            )
-        ) {
-            composable(
-                Screens.Home.route,
-                enterTransition = { expandHorizontally() + fadeIn() },
-                exitTransition = { shrinkHorizontally() + fadeOut() }
-                ) {
-                HomeScreen(navController = navController)
-            }
-            composable(
-                Screens.Profile.route,
-                enterTransition = { expandHorizontally() + fadeIn() },
-                exitTransition = { shrinkHorizontally() + fadeOut() }
-            ) {
-                ProfileScreen(navController = navController)
-            }
-            composable(
-                Screens.Settings.route,
-                enterTransition = { expandHorizontally() + fadeIn() },
-                exitTransition = { shrinkHorizontally() + fadeOut() }
-            ) {
-                SettingScreen(navController = navController)
-            }
-            composable(
-                Screens.TipCalculator.route,
-                enterTransition = {
-                    slideInVertically(
-                        initialOffsetY = { -80 },
-                        animationSpec = tween(
-                            durationMillis = 500,
-                            easing = FastOutSlowInEasing
-                        )
-                    ) + fadeIn(
-                        animationSpec = tween(
-                            durationMillis = 500,
-                            easing = FastOutSlowInEasing
-                        )
-                    )
-                },
-                exitTransition = {
-                    slideOutVertically(
-                        targetOffsetY = { -80 },
-                        animationSpec = tween(
-                            durationMillis = 1200,
-                            easing = FastOutSlowInEasing
-                        )
-                    ) + fadeOut(
-                        animationSpec = tween(
-                            durationMillis = 1200,
-                            easing = FastOutSlowInEasing
-                        )
-                    )
-                }
-            ) {
-                TipTimeLayout(navController = navController)
-            }
-            composable(
-                Screens.Quadrant.route,
-                enterTransition = {
-                    slideInVertically(
-                        initialOffsetY = { -80 },
-                        animationSpec = tween(
-                            durationMillis = 500,
-                            easing = FastOutSlowInEasing
-                        )
-                    ) + fadeIn(
-                        animationSpec = tween(
-                            durationMillis = 500,
-                            easing = FastOutSlowInEasing
-                        )
-                    )
-                },
-                exitTransition = {
-                    slideOutVertically(
-                        targetOffsetY = { -80 },
-                        animationSpec = tween(
-                            durationMillis = 1200,
-                            easing = FastOutSlowInEasing
-                        )
-                    ) + fadeOut(
-                        animationSpec = tween(
-                            durationMillis = 1200,
-                            easing = FastOutSlowInEasing
-                        )
-                    )
-                }
-            ) {
-                ComposeQuadrant(navController = navController)
-            }
-            composable(
-                Screens.Lemonade.route,
-                enterTransition = {
-                    slideInVertically(
-                        initialOffsetY = { -80 },
-                        animationSpec = tween(
-                            durationMillis = 500,
-                            easing = FastOutSlowInEasing
-                        )
-                    ) + fadeIn(
-                        animationSpec = tween(
-                            durationMillis = 500,
-                            easing = FastOutSlowInEasing
-                        )
-                    )
-                },
-                exitTransition = {
-                    slideOutVertically(
-                        targetOffsetY = { -80 },
-                        animationSpec = tween(
-                            durationMillis = 1200,
-                            easing = FastOutSlowInEasing
-                        )
-                    ) + fadeOut(
-                        animationSpec = tween(
-                            durationMillis = 1200,
-                            easing = FastOutSlowInEasing
-                        )
-                    )
-                }
-            ) {
-                Lemonade(navController = navController)
-            }
-            composable(
-                Screens.ComposeArticleScreen.route,
-                enterTransition = {
-                    slideInVertically(
-                        initialOffsetY = { -80 },
-                        animationSpec = tween(
-                            durationMillis = 500,
-                            easing = FastOutSlowInEasing
-                        )
-                    ) + fadeIn(
-                        animationSpec = tween(
-                            durationMillis = 500,
-                            easing = FastOutSlowInEasing
-                        )
-                    )
-                },
-                exitTransition = {
-                    slideOutVertically(
-                        targetOffsetY = { -80 },
-                        animationSpec = tween(
-                            durationMillis = 1200,
-                            easing = FastOutSlowInEasing
-                        )
-                    ) + fadeOut(
-                        animationSpec = tween(
-                            durationMillis = 1200,
-                            easing = FastOutSlowInEasing
-                        )
-                    )
-                }
-            ) {
-                ComposeArticleScreen(navController = navController)
-            }
-            composable(Screens.TaskManagerScreen.route) {
-                TaskManager(navController = navController)
-            }
-            composable(Screens.ArtSpace.route,
-                enterTransition = {
-                    slideInVertically(
-                        initialOffsetY = { -80 },
-                        animationSpec = tween(
-                            durationMillis = 500,
-                            easing = FastOutSlowInEasing
-                        )
-                    ) + fadeIn(
-                        animationSpec = tween(
-                            durationMillis = 500,
-                            easing = FastOutSlowInEasing
-                        )
-                    )
-                },
-                exitTransition = {
-                    slideOutVertically(
-                        targetOffsetY = { -80 },
-                        animationSpec = tween(
-                            durationMillis = 1200,
-                            easing = FastOutSlowInEasing
-                        )
-                    ) + fadeOut(
-                        animationSpec = tween(
-                            durationMillis = 1200,
-                            easing = FastOutSlowInEasing
-                        )
-                    )
-                }
-            ) {
-                ArtSpace(navController = navController)
-            }
-        }
+    }
+}
+
+@Composable
+private fun DrawerContent() {
+    Column(
+        modifier = Modifier
+            .padding(horizontal = 16.dp)
+            .verticalScroll(rememberScrollState())
+    ) {
+        Spacer(Modifier.height(12.dp))
+
+        Text(
+            "Drawer Title",
+            modifier = Modifier.padding(16.dp),
+            style = MaterialTheme.typography.titleLarge
+        )
+
+        HorizontalDivider()
+
+        Text(
+            "Section 1",
+            modifier = Modifier.padding(16.dp),
+            style = MaterialTheme.typography.titleMedium
+        )
+
+        NavigationDrawerItem(
+            label = { Text("Item 1") },
+            selected = false,
+            onClick = { /* Handle click */ }
+        )
+
+        NavigationDrawerItem(
+            label = { Text("Item 2") },
+            selected = false,
+            onClick = { /* Handle click */ }
+        )
+
+        HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
+
+        Text(
+            "Section 2",
+            modifier = Modifier.padding(16.dp),
+            style = MaterialTheme.typography.titleMedium
+        )
+        NavigationDrawerItem(
+            label = { Text("Settings") },
+            selected = false,
+            icon = { Icon(Icons.Outlined.Settings, contentDescription = null) },
+            badge = { Text("20") }, // Placeholder
+            onClick = { /* Handle click */ }
+        )
+        NavigationDrawerItem(
+            label = { Text("Help and feedback") },
+            selected = false,
+            icon = { Icon(Icons.AutoMirrored.Outlined.Help, contentDescription = null) },
+            onClick = { /* Handle click */ },
+        )
+        Spacer(Modifier.height(12.dp))
     }
 }

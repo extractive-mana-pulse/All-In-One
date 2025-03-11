@@ -4,7 +4,6 @@ import android.content.Context
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -49,6 +48,7 @@ data class Course(
     val description: String,
     val imageUrl: String? = null
 )
+
 @Preview(showSystemUi = true, showBackground = true)
 @Composable
 fun HomeScreen(
@@ -56,10 +56,10 @@ fun HomeScreen(
 ) {
     val context = LocalContext.current
     val users = remember { loadUsersFromJson(context) }
-
     LazyColumn(
-        modifier = Modifier.fillMaxSize(),
-        contentPadding = PaddingValues(16.dp),
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(horizontal = 16.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         items(users.size) { user ->
