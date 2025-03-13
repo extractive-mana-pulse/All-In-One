@@ -8,7 +8,9 @@ import androidx.activity.result.ActivityResult
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -27,6 +29,10 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SearchBar
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -35,6 +41,8 @@ import com.example.allinone.core.extension.toastMessage
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import java.util.Locale
+
+/* Code is fine but i cannot use method directly cause given attributes does not behave properly. Fix in the future. */
 
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
@@ -47,7 +55,8 @@ fun searchBarUI(
     context: Context,
     speechRecognizerLauncher: ManagedActivityResultLauncher<Intent, ActivityResult>
 ): String {
-    var isSearchBarActive = active
+    var isActive by remember { mutableStateOf(false) }
+    isActive = active
     var searchQuery = query
     Row(
         modifier = Modifier.fillMaxWidth(),
@@ -57,21 +66,21 @@ fun searchBarUI(
         SearchBar(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(if (isSearchBarActive) 0.dp else 16.dp),
+                .padding(if (isActive) 0.dp else 16.dp),
             query = searchQuery,
             onQueryChange = { searchQuery = it },
             onSearch = { newQuery ->
                 searchHistory.add(newQuery)
-                isSearchBarActive = false
+                isActive = false
                 searchQuery = ""
             },
-            active = isSearchBarActive,
-            onActiveChange = { isSearchBarActive = it },
+            active = isActive,
+            onActiveChange = { isActive = it },
             placeholder = {
                 Text(text = "Search")
             },
             leadingIcon = {
-                if (!isSearchBarActive) {
+                if (!isActive) {
                     IconButton(
                         onClick = {
                             scope.launch {
@@ -90,7 +99,7 @@ fun searchBarUI(
                 } else {
                     IconButton(
                         onClick = {
-                            isSearchBarActive = false
+                            isActive = false
                             searchQuery = ""
                         }
                     ) {
@@ -102,7 +111,7 @@ fun searchBarUI(
                 }
             },
             trailingIcon = {
-                if (!isSearchBarActive) {
+                if (!isActive) {
                     IconButton(
                         onClick = {
                             toastMessage(context, "Open user profile")

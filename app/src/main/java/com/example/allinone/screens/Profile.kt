@@ -14,13 +14,17 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.Button
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -30,13 +34,32 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Preview(showSystemUi = true, showBackground = true)
 @Composable
 fun ProfileScreen(
     navController: NavHostController = rememberNavController()
 ) {
 
-    Scaffold{ paddingValues ->
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = { Text(text = "") },
+                navigationIcon = {
+                    IconButton(
+                        onClick = { navController.popBackStack() }
+                    ) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Default.ArrowBack,
+                            contentDescription = null
+                        )
+                    }
+                },
+                modifier = Modifier.fillMaxWidth()
+            )
+        }
+    )
+    { paddingValues ->
         Box(
             modifier = Modifier.padding(paddingValues).fillMaxSize(),
         ) {

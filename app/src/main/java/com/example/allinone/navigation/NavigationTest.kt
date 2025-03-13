@@ -8,11 +8,14 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.shrinkHorizontally
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
+import androidx.compose.material3.DrawerState
+import androidx.compose.runtime.MutableState
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import com.example.allinone.screens.ArtSpace
+import com.example.allinone.screens.AutoNightModeScreen
 import com.example.allinone.screens.ComposeArticleScreen
 import com.example.allinone.screens.ComposeQuadrant
 import com.example.allinone.screens.HomeScreen
@@ -24,7 +27,9 @@ import com.example.allinone.screens.TipTimeLayout
 import com.example.allinone.settings.SettingScreen
 
 internal fun NavGraphBuilder.appNavigationTest(
-    navController: NavHostController
+    navController: NavHostController,
+    topBarState: MutableState<Boolean>,
+    drawerState: DrawerState
 ) {
     navigation(
         startDestination = Screens.Home.route,
@@ -35,7 +40,11 @@ internal fun NavGraphBuilder.appNavigationTest(
             enterTransition = { expandHorizontally() + fadeIn() },
             exitTransition = { shrinkHorizontally() + fadeOut() }
         ) {
-            HomeScreen(navController = navController)
+            HomeScreen(
+                navController = navController,
+                topBarState = topBarState,
+                drawerState = drawerState
+            )
         }
         composable(
             Screens.Profile.route,
@@ -50,6 +59,9 @@ internal fun NavGraphBuilder.appNavigationTest(
             exitTransition = { shrinkHorizontally() + fadeOut() }
         ) {
             SettingScreen(navController = navController)
+        }
+        composable(Screens.Night.route) {
+            AutoNightModeScreen(navController = navController)
         }
         composable(
             Screens.TipCalculator.route,

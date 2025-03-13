@@ -24,7 +24,7 @@ fun VisibilityOfUI(
             gesturesEnabledState.value = false
         }
         Screens.Settings.route -> {
-            bottomBarState.value = true
+            bottomBarState.value = false
             topBarState.value = false
             gesturesEnabledState.value = false
         }

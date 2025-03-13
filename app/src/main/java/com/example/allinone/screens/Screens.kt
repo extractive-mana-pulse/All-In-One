@@ -34,4 +34,10 @@ sealed class Screens(val route: String) {
 
     @Serializable
     object ArtSpace : Screens("art_space")
+
+    @Serializable
+    object Night: Screens("night_mode")
+
+    @Serializable
+    object LanguageSheet: Screens("language_sheet")
 }
