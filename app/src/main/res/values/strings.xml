@@ -22,12 +22,12 @@
     <string name="star_sky_title">Represents the view from the east window of Van Gogh\'s bedroom</string>
     <string name="blue_rose_title">Still Life of Blue Rose and Other Flowers</string>
     <string name="avenue_in_the_rain_title">It shows Fifth Avenue in New York City in the rain, draped with US flags.</string>
-    <string name="blue_rose_author">Owen Scott</string>
-    <string name="blue_rose_year">1967</string>
-    <string name="star_sky_author">Vincent van Gogh</string>
-    <string name="avenue_in_the_rain_author">Childe Hassam</string>
-    <string name="star_sky_year">1889</string>
-    <string name="avenue_in_the_rain_year">1917</string>
+    <string name="blue_rose_author" translatable="false">Owen Scott</string>
+    <string name="blue_rose_year" translatable="false">1967</string>
+    <string name="star_sky_author" translatable="false">Vincent van Gogh</string>
+    <string name="avenue_in_the_rain_author" translatable="false">Childe Hassam</string>
+    <string name="star_sky_year" translatable="false">1889</string>
+    <string name="avenue_in_the_rain_year" translatable="false">1917</string>
     <string name="settings">Settings</string>
     <string name="settingsIcon">Settings icon</string>
     <string name="help_and_feedback">Help and feedback</string>

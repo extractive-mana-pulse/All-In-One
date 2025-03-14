@@ -126,7 +126,7 @@ internal fun NavGraphBuilder.appNavigationTest(
                 )
             }
         ) {
-            ComposeQuadrant(navController = navController)
+            ComposeQuadrant()
         }
         composable(
             Screens.Lemonade.route,

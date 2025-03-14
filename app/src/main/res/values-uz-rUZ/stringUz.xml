@@ -1,22 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Hammasi bittada</string>
-    <string name="lemon_tree">Tap the lemon tree to select a lemon</string>
-    <string name="lemon_squeeze">Keep tapping the lemon to squeeze it</string>
-    <string name="lemon_drink">Tap the lemonade to drink it</string>
+    <string name="lemon_tree">Limonni tanlash uchun limon daraxtiga teging</string>
+    <string name="lemon_squeeze">Limonni siqish uchun unga tegib turing</string>
+    <string name="lemon_drink">Uni ichish uchun limonadga teging</string>
     <string name="lemon_restart">Tap the empty glass to start again</string>
-    <string name="calculate_tip">Calculate Tip</string>
-    <string name="bill_amount">Bill Amount</string>
-    <string name="tip_amount">Tip Amount: %s</string>
-    <string name="how_was_the_service">Tip Percentage</string>
-    <string name="round_up_tip">Round up tip?</string>
-    <string name="star_sky_title">Represents the view from the east window of Van Gogh\'s bedroom</string>
-    <string name="blue_rose_title">Still Life of Blue Rose and Other Flowers</string>
-    <string name="avenue_in_the_rain_title">It shows Fifth Avenue in New York City in the rain, draped with US flags.</string>
-    <string name="blue_rose_author">Owen Scott</string>
-    <string name="blue_rose_year">1967</string>
-    <string name="star_sky_author">Vincent van Gogh</string>
-    <string name="avenue_in_the_rain_author">Childe Hassam</string>
-    <string name="star_sky_year">1889</string>
-    <string name="avenue_in_the_rain_year">1917</string>
+    <string name="calculate_tip">Hadiyani hisoblash</string>
+    <string name="bill_amount">Hisob-kitob miqdori</string>
+    <string name="tip_amount">Hadiya miqdori: %s</string>
+    <string name="how_was_the_service">hadiyani foyizi</string>
+    <string name="round_up_tip">hadiyani yaxlitlamoq</string>
+    <string name="star_sky_title">Van Gog yotoqxonasining sharqiy derazasidan ko\'rinishni ifodalaydi</string>
+    <string name="blue_rose_title">Moviy atirgul va boshqa gullarning natyurmorti</string>
+    <string name="avenue_in_the_rain_title">Unda Nyu-Yorkdagi Beshinchi avenyu yomg\'ir ostida, AQSh bayroqlari bilan o\'ralgan ko\'cha ko\'rsatilgan.</string>
 </resources>
