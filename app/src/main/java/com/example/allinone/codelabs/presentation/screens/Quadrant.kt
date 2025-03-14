@@ -1,6 +1,5 @@
-package com.example.allinone.screens
+package com.example.allinone.codelabs.presentation.screens
 
-import com.example.allinone.R
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -16,17 +15,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
+import com.example.allinone.R
 
-@Preview(showSystemUi = true, showBackground = true)
 @Composable
-fun ComposeQuadrant(
-    modifier: Modifier = Modifier,
-    navController: NavHostController = rememberNavController()
-) {
+fun ComposeQuadrant() {
     Column(Modifier.fillMaxWidth()) {
         Row(Modifier.weight(1f)) {
             ComposableInfoCard(

@@ -1,4 +1,4 @@
-package com.example.allinone.util.ui
+package com.example.allinone.core.util.ui
 
 import android.annotation.SuppressLint
 import androidx.compose.animation.AnimatedVisibility
@@ -8,11 +8,7 @@ import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Person
-import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.outlined.Home
-import androidx.compose.material.icons.outlined.Person
-import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material3.Badge
 import androidx.compose.material3.BadgedBox
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -32,7 +28,7 @@ import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.example.allinone.screens.Screens
+import com.example.allinone.navigation.Screens
 
 data class BottomNavigationItem<T:Any>(
     val title: String,

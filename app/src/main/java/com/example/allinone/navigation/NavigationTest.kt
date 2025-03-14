@@ -14,17 +14,16 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
-import com.example.allinone.screens.ArtSpace
-import com.example.allinone.screens.AutoNightModeScreen
-import com.example.allinone.screens.ComposeArticleScreen
-import com.example.allinone.screens.ComposeQuadrant
-import com.example.allinone.screens.HomeScreen
-import com.example.allinone.screens.Lemonade
-import com.example.allinone.screens.ProfileScreen
-import com.example.allinone.screens.Screens
-import com.example.allinone.screens.TaskManager
-import com.example.allinone.screens.TipTimeLayout
-import com.example.allinone.settings.SettingScreen
+import com.example.allinone.codelabs.presentation.screens.ArtSpace
+import com.example.allinone.settings.presentation.screens.AutoNightModeScreen
+import com.example.allinone.codelabs.presentation.screens.ComposeArticleScreen
+import com.example.allinone.codelabs.presentation.screens.ComposeQuadrant
+import com.example.allinone.blogs.presentation.screens.HomeScreen
+import com.example.allinone.codelabs.presentation.screens.Lemonade
+import com.example.allinone.profile.presentation.screens.ProfileScreen
+import com.example.allinone.codelabs.presentation.screens.TaskManager
+import com.example.allinone.codelabs.presentation.screens.TipTimeLayout
+import com.example.allinone.settings.presentation.screens.SettingScreen
 
 internal fun NavGraphBuilder.appNavigationTest(
     navController: NavHostController,

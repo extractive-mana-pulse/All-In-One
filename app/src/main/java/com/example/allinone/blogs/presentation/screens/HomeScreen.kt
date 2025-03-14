@@ -1,4 +1,4 @@
-package com.example.allinone.screens
+package com.example.allinone.blogs.presentation.screens
 
 import android.app.Activity
 import android.content.Context
@@ -53,14 +53,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import coil3.compose.rememberAsyncImagePainter
 import coil3.request.ImageRequest
-import com.example.allinone.core.extension.toastMessage
-import com.example.allinone.util.ui.searchBarUI
+import com.example.allinone.R
+import com.example.allinone.navigation.Screens
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.launch
@@ -73,12 +74,12 @@ data class User(
     val avatar: String
 )
 
-data class Course(
-    val id: Int,
-    val title: String,
-    val description: String,
-    val imageUrl: String? = null
-)
+//data class Course(
+//    val id: Int,
+//    val title: String,
+//    val description: String,
+//    val imageUrl: String? = null
+//)
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -126,7 +127,9 @@ fun HomeScreen(
                             active = active,
                             onActiveChange = { active = it },
                             placeholder = {
-                                Text(text = "Search")
+                                Text(
+                                    text = stringResource(R.string.search)
+                                )
                             },
                             leadingIcon = {
                                 if (!active) {
@@ -141,7 +144,7 @@ fun HomeScreen(
                                     ) {
                                         Icon(
                                             Icons.Default.Menu,
-                                            contentDescription = "Menu icon in search bar"
+                                            contentDescription = stringResource(R.string.search_bar_menu_icon)
                                         )
                                     }
                                 } else {
@@ -153,7 +156,7 @@ fun HomeScreen(
                                     ) {
                                         Icon(
                                             Icons.AutoMirrored.Default.ArrowBack,
-                                            contentDescription = "Close icon in search bar"
+                                            contentDescription = stringResource(R.string.search_bar_close_icon)
                                         )
                                     }
                                 }
@@ -167,7 +170,7 @@ fun HomeScreen(
                                     ) {
                                         Icon(
                                             Icons.Default.AccountCircle,
-                                            contentDescription = "Person icon in search bar"
+                                            contentDescription = stringResource(R.string.search_bar_profile_icon)
                                         )
                                     }
                                 } else {
@@ -193,7 +196,7 @@ fun HomeScreen(
                                             }) {
                                                 Icon(
                                                     Icons.Default.Mic,
-                                                    contentDescription = "Microphone icon"
+                                                    contentDescription = stringResource(R.string.search_bar_mic_icon)
                                                 )
                                             }
                                         } else {
@@ -204,7 +207,7 @@ fun HomeScreen(
                                             ) {
                                                 Icon(
                                                     imageVector = Icons.Default.Close,
-                                                    contentDescription = "Clear search"
+                                                    contentDescription = stringResource(R.string.search_bar_clear_icon)
                                                 )
                                             }
                                         }
@@ -214,7 +217,7 @@ fun HomeScreen(
                         ) {
                             if (searchHistory.isEmpty()) {
                                 Text(
-                                    text = "No search history",
+                                    text = stringResource(R.string.search_history_empty),
                                     modifier = Modifier
                                         .padding(16.dp)
                                         .align(Alignment.CenterHorizontally)
@@ -227,7 +230,7 @@ fun HomeScreen(
                                         leadingContent = {
                                             Icon(
                                                 Icons.Default.History,
-                                                contentDescription = "History icon"
+                                                contentDescription = stringResource(R.string.search_bar_history_icon)
                                             )
                                         },
                                         colors = ListItemDefaults.colors(
@@ -279,7 +282,7 @@ fun UserCard(user: User) {
 
             Image(
                 painter = painter,
-                contentDescription = "User avatar",
+                contentDescription = stringResource(R.string.user_avatar),
                 modifier = Modifier
                     .size(60.dp)
                     .clip(CircleShape),

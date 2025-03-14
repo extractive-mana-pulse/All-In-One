@@ -32,15 +32,17 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.example.allinone.screens.Screens
-import com.example.allinone.util.ui.BottomNavigationBar
-import com.example.allinone.util.ui.VisibilityOfUI
+import com.example.allinone.R
+import com.example.allinone.navigation.Screens
+import com.example.allinone.core.util.ui.BottomNavigationBar
+import com.example.allinone.core.util.ui.VisibilityOfUI
 import kotlinx.coroutines.launch
 
 @SuppressLint("RestrictedApi")
@@ -136,7 +138,7 @@ private fun DrawerContent(
         Spacer(Modifier.height(12.dp))
 
         Text(
-            "All In One",
+            text = stringResource(R.string.app_name),
             modifier = Modifier.padding(16.dp),
             style = MaterialTheme.typography.titleLarge
         )
@@ -144,10 +146,23 @@ private fun DrawerContent(
         HorizontalDivider()
 
         NavigationDrawerItem(
-            label = { Text("Settings") },
+            label = {
+                Text(
+                    text = stringResource(R.string.settings)
+                )
+            },
             selected = false,
-            icon = { Icon(Icons.Outlined.Settings, contentDescription = null) },
-            badge = { Text("20") }, // Placeholder
+            icon = {
+                Icon(
+                    Icons.Outlined.Settings,
+                    contentDescription = stringResource(R.string.settingsIcon)
+                )
+            },
+            badge = {
+                Text(
+                    text = "20"
+                )
+            },
             onClick = { /* Handle click */ }
         )
 
@@ -158,13 +173,21 @@ private fun DrawerContent(
         )
 
         NavigationDrawerItem(
-            label = { Text("Item 1") },
+            label = {
+                Text(
+                    text = "Item 1"
+                )
+            },
             selected = false,
             onClick = { /* Handle click */ }
         )
 
         NavigationDrawerItem(
-            label = { Text("Item 2") },
+            label = {
+                Text(
+                    text = "Item 2"
+                )
+            },
             selected = false,
             onClick = {  }
         )
@@ -177,21 +200,39 @@ private fun DrawerContent(
             style = MaterialTheme.typography.titleMedium
         )
         NavigationDrawerItem(
-            label = { Text("Settings") },
+            label = {
+                Text(
+                    text = stringResource(R.string.settings)
+                )
+            },
             selected = false,
-            icon = { Icon(Icons.Outlined.Settings, contentDescription = null) },
+            icon = {
+                Icon(
+                    Icons.Outlined.Settings,
+                    contentDescription = stringResource(R.string.settingsIcon)
+                )
+            },
             onClick = {
-                scope.launch {
-                    drawerState.close()
-                }
+                scope.launch { drawerState.close() }
                 navController.navigate(Screens.Settings.route)
             }
         )
         NavigationDrawerItem(
-            label = { Text("Help and feedback") },
+            label = {
+                Text(
+                    text = stringResource(R.string.help_and_feedback)
+                )
+            },
             selected = false,
-            icon = { Icon(Icons.AutoMirrored.Outlined.Help, contentDescription = null) },
-            onClick = { /* Handle click */ },
+            icon = {
+                Icon(
+                    Icons.AutoMirrored.Outlined.Help,
+                    contentDescription = stringResource(R.string.help_and_feedback)
+                )
+            },
+            onClick = {
+                // handle navigation to help and feedback screen
+            },
         )
         Spacer(Modifier.height(12.dp))
     }

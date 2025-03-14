@@ -132,4 +132,7 @@ dependencies {
 
     // animation
     implementation(libs.androidx.compose.animation)
+
+    // app compat for language changer
+    implementation("androidx.appcompat:appcompat:1.7.0")
 }

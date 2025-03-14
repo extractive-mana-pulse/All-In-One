@@ -13,11 +13,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AllInOne"
-        tools:targetApi="31">
+        android:localeConfig="@xml/local_config"
+        tools:targetApi="33">
         <activity
             android:name=".MainActivity"
             android:exported="true"
-            android:label="@string/app_name"
             android:theme="@style/Theme.AllInOne">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

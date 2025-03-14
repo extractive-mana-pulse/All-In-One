@@ -1,9 +1,9 @@
-package com.example.allinone.util.ui
+package com.example.allinone.core.util.ui
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.navigation.NavBackStackEntry
-import com.example.allinone.screens.Screens
+import com.example.allinone.navigation.Screens
 
 @Composable
 fun VisibilityOfUI(

@@ -1,4 +1,4 @@
-package com.example.allinone.screens
+package com.example.allinone.settings.presentation.screens
 
 import android.content.Context
 import androidx.compose.foundation.clickable
@@ -21,6 +21,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.tooling.preview.Preview
@@ -42,7 +43,7 @@ fun AutoNightModeScreen(
             TopAppBar(
                 title = {
                     Text(
-                        text = "Auto-Night Mode",
+                        text = stringResource(R.string.auto_nigt_mode),
                         style = MaterialTheme.typography.titleMedium.copy(
                             fontFamily = FontFamily(Font(R.font.inknut_antiqua_regular))
                         )
@@ -72,23 +73,23 @@ fun AutoNightModeScreen(
         ) {
             AutoNightModeItem(
                 context = context,
-                content = "Disabled",
-                toastMessageContent = "Turn off auto-night mode"
+                content = stringResource(R.string.disabled),
+                toastMessageContent = stringResource(R.string.disabled_desc)
             )
             AutoNightModeItem(
                 context = context,
-                content = "Scheduled",
-                toastMessageContent = "Schedule auto-night mode"
+                content = stringResource(R.string.scheduled),
+                toastMessageContent = stringResource(R.string.scheduled_desc)
             )
             AutoNightModeItem(
                 context = context,
-                content = "Adaptive",
-                toastMessageContent = "Adaptive auto-night mode"
+                content = stringResource(R.string.adaptive),
+                toastMessageContent = stringResource(R.string.adaptive_desc)
             )
             AutoNightModeItem(
                 context = context,
-                content = "System Default",
-                toastMessageContent = "System Default auto-night mode"
+                content = stringResource(R.string.default_mode),
+                toastMessageContent = stringResource(R.string.default_desc)
             )
         }
     }

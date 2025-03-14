@@ -1,6 +1,6 @@
-package com.example.allinone.settings
+package com.example.allinone.settings.presentation.screens
 
-import android.content.Context
+import android.content.Intent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -40,6 +40,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
@@ -49,9 +50,10 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.allinone.R
-import com.example.allinone.core.extension.toastMessage
-import com.example.allinone.screens.PartialBottomSheet
-import com.example.allinone.screens.Screens
+import com.example.allinone.core.helper.LanguageChangeHelper
+import com.example.allinone.navigation.Screens
+
+val languageChangeHelper by lazy { LanguageChangeHelper() }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Preview(showSystemUi = true, showBackground = true)
@@ -59,8 +61,6 @@ import com.example.allinone.screens.Screens
 fun SettingScreen(
     navController: NavHostController = rememberNavController()
 ) {
-    val context: Context = LocalContext.current
-
     Scaffold(
         topBar = {
             TopAppBar(
@@ -86,17 +86,16 @@ fun SettingScreen(
         ) {
             SettingsItem(
                 modifier = Modifier,
-                title = "Auto-Night Mode",
-                description = "This mode defines appearance of the application.",
+                title = stringResource(R.string.auto_nigt_mode),
+                description = stringResource(R.string.auto_nigt_mode_desc),
                 icon = Icons.Default.NightsStay,
                 onClick = {
                     navController.navigate(Screens.Night.route)
                 }
             )
             SettingsItemWithSheet(
-                modifier = Modifier,
-                title = "Language",
-                description = "Change app language to appropriate language for you.",
+                title = stringResource(R.string.language),
+                description = stringResource(R.string.language_desc),
                 icon = Icons.Default.Language,
             )
             SettingsItem(
@@ -118,7 +117,6 @@ fun SettingScreen(
             SettingsItem(
                 title = "Lemonade",
                 description = "In this section you will learn how to build an art space app.",
-
                 onClick = {
                     navController.navigate(Screens.Lemonade.route)
                 }
@@ -176,7 +174,6 @@ fun SettingsItem(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsItemWithSheet(
-    modifier: Modifier = Modifier,
     title: String,
     description: String,
     icon: ImageVector? = null,
@@ -193,7 +190,7 @@ fun SettingsItemWithSheet(
         ) {
             Column {
                 Text(
-                    text = "Select Language",
+                    text = stringResource(R.string.select_language),
                     style = MaterialTheme.typography.titleLarge.copy(
                         fontFamily = FontFamily(Font(R.font.inknut_antiqua_semi_bold))
                     ),
@@ -204,7 +201,7 @@ fun SettingsItemWithSheet(
         }
     }
     Column(
-        modifier = modifier
+        modifier = Modifier
             .fillMaxWidth()
             .clickable{ showBottomSheet = true },
     ) {
@@ -243,35 +240,53 @@ fun SettingsItemWithSheet(
     }
 }
 
+// Map UI labels to language codes
+private val languageMapping = mapOf(
+    "English" to "en",
+    "Russian" to "ru",
+    "Uzbek" to "uz"
+)
+
 @Composable
 fun RadioButtonSingleSelection(modifier: Modifier = Modifier) {
-    val radioOptions = listOf(
-        "English",
-        "Russian",
-        "Uzbek"
-    )
-    val (selectedOption, onOptionSelected) = remember { mutableStateOf(radioOptions[0]) }
+    val context = LocalContext.current
+    val currentLanguageCode = languageChangeHelper.getLanguageCode(context)
+
+    // Find the UI label for the current language code
+    val initialLanguage = languageMapping.entries.find { it.value == currentLanguageCode }?.key ?: "English"
+
+    var selectedOption by remember { mutableStateOf(initialLanguage) }
+
     // Note that Modifier.selectableGroup() is essential to ensure correct accessibility behavior
     Column(modifier.selectableGroup()) {
-        radioOptions.forEach { text ->
+        languageMapping.keys.forEach { language ->
             Row(
                 Modifier
                     .fillMaxWidth()
                     .height(56.dp)
                     .selectable(
-                        selected = (text == selectedOption),
-                        onClick = { onOptionSelected(text) },
+                        selected = (language == selectedOption),
+                        onClick = {
+                            selectedOption = language
+                            // Get the language code from our mapping and apply it
+                            val languageCode = languageMapping[language] ?: "en"
+                            languageChangeHelper.changeLanguage(context, languageCode)
+                            // Inside your click handler after changing the language
+                            val intent = context.packageManager.getLaunchIntentForPackage(context.packageName)
+                            intent?.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                            context.startActivity(intent)
+                        },
                         role = Role.RadioButton
                     )
                     .padding(horizontal = 16.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 RadioButton(
-                    selected = (text == selectedOption),
+                    selected = (language == selectedOption),
                     onClick = null // null recommended for accessibility with screen readers
                 )
                 Text(
-                    text = text,
+                    text = language,
                     style = MaterialTheme.typography.bodyLarge,
                     modifier = Modifier.padding(start = 16.dp)
                 )

@@ -1,4 +1,4 @@
-package com.example.allinone.screens
+package com.example.allinone.codelabs.presentation.screens
 
 import com.example.allinone.R
 import androidx.compose.foundation.Image

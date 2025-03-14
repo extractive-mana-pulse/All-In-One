@@ -1,4 +1,4 @@
-package com.example.allinone.screens
+package com.example.allinone.profile.presentation.screens
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background

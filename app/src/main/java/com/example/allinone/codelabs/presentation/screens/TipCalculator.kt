@@ -1,6 +1,5 @@
-package com.example.allinone.screens
+package com.example.allinone.codelabs.presentation.screens
 
-import com.example.allinone.R
 import android.annotation.SuppressLint
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
@@ -20,7 +19,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -45,6 +44,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import com.example.allinone.R
 import java.text.NumberFormat
 import kotlin.math.ceil
 
@@ -66,7 +66,9 @@ fun TipTimeLayout(
         topBar = {
             MediumTopAppBar(
                 title = {
-                    Text(text = "Tip Time")
+                    Text(
+                        text = stringResource(R.string.tip_time),
+                    )
                 },
                 navigationIcon = {
                     IconButton(
@@ -75,8 +77,8 @@ fun TipTimeLayout(
                         }
                     ) {
                         Icon(
-                            imageVector = Icons.Default.ArrowBack,
-                            contentDescription = "Localized description"
+                            imageVector = Icons.AutoMirrored.Default.ArrowBack,
+                            contentDescription = stringResource(R.string.from_tip_calculator_to_somewhere)
                         )
                     }
                 },

@@ -1,4 +1,4 @@
-package com.example.allinone.util.ui
+package com.example.allinone.core.util.ui
 
 import android.content.Context
 import android.content.Intent
@@ -8,9 +8,7 @@ import androidx.activity.result.ActivityResult
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -36,7 +34,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.example.allinone.R
 import com.example.allinone.core.extension.toastMessage
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -77,7 +77,9 @@ fun searchBarUI(
             active = isActive,
             onActiveChange = { isActive = it },
             placeholder = {
-                Text(text = "Search")
+                Text(
+                    text = stringResource(R.string.search)
+                )
             },
             leadingIcon = {
                 if (!isActive) {
@@ -88,12 +90,11 @@ fun searchBarUI(
                                     if (isClosed) open() else close()
                                 }
                             }
-                            toastMessage(context, "Opening navigation drawer")
                         }
                     ) {
                         Icon(
                             Icons.Default.Menu,
-                            contentDescription = "Menu icon in search bar"
+                            contentDescription = stringResource(R.string.search_bar_menu_icon)
                         )
                     }
                 } else {
@@ -105,7 +106,7 @@ fun searchBarUI(
                     ) {
                         Icon(
                             Icons.AutoMirrored.Default.ArrowBack,
-                            contentDescription = "Close icon in search bar"
+                            contentDescription = stringResource(R.string.search_bar_close_icon)
                         )
                     }
                 }
