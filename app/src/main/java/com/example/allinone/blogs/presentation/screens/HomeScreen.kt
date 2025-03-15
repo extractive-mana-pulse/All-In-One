@@ -40,6 +40,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SearchBar
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
@@ -94,6 +95,7 @@ fun HomeScreen(
     val scope = rememberCoroutineScope()
     var active by remember { mutableStateOf(false) }
     var searchHistory = remember { mutableStateListOf<String>() }
+    val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
     val speechRecognizerLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.StartActivityForResult()
     ) { result ->
@@ -109,7 +111,8 @@ fun HomeScreen(
                 visible = topBarState.value,
                 content = {
                     Row(
-                        modifier = Modifier.fillMaxWidth(),
+                        modifier = Modifier
+                            .fillMaxWidth(),
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
@@ -243,7 +246,7 @@ fun HomeScreen(
                     }
                 }
             )
-        }
+        },
     ) { innerPadding ->
         LazyColumn(
             modifier = Modifier

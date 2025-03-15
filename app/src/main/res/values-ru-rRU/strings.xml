@@ -40,4 +40,6 @@
     <string name="third_description">Компоновочный макет, размещающий дочерние элементы в горизонтальной последовательности.</string>
     <string name="fourth_title">Компонуемая колонка</string>
     <string name="fourth_description">Компоновочный макет, размещающий дочерние элементы в вертикальной последовательности.</string>
+    <string name="folder_icon">Folder icon</string>
+    <string name="app_version">App Version</string>
 </resources>

@@ -58,4 +58,6 @@
     <string name="adaptive_desc">Adaptive auto-night mode</string>
     <string name="default_desc">System Default auto-night mode.</string>
     <string name="default_mode">System Default</string>
+    <string name="folder_icon">Folder icon</string>
+    <string name="app_version">App Version</string>
 </resources>

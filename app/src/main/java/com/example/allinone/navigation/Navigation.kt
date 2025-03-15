@@ -1,59 +1,31 @@
 package com.example.allinone.navigation
 
-import android.annotation.SuppressLint
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.calculateEndPadding
 import androidx.compose.foundation.layout.calculateStartPadding
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.outlined.Help
-import androidx.compose.material.icons.outlined.Settings
-import androidx.compose.material3.DrawerState
 import androidx.compose.material3.DrawerValue
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.ModalDrawerSheet
-import androidx.compose.material3.ModalNavigationDrawer
-import androidx.compose.material3.NavigationDrawerItem
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.LayoutDirection
-import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.example.allinone.R
-import com.example.allinone.navigation.Screens
-import com.example.allinone.core.util.ui.BottomNavigationBar
+import com.example.allinone.core.util.ui.NavigationDrawer
 import com.example.allinone.core.util.ui.VisibilityOfUI
-import kotlinx.coroutines.launch
 
-@SuppressLint("RestrictedApi")
 @Composable
 fun NavigationGraph(
     navController: NavHostController = rememberNavController()
 ) {
-    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    val topBarState = rememberSaveable { mutableStateOf(true) }
+    val bottomBarState = rememberSaveable { mutableStateOf(true) }
     val gesturesEnabledState = rememberSaveable { mutableStateOf(true) }
-    val bottomBarState = rememberSaveable { (mutableStateOf(true)) }
-    val topBarState = rememberSaveable { (mutableStateOf(true)) }
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
 
     VisibilityOfUI(
@@ -63,7 +35,7 @@ fun NavigationGraph(
         topBarState = topBarState
     )
 
-    DetailedDrawerExample(
+    NavigationDrawer(
         content = { innerPadding ->
             NavHost(
                 navController = navController,
@@ -75,10 +47,16 @@ fun NavigationGraph(
 //                    bottom = if (bottomBarState.value) innerPadding.calculateBottomPadding() else 0.dp
                 )
             ) {
-                appNavigationTest(
+                mainNavigation(
                     navController = navController,
                     topBarState = topBarState,
                     drawerState = drawerState
+                )
+                settingsNavigation(
+                    navController = navController
+                )
+                profileNavigation(
+                    navController = navController
                 )
             }
         },
@@ -87,153 +65,4 @@ fun NavigationGraph(
         gesturesEnabledState = gesturesEnabledState,
         drawerState = drawerState
     )
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun DetailedDrawerExample(
-    content: @Composable (PaddingValues) -> Unit,
-    navController: NavHostController = rememberNavController(),
-    bottomBarState: MutableState<Boolean>,
-    gesturesEnabledState: MutableState<Boolean>,
-    drawerState: DrawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
-) {
-
-    ModalNavigationDrawer(
-        drawerContent = {
-            ModalDrawerSheet {
-                DrawerContent(
-                    navController = navController,
-                    drawerState = drawerState
-                )
-            }
-        },
-        drawerState = drawerState,
-        gesturesEnabled = gesturesEnabledState.value
-    ) {
-        Scaffold(
-            bottomBar = {
-                BottomNavigationBar(
-                    bottomBarState = bottomBarState,
-                    navController = navController
-                )
-            }
-        ) { innerPadding ->
-            content(innerPadding)
-        }
-    }
-}
-
-@Composable
-private fun DrawerContent(
-    navController: NavHostController = rememberNavController(),
-    drawerState: DrawerState
-) {
-    val scope = rememberCoroutineScope()
-    Column(
-        modifier = Modifier
-            .padding(horizontal = 16.dp)
-            .verticalScroll(rememberScrollState())
-    ) {
-        Spacer(Modifier.height(12.dp))
-
-        Text(
-            text = stringResource(R.string.app_name),
-            modifier = Modifier.padding(16.dp),
-            style = MaterialTheme.typography.titleLarge
-        )
-
-        HorizontalDivider()
-
-        NavigationDrawerItem(
-            label = {
-                Text(
-                    text = stringResource(R.string.settings)
-                )
-            },
-            selected = false,
-            icon = {
-                Icon(
-                    Icons.Outlined.Settings,
-                    contentDescription = stringResource(R.string.settingsIcon)
-                )
-            },
-            badge = {
-                Text(
-                    text = "20"
-                )
-            },
-            onClick = { /* Handle click */ }
-        )
-
-        Text(
-            "Section 1",
-            modifier = Modifier.padding(16.dp),
-            style = MaterialTheme.typography.titleMedium
-        )
-
-        NavigationDrawerItem(
-            label = {
-                Text(
-                    text = "Item 1"
-                )
-            },
-            selected = false,
-            onClick = { /* Handle click */ }
-        )
-
-        NavigationDrawerItem(
-            label = {
-                Text(
-                    text = "Item 2"
-                )
-            },
-            selected = false,
-            onClick = {  }
-        )
-
-        HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
-
-        Text(
-            "Section 2",
-            modifier = Modifier.padding(16.dp),
-            style = MaterialTheme.typography.titleMedium
-        )
-        NavigationDrawerItem(
-            label = {
-                Text(
-                    text = stringResource(R.string.settings)
-                )
-            },
-            selected = false,
-            icon = {
-                Icon(
-                    Icons.Outlined.Settings,
-                    contentDescription = stringResource(R.string.settingsIcon)
-                )
-            },
-            onClick = {
-                scope.launch { drawerState.close() }
-                navController.navigate(Screens.Settings.route)
-            }
-        )
-        NavigationDrawerItem(
-            label = {
-                Text(
-                    text = stringResource(R.string.help_and_feedback)
-                )
-            },
-            selected = false,
-            icon = {
-                Icon(
-                    Icons.AutoMirrored.Outlined.Help,
-                    contentDescription = stringResource(R.string.help_and_feedback)
-                )
-            },
-            onClick = {
-                // handle navigation to help and feedback screen
-            },
-        )
-        Spacer(Modifier.height(12.dp))
-    }
 }

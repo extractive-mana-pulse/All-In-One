@@ -5,12 +5,12 @@
     <string name="help_and_feedback">Yordam va fikr-mulohaza</string>
     <string name="task_complete_title">Barcha vazifa bajarildi</string>
     <string name="task_complete_title2">Yaxshi ish!</string>
-    <string name="select_language">Tilni tanlang</string>
-    <string name="auto_nigt_mode">Avtomatik tungi rejim</string>
+    <string name="select_language">Ilova tilini tanlang</string>
+    <string name="auto_nigt_mode">Avtomatik tungi rejimi</string>
     <string name="auto_nigt_mode_desc">Ushbu rejim ilovaning ko\'rinishini belgilaydi.</string>
-    <string name="language">Til</string>
+    <string name="language">Ilova Tili</string>
     <string name="language_desc">Ilova tilini o\'zingiz uchun mos tilga o\'zgartiring.</string>
-    <string name="search">Qidiruv</string>
+    <string name="search">Qidirish…</string>
     <string name="search_bar_menu_icon">Qidiruv panelidagi menyu belgisi</string>
     <string name="search_bar_close_icon">Qidiruv panelidagi belgini yoping</string>
     <string name="search_bar_profile_icon">Qidiruv panelidagi profil belgisi</string>
@@ -19,9 +19,9 @@
     <string name="search_history_empty">Qidiruv tarixi yo\'q</string>
     <string name="search_bar_history_icon">Tarix belgisi</string>
     <string name="user_avatar">Foydalanuvchi rasmi</string>
-    <string name="from_lemonade_to_somewhere">limonad sahifasidan yuqoriga o\'ting</string>
-    <string name="tip_time">Maslahat vaqti</string>
-    <string name="from_tip_calculator_to_somewhere">Maslahat kalkulyatori ekranidan yuqoriga oʻting</string>
+    <string name="from_lemonade_to_somewhere">limonad sahifasidan orqaga o\'tish</string>
+    <string name="tip_time">Hadiya vaqti</string>
+    <string name="from_tip_calculator_to_somewhere">Hadiya kalkulyatori ekranidan yuqoriga oʻting</string>
     <string name="disabled">O\'chirilgan</string>
     <string name="disabled_desc">Avtomatik tungi rejimni o\'chiring</string>
     <string name="scheduled">Rejalashtirilgan</string>
@@ -40,4 +40,6 @@
     <string name="second_description">Berilgan Painter sinfi ob\'ektini joylashtiradigan va chizadigan kompozitsiyani yaratadi.</string>
     <string name="third_title">Qator tuzish mumkin</string>
     <string name="third_description">Farzandlarini gorizontal ketma-ketlikda joylashtiradigan tuzilma.</string>
+    <string name="folder_icon">Folder icon</string>
+    <string name="app_version">App Version</string>
 </resources>
