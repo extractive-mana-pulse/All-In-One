@@ -10,7 +10,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
-import com.example.allinone.blogs.presentation.screens.HomeScreen
+import com.example.allinone.main.presentation.screens.HomeScreen
 
 internal fun NavGraphBuilder.mainNavigation(
     navController: NavHostController,
@@ -33,6 +33,9 @@ internal fun NavGraphBuilder.mainNavigation(
             )
         }
         codelabsNavigation(
+            navController = navController
+        )
+        profileNavigation(
             navController = navController
         )
     }

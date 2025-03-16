@@ -1,5 +1,6 @@
 package com.example.allinone.navigation
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.calculateEndPadding
 import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.padding
@@ -55,9 +56,7 @@ fun NavigationGraph(
                 settingsNavigation(
                     navController = navController
                 )
-                profileNavigation(
-                    navController = navController
-                )
+                // later implement auth & onBoarding graphs
             }
         },
         navController = navController,

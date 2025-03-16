@@ -1,4 +1,4 @@
-package com.example.allinone.blogs.presentation.screens
+package com.example.allinone.main.presentation.screens
 
 import android.app.Activity
 import android.content.Context

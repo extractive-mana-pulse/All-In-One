@@ -39,5 +39,9 @@ sealed class Screens(val route: String) {
     object Night: Screens("night_mode")
 
     @Serializable
-    object LanguageSheet: Screens("language_sheet")
+    object PowerSaving: Screens("power_saving")
+}
+
+sealed class HomeScreens(val route: String) {
+
 }

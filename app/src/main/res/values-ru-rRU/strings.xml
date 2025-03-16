@@ -42,4 +42,6 @@
     <string name="fourth_description">Компоновочный макет, размещающий дочерние элементы в вертикальной последовательности.</string>
     <string name="folder_icon">Folder icon</string>
     <string name="app_version">App Version</string>
+    <string name="battery_saving">Power Saving</string>
+    <string name="from_power_saving_to_somewhere">Navigate up from PowerSaving screen</string>
 </resources>

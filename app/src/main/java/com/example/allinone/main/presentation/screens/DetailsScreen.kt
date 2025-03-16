@@ -1,4 +1,4 @@
-package com.example.allinone.blogs.presentation.screens
+package com.example.allinone.main.presentation.screens
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -42,6 +42,7 @@ import com.example.allinone.core.extension.toastMessage
 fun DetailsScreen(
     navController: NavHostController = rememberNavController()
 ) {
+    // if user in this screen for more than 2-3 minutes pop up snackbar with switch to turn on read-mode
     val context = LocalContext.current
 
     Scaffold(

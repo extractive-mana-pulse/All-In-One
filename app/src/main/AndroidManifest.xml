@@ -16,7 +16,7 @@
         android:localeConfig="@xml/local_config"
         tools:targetApi="33">
         <activity
-            android:name=".MainActivity"
+            android:name=".main.presentation.MainActivity"
             android:exported="true"
             android:theme="@style/Theme.AllInOne">
             <intent-filter>
