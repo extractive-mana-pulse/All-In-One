@@ -21,7 +21,9 @@ import com.example.allinone.core.util.ui.VisibilityOfUI
 
 @Composable
 fun NavigationGraph(
-    navController: NavHostController = rememberNavController()
+    navController: NavHostController = rememberNavController(),
+    isDarkTheme: Boolean,
+    onThemeChanged: (Boolean) -> Unit
 ) {
     val topBarState = rememberSaveable { mutableStateOf(true) }
     val bottomBarState = rememberSaveable { mutableStateOf(true) }
@@ -54,7 +56,9 @@ fun NavigationGraph(
                     drawerState = drawerState
                 )
                 settingsNavigation(
-                    navController = navController
+                    navController = navController,
+                    isDarkTheme = isDarkTheme,
+                    onThemeChanged = onThemeChanged
                 )
                 // later implement auth & onBoarding graphs
             }

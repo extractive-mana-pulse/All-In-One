@@ -75,12 +75,13 @@ data class User(
     val avatar: String
 )
 
-//data class Course(
-//    val id: Int,
-//    val title: String,
-//    val description: String,
-//    val imageUrl: String? = null
-//)
+data class Course(
+    val id: Int,
+    val title: String? = null,
+    val subtitle: String? = null,
+    val description: String? = null,
+    val imageUrl: String? = null
+)
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -91,6 +92,7 @@ fun HomeScreen(
 ) {
     val context = LocalContext.current
     val users = remember { loadUsersFromJson(context) }
+    val courses = remember { loadCoursesFromJson(context) }
     var query by remember { mutableStateOf("") }
     val scope = rememberCoroutineScope()
     var active by remember { mutableStateOf(false) }
@@ -255,8 +257,63 @@ fun HomeScreen(
                 .padding(horizontal = 16.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            items(users.size) { user ->
-                UserCard(user = users[user])
+            item {
+                Text(
+                    text = "Courses",
+                    style = MaterialTheme.typography.titleLarge,
+                    modifier = Modifier.padding(vertical = 8.dp)
+                )
+            }
+            items(courses.size) {
+                CourseCard(course = courses[it])
+            }
+        }
+    }
+}
+
+@Composable
+fun CourseCard(course: Course) {
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 4.dp),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            // Avatar image
+            val painter = rememberAsyncImagePainter(
+                ImageRequest.Builder(LocalContext.current)
+                    .data(data = course.imageUrl)
+                    .build()
+            )
+            Image(
+                painter = painter,
+                contentDescription = stringResource(R.string.user_avatar),
+                modifier = Modifier
+                    .size(60.dp)
+                    .clip(CircleShape),
+                contentScale = ContentScale.Crop
+            )
+
+            Spacer(modifier = Modifier.width(16.dp))
+
+            // User details
+            Column {
+                Text(
+                    text = course.title ?: "",
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.Bold
+                )
+                Spacer(modifier = Modifier.height(4.dp))
+                Text(
+                    text = course.subtitle ?: "",
+                    style = MaterialTheme.typography.bodyMedium
+                )
             }
         }
     }
@@ -321,6 +378,22 @@ fun loadUsersFromJson(context: Context): List<User> {
         val gson = Gson()
         val usersType = object : TypeToken<List<User>>() {}.type
         return gson.fromJson(jsonString, usersType)
+    } catch (e: Exception) {
+        e.printStackTrace()
+        return emptyList()
+    }
+}
+
+
+fun loadCoursesFromJson(context: Context) : List<Course> {
+    try {
+        // Open and read the JSON file from assets
+        val jsonString = context.assets.open("course.json").bufferedReader().use { it.readText() }
+
+        // Parse JSON using Gson
+        val gson = Gson()
+        val courseType = object : TypeToken<List<Course>>() {}.type
+        return gson.fromJson(jsonString, courseType)
     } catch (e: Exception) {
         e.printStackTrace()
         return emptyList()

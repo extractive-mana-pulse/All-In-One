@@ -1,5 +1,8 @@
 package com.example.allinone.settings.presentation.screens
 
+import android.content.Intent
+import android.content.IntentFilter
+import android.os.BatteryManager
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -17,12 +20,14 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
@@ -39,7 +44,26 @@ import com.example.allinone.R
 fun BatterySavingScreen(
     navController: NavHostController = rememberNavController()
 ) {
-    Scaffold(
+
+    // implement logic of battery icon. when battery level is 20% corresponding icon when 50% corresponding icon and so on.
+    // also implement logic when power saving mode is active these actions.
+    // 1. Dark mode activated
+    // 2. reduce brightness
+    // 3. turn off unused features: bluetooth, wi_fi and so on
+    // 4. limit notifications if they exist locally.
+    val context = LocalContext.current
+
+    val batteryStatus: Intent? = IntentFilter(Intent.ACTION_BATTERY_CHANGED).let { ifilter ->
+        context.registerReceiver(null, ifilter)
+    }
+
+    val batteryPct: Float? = batteryStatus?.let { intent ->
+        val level: Int = intent.getIntExtra(BatteryManager.EXTRA_LEVEL, -1)
+        val scale: Int = intent.getIntExtra(BatteryManager.EXTRA_SCALE, -1)
+        level * 100 / scale.toFloat()
+    }
+
+        Scaffold(
         modifier = Modifier,
         topBar = {
             TopAppBar(
@@ -74,6 +98,15 @@ fun BatterySavingScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             var sliderPosition by remember { mutableFloatStateOf(0f) }
+
+            LaunchedEffect(batteryPct) {
+                if (batteryPct != null && batteryPct < sliderPosition) {
+                    // activate dark theme
+                    // reduce brightness
+                    // turn off unused features: bluetooth, wi_fi and etc
+                    // limit notifications if they exist locally.
+                }
+            }
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
@@ -86,7 +119,7 @@ fun BatterySavingScreen(
                     )
                 )
                 Text(
-                    text = "When below ${sliderPosition.toInt()}%",
+                    text = "When below ${sliderPosition.toInt()}%.",
                     textAlign = TextAlign.Center,
                     style = MaterialTheme.typography.bodySmall.copy(
                         fontFamily = FontFamily(Font(R.font.inknut_antiqua_regular))
@@ -109,6 +142,13 @@ fun BatterySavingScreen(
                 style = MaterialTheme.typography.bodySmall.copy(
                     fontFamily = FontFamily(Font(R.font.inknut_antiqua_regular))
                 )
+            )
+            Text(
+                text = "Currently battery level is: ${batteryPct?.toInt()}%",
+                style = MaterialTheme.typography.bodySmall.copy(
+                    fontFamily = FontFamily(Font(R.font.inknut_antiqua_regular))
+                ),
+                modifier = Modifier.align(Alignment.Start)
             )
         }
     }

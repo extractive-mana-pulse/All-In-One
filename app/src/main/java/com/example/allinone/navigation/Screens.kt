@@ -40,6 +40,9 @@ sealed class Screens(val route: String) {
 
     @Serializable
     object PowerSaving: Screens("power_saving")
+
+    @Serializable
+    object AdaptiveMode: Screens("adaptive_mode")
 }
 
 sealed class HomeScreens(val route: String) {

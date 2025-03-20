@@ -1,6 +1,5 @@
 package com.example.allinone.settings.presentation.screens
 
-import android.content.Context
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -24,20 +23,22 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.allinone.R
 import com.example.allinone.core.extension.toastMessage
+import com.example.allinone.navigation.Screens
 
-@Preview(showSystemUi = true, showBackground = true)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AutoNightModeScreen(
     navController: NavHostController = rememberNavController(),
+    isDarkTheme: Boolean,
+    onThemeChanged: (Boolean) -> Unit
 ) {
     val context = LocalContext.current
+
     Scaffold(
         topBar = {
             TopAppBar(
@@ -72,24 +73,23 @@ fun AutoNightModeScreen(
             verticalArrangement = Arrangement.Top
         ) {
             AutoNightModeItem(
-                context = context,
                 content = stringResource(R.string.disabled),
-                toastMessageContent = stringResource(R.string.disabled_desc)
+                onClick = {
+                    onThemeChanged(!isDarkTheme)
+                    toastMessage(context, "Theme changed to ${if (isDarkTheme) "Dark" else "Light"}")
+                }
             )
             AutoNightModeItem(
-                context = context,
-                content = stringResource(R.string.scheduled),
-                toastMessageContent = stringResource(R.string.scheduled_desc)
+                content = stringResource(R.string.scheduled)
             )
             AutoNightModeItem(
-                context = context,
                 content = stringResource(R.string.adaptive),
-                toastMessageContent = stringResource(R.string.adaptive_desc)
+                onClick = {
+                    navController.navigate(Screens.AdaptiveMode.route)
+                }
             )
             AutoNightModeItem(
-                context = context,
-                content = stringResource(R.string.default_mode),
-                toastMessageContent = stringResource(R.string.default_desc)
+                content = stringResource(R.string.default_mode)
             )
         }
     }
@@ -97,9 +97,8 @@ fun AutoNightModeScreen(
 
 @Composable
 private fun AutoNightModeItem(
-    context: Context,
     content: String,
-    toastMessageContent: String
+    onClick: () -> Unit = {}
 ) {
     Text(
         text = content,
@@ -109,12 +108,7 @@ private fun AutoNightModeItem(
         modifier = Modifier
             .fillMaxWidth()
             .padding(16.dp)
-            .clickable {
-                toastMessage(
-                    context = context,
-                    message = toastMessageContent
-                )
-            }
+            .clickable { onClick() }
     )
     HorizontalDivider(modifier = Modifier.padding(start = 16.dp))
 }

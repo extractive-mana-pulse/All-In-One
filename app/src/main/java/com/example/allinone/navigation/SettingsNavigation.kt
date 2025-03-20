@@ -8,12 +8,15 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
+import com.example.allinone.settings.presentation.screens.AdaptiveModeScreen
 import com.example.allinone.settings.presentation.screens.AutoNightModeScreen
 import com.example.allinone.settings.presentation.screens.BatterySavingScreen
 import com.example.allinone.settings.presentation.screens.SettingScreen
 
 internal fun NavGraphBuilder.settingsNavigation(
-    navController: NavHostController
+    navController: NavHostController,
+    isDarkTheme: Boolean,
+    onThemeChanged: (Boolean) -> Unit
 ) {
     navigation(
         startDestination = Screens.Settings.route,
@@ -27,10 +30,21 @@ internal fun NavGraphBuilder.settingsNavigation(
             SettingScreen(navController = navController)
         }
         composable(Screens.Night.route) {
-            AutoNightModeScreen(navController = navController)
+            AutoNightModeScreen(
+                navController = navController,
+                isDarkTheme = isDarkTheme,
+                onThemeChanged = onThemeChanged
+            )
         }
         composable(Screens.PowerSaving.route) {
             BatterySavingScreen(navController = navController)
+        }
+        composable(Screens.AdaptiveMode.route) {
+            AdaptiveModeScreen(
+                navController = navController,
+                isDarkTheme = isDarkTheme,
+                onThemeChanged = onThemeChanged
+            )
         }
     }
 }

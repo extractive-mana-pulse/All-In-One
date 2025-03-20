@@ -3,18 +3,21 @@
     "id": 1,
     "title": "Compose article",
     "subtitle": "This page represents a compose article and you will learn how to make such screen using Jetpack compose.",
+    "description": "Jetpack Compose is a modern toolkit for building native Android UI. Compose simplifies and accelerates UI development on Android with less code, powerful tools, and intuitive Kotlin APIs.",
     "imageUrl": ""
   },
   {
     "id": 2,
     "title": "Quadrant",
     "subtitle": "In this section you will learn how to use compose wisely.",
+    "description": "Displays text and follows the recommended Material Design guidelines.",
     "imageUrl": ""
   },
   {
     "id": 3,
     "title": "Tip Calculator",
     "subtitle": "In this code lab you will learn how to build a tip calculator app.",
+    "description": "",
     "imageUrl": ""
   },
   {
