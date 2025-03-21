@@ -19,27 +19,27 @@ internal fun NavGraphBuilder.settingsNavigation(
     onThemeChanged: (Boolean) -> Unit
 ) {
     navigation(
-        startDestination = Screens.Settings.route,
+        startDestination = SettingsScreens.Settings.route,
         route = Graph.SETTINGS
     ) {
         composable(
-            Screens.Settings.route,
+            SettingsScreens.Settings.route,
             enterTransition = { expandHorizontally() + fadeIn() },
             exitTransition = { shrinkHorizontally() + fadeOut() }
         ) {
             SettingScreen(navController = navController)
         }
-        composable(Screens.Night.route) {
+        composable(SettingsScreens.Night.route) {
             AutoNightModeScreen(
                 navController = navController,
                 isDarkTheme = isDarkTheme,
                 onThemeChanged = onThemeChanged
             )
         }
-        composable(Screens.PowerSaving.route) {
+        composable(SettingsScreens.PowerSaving.route) {
             BatterySavingScreen(navController = navController)
         }
-        composable(Screens.AdaptiveMode.route) {
+        composable(SettingsScreens.AdaptiveMode.route) {
             AdaptiveModeScreen(
                 navController = navController,
                 isDarkTheme = isDarkTheme,

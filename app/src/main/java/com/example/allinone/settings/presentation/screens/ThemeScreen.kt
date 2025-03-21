@@ -28,7 +28,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.allinone.R
 import com.example.allinone.core.extension.toastMessage
-import com.example.allinone.navigation.Screens
+import com.example.allinone.navigation.SettingsScreens
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -85,7 +85,7 @@ fun AutoNightModeScreen(
             AutoNightModeItem(
                 content = stringResource(R.string.adaptive),
                 onClick = {
-                    navController.navigate(Screens.AdaptiveMode.route)
+                    navController.navigate(SettingsScreens.AdaptiveMode.route)
                 }
             )
             AutoNightModeItem(

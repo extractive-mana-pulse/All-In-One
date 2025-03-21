@@ -40,8 +40,10 @@
     <string name="second_description">Berilgan Painter sinfi ob\'ektini joylashtiradigan va chizadigan kompozitsiyani yaratadi.</string>
     <string name="third_title">Qator tuzish mumkin</string>
     <string name="third_description">Farzandlarini gorizontal ketma-ketlikda joylashtiradigan tuzilma.</string>
-    <string name="folder_icon">Folder icon</string>
-    <string name="app_version">App Version</string>
-    <string name="battery_saving">Power Saving</string>
+    <string name="folder_icon">Jild belgisi</string>
+    <string name="app_version">Ilova versiyasi</string>
+    <string name="battery_saving">Quvvatni tejash</string>
     <string name="from_power_saving_to_somewhere">Navigate up from PowerSaving screen</string>
+    <string name="other_sections">Boshqa bo\'limlar</string>
+    <string name="courses">Kurslar</string>
 </resources>

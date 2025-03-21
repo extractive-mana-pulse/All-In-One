@@ -4,33 +4,33 @@
     "title": "Compose article",
     "subtitle": "This page represents a compose article and you will learn how to make such screen using Jetpack compose.",
     "description": "Jetpack Compose is a modern toolkit for building native Android UI. Compose simplifies and accelerates UI development on Android with less code, powerful tools, and intuitive Kotlin APIs.",
-    "imageUrl": ""
+    "imageUrl": "https://developers.google.com/static/profile/badges/playlists/android/android-basics-compose-unit-1-pathway-1/badge.svg"
   },
   {
     "id": 2,
     "title": "Quadrant",
-    "subtitle": "In this section you will learn how to use compose wisely.",
+    "subtitle": "In this section, you will discover how to use composition effectively.",
     "description": "Displays text and follows the recommended Material Design guidelines.",
-    "imageUrl": ""
+    "imageUrl": "https://cdn-icons-png.flaticon.com/512/6699/6699786.png"
   },
   {
     "id": 3,
     "title": "Tip Calculator",
     "subtitle": "In this code lab you will learn how to build a tip calculator app.",
     "description": "",
-    "imageUrl": ""
+    "imageUrl": "https://play-lh.googleusercontent.com/kNODo_-kWzlmyLmEMiBJqdk4kYiMkZVxsYhZW04Z_F_PX1oIPLzW-PEaihRh3xOblig"
   },
   {
     "id": 4,
     "title": "Art Space App",
     "subtitle": "In this section you will learn how to build an art space app.",
-    "imageUrl": ""
+    "imageUrl": "https://developers.google.com/static/profile/badges/playlists/android/android-basics-compose-unit-2-pathway-3/badge.svg"
   },
   {
     "id": 5,
     "title": "Lemonade",
-    "subtitle": "In this section you will learn how to build an art space app.",
-    "imageUrl": ""
+    "subtitle": "This section will teach how to make a thirst quencher lemonade.",
+    "imageUrl": "https://cdn-icons-png.flaticon.com/512/1425/1425548.png"
   },
   {
     "id": 6,

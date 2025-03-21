@@ -28,6 +28,7 @@ import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.example.allinone.navigation.HomeScreens
 import com.example.allinone.navigation.Screens
 
 data class BottomNavigationItem<T:Any>(
@@ -54,7 +55,7 @@ fun BottomNavigationBar(
             selectedIcon = Icons.Filled.Home,
             unselectedIcon = Icons.Outlined.Home,
             hasNews = false,
-            route = Screens.Home.route
+            route = HomeScreens.Home.route
         ),
 //        BottomNavigationItem(
 //            title = "Profile",

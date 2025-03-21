@@ -15,18 +15,18 @@ internal fun NavGraphBuilder.profileNavigation(
     navController: NavHostController
 ) {
     navigation(
-        startDestination = Screens.Profile.route,
+        startDestination = ProfileScreens.Profile.route,
         route = Graph.PROFILE
     ) {
         composable(
-            Screens.Profile.route,
+            ProfileScreens.Profile.route,
             enterTransition = { expandHorizontally() + fadeIn() },
             exitTransition = { shrinkHorizontally() + fadeOut() }
         ) {
             ProfileScreen(navController = navController)
         }
         composable(
-            Screens.EditProfile.route,
+            ProfileScreens.EditProfile.route,
             enterTransition = { expandHorizontally() + fadeIn() },
             exitTransition = { shrinkHorizontally() + fadeOut() }
         ) {

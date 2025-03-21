@@ -3,7 +3,10 @@ package com.example.allinone.core.util.ui
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.navigation.NavBackStackEntry
+import com.example.allinone.navigation.HomeScreens
+import com.example.allinone.navigation.ProfileScreens
 import com.example.allinone.navigation.Screens
+import com.example.allinone.navigation.SettingsScreens
 
 @Composable
 fun VisibilityOfUI(
@@ -13,21 +16,13 @@ fun VisibilityOfUI(
     topBarState: MutableState<Boolean>,
 ) {
     when (navBackStackEntry?.destination?.route) {
-        Screens.Home.route -> {
-            bottomBarState.value = true
+        HomeScreens.Home.route -> {
+            bottomBarState.value = false
             topBarState.value = true
             gesturesEnabledState.value = true
         }
-        Screens.Profile.route -> {
-            bottomBarState.value = false
-            topBarState.value = false
-            gesturesEnabledState.value = false
-        }
-        Screens.Settings.route -> {
-            bottomBarState.value = false
-            topBarState.value = false
-            gesturesEnabledState.value = false
-        }
+        ProfileScreens.Profile.route,
+        SettingsScreens.Settings.route,
         Screens.ComposeArticleScreen.route,
         Screens.TipCalculator.route,
         Screens.Quadrant.route,

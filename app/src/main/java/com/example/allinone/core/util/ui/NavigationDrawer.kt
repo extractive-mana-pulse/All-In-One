@@ -36,7 +36,9 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.allinone.BuildConfig
 import com.example.allinone.R
+import com.example.allinone.navigation.HomeScreens
 import com.example.allinone.navigation.Screens
+import com.example.allinone.navigation.SettingsScreens
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -157,7 +159,7 @@ private fun NavigationDrawerContent(
                 },
                 onClick = {
                     scope.launch { drawerState.close() }
-                    navController.navigate(Screens.Settings.route)
+                    navController.navigate(SettingsScreens.Settings.route)
                 }
             )
             NavigationDrawerItem(
@@ -174,7 +176,7 @@ private fun NavigationDrawerContent(
                     )
                 },
                 onClick = {
-                    // handle navigation to help and feedback screen
+                    navController.navigate(HomeScreens.Help.route)
                 },
             )
 

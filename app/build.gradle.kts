@@ -130,6 +130,7 @@ dependencies {
 
     // coil
     implementation(libs.coil.compose)
+    implementation(libs.coil.svg.compose)
     implementation(libs.coil.network.okhttp)
 
     // animation

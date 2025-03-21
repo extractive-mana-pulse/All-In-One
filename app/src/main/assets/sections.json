@@ -1,0 +1,17 @@
+[
+  {
+    "id": 1,
+    "name": "Leetcode",
+    "imageUrl": "https://cdn.iconscout.com/icon/free/png-256/free-leetcode-logo-icon-download-in-svg-png-gif-file-formats--technology-social-media-vol-4-pack-logos-icons-2944960.png"
+  },
+  {
+    "id": 2,
+    "name": "Codelabs",
+    "imageUrl": "https://developer.android.com/static/images/hero-assets/android-codelabs.svg"
+  },
+  {
+    "id": 3,
+    "name": "Blogs",
+    "imageUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQt8hVInSPn5FlNrKHGMNY6Dvd0R7JtU18TyQ&s"
+  }
+]

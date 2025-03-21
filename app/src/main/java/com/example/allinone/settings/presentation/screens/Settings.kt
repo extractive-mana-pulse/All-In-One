@@ -68,6 +68,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.allinone.R
 import com.example.allinone.core.helper.LanguageChangeHelper
 import com.example.allinone.navigation.Screens
+import com.example.allinone.navigation.SettingsScreens
 import com.example.allinone.settings.presentation.vm.ReadingModeViewModel
 
 val languageChangeHelper by lazy { LanguageChangeHelper() }
@@ -114,7 +115,7 @@ fun SettingScreen(
                     title = stringResource(R.string.auto_nigt_mode),
                     description = stringResource(R.string.auto_nigt_mode_desc),
                     icon = Icons.Default.NightsStay,
-                    onClick = { navController.navigate(Screens.Night.route) }
+                    onClick = { navController.navigate(SettingsScreens.Night.route) }
                 )
             }
             item {
@@ -139,7 +140,7 @@ fun SettingScreen(
                     description = "Automatically reduce power usage and animations when your battery is below 20%. ",
                     icon = Icons.Default.BatterySaver,
                     onClick = {
-                        navController.navigate(Screens.PowerSaving.route)
+                        navController.navigate(SettingsScreens.PowerSaving.route)
                     }
                 )
             }

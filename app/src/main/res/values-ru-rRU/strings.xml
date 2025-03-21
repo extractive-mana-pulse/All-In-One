@@ -40,8 +40,10 @@
     <string name="third_description">Компоновочный макет, размещающий дочерние элементы в горизонтальной последовательности.</string>
     <string name="fourth_title">Компонуемая колонка</string>
     <string name="fourth_description">Компоновочный макет, размещающий дочерние элементы в вертикальной последовательности.</string>
-    <string name="folder_icon">Folder icon</string>
-    <string name="app_version">App Version</string>
-    <string name="battery_saving">Power Saving</string>
+    <string name="folder_icon">Значок папки</string>
+    <string name="app_version">Версия приложения</string>
+    <string name="battery_saving">Энергосбережение</string>
     <string name="from_power_saving_to_somewhere">Navigate up from PowerSaving screen</string>
+    <string name="other_sections">Другие разделы</string>
+    <string name="courses">Курсы</string>
 </resources>

@@ -62,4 +62,6 @@
     <string name="app_version">App Version</string>
     <string name="battery_saving">Power Saving</string>
     <string name="from_power_saving_to_somewhere">Navigate up from PowerSaving screen</string>
+    <string name="other_sections">Other sections</string>
+    <string name="courses">Courses</string>
 </resources>

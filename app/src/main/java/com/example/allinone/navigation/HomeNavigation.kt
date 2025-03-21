@@ -10,6 +10,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
+import com.example.allinone.main.presentation.screens.HelpAndFeedbackScreen
 import com.example.allinone.main.presentation.screens.HomeScreen
 
 internal fun NavGraphBuilder.mainNavigation(
@@ -18,11 +19,11 @@ internal fun NavGraphBuilder.mainNavigation(
     drawerState: DrawerState
 ) {
     navigation(
-        startDestination = Screens.Home.route,
+        startDestination = HomeScreens.Home.route,
         route = Graph.HOME
     ) {
         composable(
-            Screens.Home.route,
+            HomeScreens.Home.route,
             enterTransition = { expandHorizontally() + fadeIn() },
             exitTransition = { shrinkHorizontally() + fadeOut() }
         ) {
@@ -30,6 +31,11 @@ internal fun NavGraphBuilder.mainNavigation(
                 navController = navController,
                 topBarState = topBarState,
                 drawerState = drawerState
+            )
+        }
+        composable(HomeScreens.Help.route) {
+            HelpAndFeedbackScreen(
+                navController = navController
             )
         }
         codelabsNavigation(

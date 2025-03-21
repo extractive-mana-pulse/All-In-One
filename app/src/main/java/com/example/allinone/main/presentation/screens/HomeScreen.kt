@@ -11,6 +11,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -20,7 +21,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.AccountCircle
@@ -32,6 +38,7 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.ListItem
@@ -52,17 +59,18 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import coil3.compose.rememberAsyncImagePainter
-import coil3.request.ImageRequest
+import coil3.compose.AsyncImage
 import com.example.allinone.R
-import com.example.allinone.navigation.Screens
+import com.example.allinone.navigation.ProfileScreens
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.launch
@@ -83,6 +91,12 @@ data class Course(
     val imageUrl: String? = null
 )
 
+data class Sections(
+    val id: Int,
+    val name: String,
+    val imageUrl: String
+)
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
@@ -91,13 +105,12 @@ fun HomeScreen(
     drawerState: DrawerState
 ) {
     val context = LocalContext.current
-    val users = remember { loadUsersFromJson(context) }
-    val courses = remember { loadCoursesFromJson(context) }
-    var query by remember { mutableStateOf("") }
     val scope = rememberCoroutineScope()
+    var query by remember { mutableStateOf("") }
     var active by remember { mutableStateOf(false) }
+    val courses = remember { loadCoursesFromJson(context) }
+    val sections = remember { loadSectionsFromJson(context) }
     var searchHistory = remember { mutableStateListOf<String>() }
-    val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
     val speechRecognizerLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.StartActivityForResult()
     ) { result ->
@@ -170,7 +183,7 @@ fun HomeScreen(
                                 if (!active) {
                                     IconButton(
                                         onClick = {
-                                            navController.navigate(Screens.Profile.route)
+                                            navController.navigate(ProfileScreens.Profile.route)
                                         }
                                     ) {
                                         Icon(
@@ -259,131 +272,101 @@ fun HomeScreen(
         ) {
             item {
                 Text(
-                    text = "Courses",
+                    text = stringResource(R.string.courses),
                     style = MaterialTheme.typography.titleLarge,
                     modifier = Modifier.padding(vertical = 8.dp)
                 )
             }
-            items(courses.size) {
-                CourseCard(course = courses[it])
+            items(courses) {
+                CourseListItem(course = it)
+            }
+            item {
+                Text(
+                    text = stringResource(R.string.other_sections),
+                    style = MaterialTheme.typography.titleLarge,
+                    modifier = Modifier.padding(vertical = 8.dp)
+                )
+            }
+            // Section item with horizontal scrolling LazyRow
+            item {
+                LazyRow(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(16.dp),
+                ) {
+                    items(sections) { section ->
+                        ItemCard(sections = section)
+                    }
+                }
             }
         }
     }
 }
 
 @Composable
-fun CourseCard(course: Course) {
-    Card(
+fun CourseListItem(course: Course) {
+    if (course.title.isNullOrEmpty() && course.subtitle.isNullOrEmpty()) return
+
+    Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 4.dp),
-        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+            .padding(16.dp),
+        verticalAlignment = Alignment.CenterVertically
     ) {
-        Row(
+        AsyncImage(
+            model = course.imageUrl ?: R.drawable.compose_logo,
+            contentDescription = null,
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            // Avatar image
-            val painter = rememberAsyncImagePainter(
-                ImageRequest.Builder(LocalContext.current)
-                    .data(data = course.imageUrl)
-                    .build()
-            )
-            Image(
-                painter = painter,
-                contentDescription = stringResource(R.string.user_avatar),
-                modifier = Modifier
-                    .size(60.dp)
-                    .clip(CircleShape),
-                contentScale = ContentScale.Crop
-            )
+                .size(60.dp)
+                .clip(CircleShape)
+        )
 
-            Spacer(modifier = Modifier.width(16.dp))
+        Spacer(modifier = Modifier.width(16.dp))
 
-            // User details
-            Column {
-                Text(
-                    text = course.title ?: "",
-                    style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.Bold
-                )
-                Spacer(modifier = Modifier.height(4.dp))
-                Text(
-                    text = course.subtitle ?: "",
-                    style = MaterialTheme.typography.bodyMedium
-                )
-            }
+        Column {
+            Text(
+                text = course.title ?: "",
+                style = MaterialTheme.typography.titleMedium,
+                fontWeight = FontWeight.Bold
+            )
+            Spacer(modifier = Modifier.height(4.dp))
+            Text(
+                text = course.subtitle ?: "",
+                style = MaterialTheme.typography.bodyMedium
+            )
         }
     }
+    HorizontalDivider()
 }
 
 @Composable
-fun UserCard(user: User) {
+fun ItemCard(sections: Sections) {
     Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 4.dp),
-        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+        modifier = Modifier.size(120.dp),
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
     ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
-            verticalAlignment = Alignment.CenterVertically
+        Column(
+            modifier = Modifier.padding(12.dp).align(Alignment.CenterHorizontally),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
         ) {
-            // Avatar image
-            val painter = rememberAsyncImagePainter(
-                ImageRequest.Builder(LocalContext.current)
-                    .data(data = user.avatar)
-                    .build()
-            )
-
-            Image(
-                painter = painter,
-                contentDescription = stringResource(R.string.user_avatar),
+            AsyncImage(
+                model = sections.imageUrl,
+                contentDescription = null,
                 modifier = Modifier
                     .size(60.dp)
-                    .clip(CircleShape),
-                contentScale = ContentScale.Crop
+                    .clip(RoundedCornerShape(8.dp))
             )
-
-            Spacer(modifier = Modifier.width(16.dp))
-
-            // User details
-            Column {
-                Text(
-                    text = user.name,
-                    style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.Bold
-                )
-                Spacer(modifier = Modifier.height(4.dp))
-                Text(
-                    text = user.email,
-                    style = MaterialTheme.typography.bodyMedium
-                )
-            }
+            Spacer(modifier = Modifier.height(4.dp))
+            Text(
+                text = sections.name,
+                style = MaterialTheme.typography.bodySmall,
+                maxLines = 2,
+                overflow = TextOverflow.Ellipsis
+            )
         }
     }
 }
-
-// Step 4: Create a function to load and parse the JSON file
-fun loadUsersFromJson(context: Context): List<User> {
-    try {
-        // Open and read the JSON file from assets
-        val jsonString = context.assets.open("users.json").bufferedReader().use { it.readText() }
-
-        // Parse JSON using Gson
-        val gson = Gson()
-        val usersType = object : TypeToken<List<User>>() {}.type
-        return gson.fromJson(jsonString, usersType)
-    } catch (e: Exception) {
-        e.printStackTrace()
-        return emptyList()
-    }
-}
-
 
 fun loadCoursesFromJson(context: Context) : List<Course> {
     try {
@@ -393,6 +376,21 @@ fun loadCoursesFromJson(context: Context) : List<Course> {
         // Parse JSON using Gson
         val gson = Gson()
         val courseType = object : TypeToken<List<Course>>() {}.type
+        return gson.fromJson(jsonString, courseType)
+    } catch (e: Exception) {
+        e.printStackTrace()
+        return emptyList()
+    }
+}
+
+fun loadSectionsFromJson(context: Context) : List<Sections> {
+    try {
+        // Open and read the JSON file from assets
+        val jsonString = context.assets.open("sections.json").bufferedReader().use { it.readText() }
+
+        // Parse JSON using Gson
+        val gson = Gson()
+        val courseType = object : TypeToken<List<Sections>>() {}.type
         return gson.fromJson(jsonString, courseType)
     } catch (e: Exception) {
         e.printStackTrace()
