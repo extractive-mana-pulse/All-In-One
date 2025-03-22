@@ -1,0 +1,75 @@
+[
+  {
+    "id": 1,
+    "title": "Compose article",
+    "subtitle": "This page represents a compose article and you will learn how to make such screen using Jetpack compose.",
+    "description": "Jetpack Compose is a modern toolkit for building native Android UI. Compose simplifies and accelerates UI development on Android with less code, powerful tools, and intuitive Kotlin APIs.",
+    "imageUrl": "https://developers.google.com/static/profile/badges/playlists/android/android-basics-compose-unit-1-pathway-1/badge.svg",
+    "publishedDate": "Published · Oct, 28 2025",
+    "author": "John Doe"
+  },
+  {
+    "id": 2,
+    "title": "Quadrant",
+    "subtitle": "In this section, you will discover how to use composition effectively.",
+    "description": "Displays text and follows the recommended Material Design guidelines.",
+    "imageUrl": "https://cdn-icons-png.flaticon.com/512/6699/6699786.png",
+    "publishedDate": "Published · Feb, 05 2024",
+    "author": "Michael Smith"
+  },
+  {
+    "id": 3,
+    "title": "Tip Calculator",
+    "subtitle": "In this code lab you will learn how to build a tip calculator app.",
+    "description": "",
+    "imageUrl": "https://play-lh.googleusercontent.com/kNODo_-kWzlmyLmEMiBJqdk4kYiMkZVxsYhZW04Z_F_PX1oIPLzW-PEaihRh3xOblig",
+    "publishedDate": "Published · Jan, 28 2024",
+    "author": "Qasim Alex"
+  },
+  {
+    "id": 4,
+    "title": "Art Space App",
+    "subtitle": "In this section you will learn how to build an art space app.",
+    "imageUrl": "https://developers.google.com/static/profile/badges/playlists/android/android-basics-compose-unit-2-pathway-3/badge.svg",
+    "publishedDate": "Published · Apr, 01 2024",
+    "author": "Lisa Johnson"
+  },
+  {
+    "id": 5,
+    "title": "Lemonade",
+    "subtitle": "This section will teach how to make a thirst quencher lemonade.",
+    "imageUrl": "https://cdn-icons-png.flaticon.com/512/1425/1425548.png",
+    "publishedDate": "Published · Sep, 15 2023",
+    "author": "Sarah Williams"
+  },
+  {
+    "id": 6,
+    "title": "",
+    "subtitle": "",
+    "imageUrl": ""
+  },
+  {
+    "id": 7,
+    "title": "",
+    "subtitle": "",
+    "imageUrl": ""
+  },
+  {
+    "id": 8,
+    "title": "",
+    "subtitle": "",
+    "imageUrl": ""
+  },
+  {
+    "id": 9,
+    "title": "",
+    "subtitle": "",
+    "imageUrl": ""
+  },
+  {
+    "id": 10,
+    "title": "",
+    "subtitle": "",
+    "imageUrl": ""
+  }
+]

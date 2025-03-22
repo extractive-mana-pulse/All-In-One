@@ -70,6 +70,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import coil3.compose.AsyncImage
 import com.example.allinone.R
+import com.example.allinone.navigation.HomeScreens
 import com.example.allinone.navigation.ProfileScreens
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
@@ -278,7 +279,10 @@ fun HomeScreen(
                 )
             }
             items(courses) {
-                CourseListItem(course = it)
+                CourseListItem(
+                    navController = navController,
+                    course = it
+                )
             }
             item {
                 Text(
@@ -287,7 +291,6 @@ fun HomeScreen(
                     modifier = Modifier.padding(vertical = 8.dp)
                 )
             }
-            // Section item with horizontal scrolling LazyRow
             item {
                 LazyRow(
                     modifier = Modifier.fillMaxWidth(),
@@ -304,13 +307,23 @@ fun HomeScreen(
 }
 
 @Composable
-fun CourseListItem(course: Course) {
+fun CourseListItem(
+    navController: NavHostController = rememberNavController(),
+    course: Course,
+) {
     if (course.title.isNullOrEmpty() && course.subtitle.isNullOrEmpty()) return
 
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(16.dp),
+            .padding(16.dp)
+            .clickable {
+                navController.navigate(
+                    HomeScreens.DetailsScreen(
+                        id = course.id
+                    )
+                )
+            },
         verticalAlignment = Alignment.CenterVertically
     ) {
         AsyncImage(

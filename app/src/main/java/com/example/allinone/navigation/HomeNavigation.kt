@@ -10,6 +10,8 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
+import androidx.navigation.toRoute
+import com.example.allinone.main.presentation.screens.DetailsScreen
 import com.example.allinone.main.presentation.screens.HelpAndFeedbackScreen
 import com.example.allinone.main.presentation.screens.HomeScreen
 
@@ -36,6 +38,13 @@ internal fun NavGraphBuilder.mainNavigation(
         composable(HomeScreens.Help.route) {
             HelpAndFeedbackScreen(
                 navController = navController
+            )
+        }
+        composable<HomeScreens.DetailsScreen> {
+            val argument = it.toRoute<HomeScreens.DetailsScreen>()
+            DetailsScreen(
+                navController = navController,
+                id = argument.id
             )
         }
         codelabsNavigation(

@@ -31,7 +31,7 @@ sealed class HomeScreens(val route: String) {
     object Home : Screens("home")
 
     @Serializable
-    object DetailsScreen : Screens("details_screen")
+    data class DetailsScreen(val id: Int) : Screens("details_screen")
 
     @Serializable
     object Help : Screens("help_and_feedback")
