@@ -29,7 +29,6 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.allinone.navigation.HomeScreens
-import com.example.allinone.navigation.Screens
 
 data class BottomNavigationItem<T:Any>(
     val title: String,

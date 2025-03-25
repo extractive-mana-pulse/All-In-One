@@ -34,32 +34,32 @@
   },
   {
     "id": 6,
-    "title": "",
-    "subtitle": "",
-    "imageUrl": ""
+    "title": "Task Manager",
+    "subtitle": "This section will teach you task manager.",
+    "imageUrl": "https://e7.pngegg.com/pngimages/368/132/png-clipart-getting-things-done-task-management-computer-icons-coelho-blue-angle-thumbnail.png"
   },
   {
     "id": 7,
-    "title": "",
-    "subtitle": "",
-    "imageUrl": ""
+    "title": "Art Space",
+    "subtitle": "In this section you mainly going to study modifier of compose.",
+    "imageUrl": "https://developers.google.com/static/profile/badges/playlists/android/android-basics-compose-unit-2-pathway-3/badge.svg"
   },
   {
     "id": 8,
-    "title": "",
-    "subtitle": "",
+    "title": "Business card",
+    "subtitle": "By building business card app you will learn how to work with compose Row & Column and arrange them with horizontalAlignment and verticalArrangement parameters.",
     "imageUrl": ""
   },
   {
     "id": 9,
-    "title": "",
-    "subtitle": "",
-    "imageUrl": ""
+    "title": "In building process...",
+    "subtitle": "In building process...",
+    "imageUrl": "https://developers.google.com/static/profile/badges/playlists/android/android-basics-compose-unit-2-pathway-2/badge.svg"
   },
   {
     "id": 10,
-    "title": "",
-    "subtitle": "",
-    "imageUrl": ""
+    "title": "In building process...",
+    "subtitle": "In building process...",
+    "imageUrl": "https://developers.google.com/static/profile/badges/playlists/android/android-basics-compose-unit-2-pathway-2/badge.svg"
   }
 ]

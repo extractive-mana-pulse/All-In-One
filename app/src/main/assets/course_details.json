@@ -44,32 +44,44 @@
   },
   {
     "id": 6,
-    "title": "",
-    "subtitle": "",
-    "imageUrl": ""
+    "title": "Task Manager",
+    "subtitle": "This section will teach you task manager.",
+    "imageUrl": "https://e7.pngegg.com/pngimages/368/132/png-clipart-getting-things-done-task-management-computer-icons-coelho-blue-angle-thumbnail.png",
+    "publishedDate": "Published · Jul, 10 2023",
+    "author": "David Brown"
   },
   {
     "id": 7,
-    "title": "",
-    "subtitle": "",
-    "imageUrl": ""
+    "title": "Art Space",
+    "subtitle": "In this section you mainly going to study modifier of compose.",
+    "description": "Prerequisites\nAbility to create and run a project in Android Studio.\nExperience with Kotlin syntax, which includes Boolean and when expressions.\nAbility to apply basic Jetpack Compose concepts, such as the use of state with MutableState object.\nExperience with composable functions, which includes Text, Image, and Button composables.\nWhat you'll learn\nHow to build low-fidelity prototypes and translate them to code.\nHow to build simple layouts with Row and Column composables, and arrange them with horizontalAlignment and verticalArrangement parameters.\nHow to customize Compose elements with a Modifier object.\nHow to identify states and modify them upon triggers, such as button taps.\nWhat you'll build\nAn Android app that can display artwork or family photos",
+    "imageUrl": "https://developers.google.com/static/profile/badges/playlists/android/android-basics-compose-unit-2-pathway-3/badge.svg",
+    "publishedDate": "Published · Jun, 22 2023",
+    "author": "Emily Davis"
   },
   {
     "id": 8,
-    "title": "",
-    "subtitle": "",
-    "imageUrl": ""
+    "title": "Business card",
+    "subtitle": "By building business card app you will learn how to work with compose components.",
+    "description": "You'll learn how to build simple layouts with Row and Column composables, and arrange them with horizontalAlignment and verticalArrangement parameters.\nHow to customize Compose elements with a Modifier object.",
+    "imageUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSatNuQtiszrbins18afZY2h37Gwl_tIzZ2AQ&s",
+    "publishedDate": "Published · May, 18 2023",
+    "author": "Daniel Wilson"
   },
   {
     "id": 9,
-    "title": "",
-    "subtitle": "",
-    "imageUrl": ""
+    "title": "In building process...",
+    "subtitle": "In building process...",
+    "imageUrl": "https://developers.google.com/static/profile/badges/playlists/android/android-basics-compose-unit-2-pathway-2/badge.svg",
+    "publishedDate": "Published · Apr, 30 2023",
+    "author": "Olivia Taylor"
   },
   {
     "id": 10,
-    "title": "",
-    "subtitle": "",
-    "imageUrl": ""
+    "title": "In building process...",
+    "subtitle": "In building process...",
+    "imageUrl": "https://developers.google.com/static/profile/badges/playlists/android/android-basics-compose-unit-2-pathway-2/badge.svg",
+    "publishedDate": "Published · Mar, 25 2023",
+    "author": "William Anderson"
   }
 ]

@@ -11,12 +11,15 @@ import androidx.navigation.navigation
 import com.example.allinone.settings.presentation.screens.AdaptiveModeScreen
 import com.example.allinone.settings.presentation.screens.AutoNightModeScreen
 import com.example.allinone.settings.presentation.screens.BatterySavingScreen
+import com.example.allinone.settings.presentation.screens.ScheduledModeScreen
 import com.example.allinone.settings.presentation.screens.SettingScreen
+import com.google.android.gms.location.FusedLocationProviderClient
 
 internal fun NavGraphBuilder.settingsNavigation(
     navController: NavHostController,
     isDarkTheme: Boolean,
-    onThemeChanged: (Boolean) -> Unit
+    onThemeChanged: (Boolean) -> Unit,
+    fusedLocationClient: FusedLocationProviderClient
 ) {
     navigation(
         startDestination = SettingsScreens.Settings.route,
@@ -44,6 +47,14 @@ internal fun NavGraphBuilder.settingsNavigation(
                 navController = navController,
                 isDarkTheme = isDarkTheme,
                 onThemeChanged = onThemeChanged
+            )
+        }
+        composable(SettingsScreens.ScheduledMode.route) {
+            ScheduledModeScreen(
+                navController = navController,
+                isDarkTheme = isDarkTheme,
+                onThemeChanged = onThemeChanged,
+                fusedLocationClient = fusedLocationClient
             )
         }
     }

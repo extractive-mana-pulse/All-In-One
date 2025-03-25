@@ -2,6 +2,7 @@ package com.example.allinone.settings.presentation.screens
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -80,7 +81,10 @@ fun AutoNightModeScreen(
                 }
             )
             AutoNightModeItem(
-                content = stringResource(R.string.scheduled)
+                content = stringResource(R.string.scheduled),
+                onClick = {
+                    navController.navigate(SettingsScreens.ScheduledMode.route)
+                }
             )
             AutoNightModeItem(
                 content = stringResource(R.string.adaptive),
@@ -89,7 +93,11 @@ fun AutoNightModeScreen(
                 }
             )
             AutoNightModeItem(
-                content = stringResource(R.string.default_mode)
+                content = stringResource(R.string.default_mode),
+                onClick = {
+                    onThemeChanged(!isDarkTheme)
+                    toastMessage(context, "Theme changed to ${if (isDarkTheme) "Dark" else "Light"}")
+                }
             )
         }
     }
@@ -98,17 +106,20 @@ fun AutoNightModeScreen(
 @Composable
 private fun AutoNightModeItem(
     content: String,
-    onClick: () -> Unit = {}
+    onClick: () -> Unit
 ) {
-    Text(
-        text = content,
-        style = MaterialTheme.typography.bodyMedium.copy(
-            fontFamily = FontFamily(Font(R.font.inknut_antiqua_semi_bold))
-        ),
+    Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(16.dp)
             .clickable { onClick() }
-    )
+            .padding(16.dp),
+    ) {
+        Text(
+            text = content,
+            style = MaterialTheme.typography.bodyMedium.copy(
+                fontFamily = FontFamily(Font(R.font.inknut_antiqua_semi_bold))
+            )
+        )
+    }
     HorizontalDivider(modifier = Modifier.padding(start = 16.dp))
 }

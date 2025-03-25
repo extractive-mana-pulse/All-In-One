@@ -15,12 +15,19 @@ import androidx.navigation.compose.rememberNavController
 import com.example.allinone.navigation.NavigationGraph
 import com.example.allinone.settings.ThemePreferences
 import com.example.allinone.ui.theme.AllInOneTheme
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+
+    private lateinit var fusedLocationClient: FusedLocationProviderClient
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
         enableEdgeToEdge()
         setContent {
             val scope = rememberCoroutineScope()
@@ -37,7 +44,8 @@ class MainActivity : ComponentActivity() {
                         scope.launch {
                             themePreferences.saveThemePreference(newTheme)
                         }
-                    }
+                    },
+                    fusedLocationClient = fusedLocationClient
                 )
             }
         }

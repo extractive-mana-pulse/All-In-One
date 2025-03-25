@@ -25,14 +25,19 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        buildConfigField("String", "BASE_URL", "\"https://api.sunrisesunset.io/\"")
     }
 
     buildTypes {
+        debug {
+            buildConfigField("String", "BASE_URL", "\"https://api.sunrisesunset.io/\"")
+        }
         release {
             /* this 2 block of code, prepare application for release.
              Basically optimize code and remove unused elements. */
             isShrinkResources = true
             isMinifyEnabled = true
+
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
@@ -141,4 +146,7 @@ dependencies {
 
     // data store
     implementation("androidx.datastore:datastore-preferences:1.1.3")
+
+    // location
+    implementation ("com.google.android.gms:play-services-location:21.3.0")
 }

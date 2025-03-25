@@ -2,6 +2,7 @@ package com.example.allinone.main.presentation.screens
 
 import android.content.Context
 import android.util.Log
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -122,48 +123,65 @@ fun DetailsScreen(
 @Composable
 private fun DetailsItem(course: CourseDetails) {
     val context = LocalContext.current
-    Column(
+    Box(
         modifier = Modifier
             .fillMaxSize()
     ) {
-        AsyncImage(
-            model = course.imageUrl ?: R.drawable.compose_logo,
-            contentDescription = null,
+        Column{
+            AsyncImage(
+                model = course.imageUrl ?: R.drawable.compose_logo,
+                contentDescription = null,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clip(RectangleShape)
+            )
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Text(
+                    text = course.author ?: "John Doe",
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier.weight(1f)
+                )
+                TextButton(
+                    onClick = {
+                        toastMessage(
+                            context = context,
+                            message = "In progress. This feature will be implemented soon"
+                        )
+                    }
+                ) {
+                    Text("Follow")
+                }
+            }
+            Text(
+                text = course.publishedDate ?: "Published · Oct, 28 2025",
+                fontSize = 12.sp,
+                color = Color.Gray
+            )
+            Spacer(modifier = Modifier.height(16.dp))
+            Text(
+                text = course.description ?: "No description available",
+                style = MaterialTheme.typography.bodyMedium
+            )
+        }
+        Button(
             modifier = Modifier
                 .fillMaxWidth()
-                .clip(RectangleShape)
-        )
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically,
+                .align(Alignment.BottomCenter),
+            onClick = {
+                toastMessage(
+                    context = context,
+                    message = "In progress. This feature will be implemented soon"
+                )
+            }
         ) {
             Text(
-                text = course.author ?: "John Doe",
-                fontSize = 20.sp,
-                fontWeight = FontWeight.Bold,
-                modifier = Modifier.weight(1f)
+                text = "Start the code lab"
             )
-            TextButton(
-                onClick = {
-                    toastMessage(
-                        context = context,
-                        message = "In progress. This feature will be implemented soon"
-                    )
-                }
-            ) {
-                Text("Follow")
-            }
         }
-        Text(
-            text = course.publishedDate ?: "Published · Oct, 28 2025",
-            fontSize = 12.sp,
-            color = Color.Gray
-        )
-        Spacer(modifier = Modifier.height(16.dp))
-        Text(
-            text = course.description ?: "No description available",
-            style = MaterialTheme.typography.bodyMedium
-        )
     }
 }
 

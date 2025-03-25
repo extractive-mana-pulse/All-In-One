@@ -17,12 +17,14 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.allinone.core.util.ui.NavigationDrawer
 import com.example.allinone.core.util.ui.VisibilityOfUI
+import com.google.android.gms.location.FusedLocationProviderClient
 
 @Composable
 fun NavigationGraph(
     navController: NavHostController = rememberNavController(),
     isDarkTheme: Boolean,
-    onThemeChanged: (Boolean) -> Unit
+    onThemeChanged: (Boolean) -> Unit,
+    fusedLocationClient: FusedLocationProviderClient
 ) {
     val topBarState = rememberSaveable { mutableStateOf(true) }
     val bottomBarState = rememberSaveable { mutableStateOf(true) }
@@ -57,7 +59,8 @@ fun NavigationGraph(
                 settingsNavigation(
                     navController = navController,
                     isDarkTheme = isDarkTheme,
-                    onThemeChanged = onThemeChanged
+                    onThemeChanged = onThemeChanged,
+                    fusedLocationClient = fusedLocationClient
                 )
                 // later implement auth & onBoarding graphs
             }

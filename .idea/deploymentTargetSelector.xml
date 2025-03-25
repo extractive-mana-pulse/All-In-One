@@ -19,7 +19,7 @@
       <SelectionState runConfigName="SettingScreen">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="AutoNightModeScreen">
+      <SelectionState runConfigName="BusinessCard">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
     </selectionStates>

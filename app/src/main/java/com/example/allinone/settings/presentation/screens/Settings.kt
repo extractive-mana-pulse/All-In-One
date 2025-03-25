@@ -1,7 +1,6 @@
 package com.example.allinone.settings.presentation.screens
 
 import android.content.Intent
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -67,7 +66,6 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.allinone.R
 import com.example.allinone.core.helper.LanguageChangeHelper
-import com.example.allinone.navigation.Screens
 import com.example.allinone.navigation.SettingsScreens
 import com.example.allinone.settings.presentation.vm.ReadingModeViewModel
 
@@ -128,16 +126,16 @@ fun SettingScreen(
             item {
                 SettingsItemWithToggle(
                     modifier = Modifier,
-                    title = "Reading mode",
-                    description = "Reading mode mostly used for reading articles. it's decrease a light-blue color and make it less pain for your eyes.",
+                    title = stringResource(R.string.reading_mode),
+                    description = stringResource(R.string.reading_mode_desc),
                     icon = Icons.AutoMirrored.Default.MenuBook,
                     viewModel = viewModel
                 )
             }
             item {
                 SettingsItem(
-                    title = "Power saving mode",
-                    description = "Automatically reduce power usage and animations when your battery is below 20%. ",
+                    title = stringResource(R.string.power_saving),
+                    description = stringResource(R.string.power_saving_desc),
                     icon = Icons.Default.BatterySaver,
                     onClick = {
                         navController.navigate(SettingsScreens.PowerSaving.route)
@@ -154,7 +152,7 @@ fun SettingsItem(
     title: String,
     description: String,
     icon: ImageVector? = null,
-    onClick: () -> Unit = {}
+    onClick: () -> Unit
 ) {
     Column(
         modifier = modifier.fillMaxWidth().clickable { onClick() },
@@ -170,7 +168,7 @@ fun SettingsItem(
                     modifier = Modifier.size(48.dp),
                     contentAlignment = Alignment.Center
                 ) {
-                    Image(
+                    Icon(
                         imageVector = it,
                         contentDescription = null,
                         modifier = Modifier.size(48.dp)
@@ -271,7 +269,7 @@ fun SettingsItemWithSheet(
             },
             leadingContent = {
                 icon?.let {
-                    Image(
+                    Icon(
                         imageVector = it,
                         contentDescription = null,
                         modifier = Modifier.size(48.dp)
@@ -327,11 +325,10 @@ fun SettingsItemWithToggle(
                     modifier = Modifier.size(48.dp),
                     contentAlignment = Alignment.Center
                 ) {
-                    Image(
+                    Icon(
                         imageVector = it,
                         contentDescription = null,
-                        modifier = Modifier.size(48.dp),
-                        colorFilter = if (readingMode) ColorFilter.tint(sepiaColor.copy(alpha = 0.7f)) else null
+                        modifier = Modifier.size(48.dp)
                     )
                 }
             }

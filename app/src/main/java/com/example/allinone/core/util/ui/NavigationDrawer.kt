@@ -37,7 +37,6 @@ import androidx.navigation.compose.rememberNavController
 import com.example.allinone.BuildConfig
 import com.example.allinone.R
 import com.example.allinone.navigation.HomeScreens
-import com.example.allinone.navigation.Screens
 import com.example.allinone.navigation.SettingsScreens
 import kotlinx.coroutines.launch
 
@@ -176,6 +175,7 @@ private fun NavigationDrawerContent(
                     )
                 },
                 onClick = {
+                    scope.launch { drawerState.close() }
                     navController.navigate(HomeScreens.Help.route)
                 },
             )

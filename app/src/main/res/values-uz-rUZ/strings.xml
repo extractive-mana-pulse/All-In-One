@@ -46,4 +46,9 @@
     <string name="from_power_saving_to_somewhere">Navigate up from PowerSaving screen</string>
     <string name="other_sections">Boshqa bo\'limlar</string>
     <string name="courses">Kurslar</string>
+    <string name="reading_mode">Reading mode</string>
+    <string name="reading_mode_desc">Reading mode mainly used for reading articles. it\'s decrease a light-blue color and make it less pain for your eyes.</string>
+    <string name="power_saving">Power saving mode</string>
+    <string name="power_saving_desc">Automatically reduce power usage and animations when your battery is below 20%.</string>
+    <string name="location_permission_required">Location Permission not granted!</string>
 </resources>
