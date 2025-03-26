@@ -11,9 +11,12 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.outlined.Keyboard
@@ -21,6 +24,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.LargeTopAppBar
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Switch
@@ -85,7 +89,7 @@ fun ScheduledModeScreen(
     var townName by remember { mutableStateOf<String?>(null) }
     var location by remember { mutableStateOf<Location?>(null) }
     val state by viewModel.twilight.collectAsStateWithLifecycle()
-    val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
+    val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
 
     LaunchedEffect(Unit) {
         if (ActivityCompat.checkSelfPermission(
@@ -114,21 +118,29 @@ fun ScheduledModeScreen(
     }
 
     LaunchedEffect(Unit) {
-        // viewModel.getTwilight(it.latitude, it.longitude)
-        // tashkent lat -> 41.311081 & long -> 69.240562
         viewModel.getTwilight(latitude, longitude)
     }
 
     Scaffold(
-        modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
+        modifier = Modifier
+            .fillMaxSize()
+            .nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
-            TopAppBar(
+            LargeTopAppBar(
                 title = {
                     Text(
                         text = stringResource(R.string.scheduled),
-                        style = MaterialTheme.typography.titleMedium.copy(
-                            fontFamily = FontFamily(Font(R.font.inknut_antiqua_regular))
-                        )
+                        style = MaterialTheme.typography.titleLarge.copy(
+                            fontFamily = FontFamily(Font(R.font.inknut_antiqua_semi_bold)),
+                            fontSize = MaterialTheme.typography.titleLarge.fontSize,
+                            fontWeight = MaterialTheme.typography.titleLarge.fontWeight,
+                            letterSpacing = MaterialTheme.typography.titleLarge.letterSpacing,
+                            lineHeight = MaterialTheme.typography.titleLarge.lineHeight,
+                            platformStyle = MaterialTheme.typography.titleLarge.platformStyle,
+                            textAlign = MaterialTheme.typography.titleLarge.textAlign,
+                            textDirection = MaterialTheme.typography.titleLarge.textDirection,
+
+                            )
                     )
                 },
                 navigationIcon = {
@@ -139,22 +151,17 @@ fun ScheduledModeScreen(
                         )
                     }
                 },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.surfaceContainerHighest,
-
-                ),
                 scrollBehavior = scrollBehavior,
             )
         }
     ) { innerPadding ->
         Column(
             modifier = Modifier
-                .fillMaxWidth()
-                .background(MaterialTheme.colorScheme.surfaceContainerLow)
+                .fillMaxSize()
                 .padding(innerPadding)
-                .padding(horizontal = 16.dp),
-            horizontalAlignment = Alignment.Start,
-            verticalArrangement = Arrangement.Center
+                .padding(horizontal = 16.dp)
+                .verticalScroll(rememberScrollState()),
+            horizontalAlignment = Alignment.CenterHorizontally,
         ) {
 
             Row(
@@ -165,10 +172,16 @@ fun ScheduledModeScreen(
                 Text(
                     text = "Use Local Sunset and Sunrise Times",
                     style = MaterialTheme.typography.bodyMedium.copy(
-                        fontFamily = FontFamily(Font(R.font.inknut_antiqua_bold))
-                    )
+                        fontFamily = FontFamily(Font(R.font.inknut_antiqua_medium)),
+                        fontSize = MaterialTheme.typography.bodyMedium.fontSize,
+                        fontWeight = MaterialTheme.typography.bodyMedium.fontWeight,
+                        letterSpacing = MaterialTheme.typography.bodyMedium.letterSpacing,
+                        lineHeight = MaterialTheme.typography.bodyMedium.lineHeight,
+                        platformStyle = MaterialTheme.typography.bodyMedium.platformStyle,
+                        textAlign = MaterialTheme.typography.bodyMedium.textAlign,
+                        textDirection = MaterialTheme.typography.bodyMedium.textDirection,
+                        )
                 )
-
                 Switch(
                     checked = checked,
                     onCheckedChange = { status ->
@@ -176,10 +189,7 @@ fun ScheduledModeScreen(
                     },
                 )
             }
-            if (checked)
-                SwitchOnMode(state, townName)
-            else
-                SwitchOffMode()
+            if (checked) SwitchOnMode(state, townName) else SwitchOffMode()
         }
     }
 }
@@ -234,14 +244,28 @@ private fun SwitchOffMode() {
     ) {
         Text(
             text = "From",
-            style = MaterialTheme.typography.bodyMedium.copy(
-                fontFamily = FontFamily(Font(R.font.inknut_antiqua_regular))
+            style = MaterialTheme.typography.bodySmall.copy(
+                fontFamily = FontFamily(Font(R.font.inknut_antiqua_medium)),
+                fontSize = MaterialTheme.typography.bodySmall.fontSize,
+                fontWeight = MaterialTheme.typography.bodySmall.fontWeight,
+                letterSpacing = MaterialTheme.typography.bodySmall.letterSpacing,
+                lineHeight = MaterialTheme.typography.bodySmall.lineHeight,
+                platformStyle = MaterialTheme.typography.bodySmall.platformStyle,
+                textAlign = MaterialTheme.typography.bodySmall.textAlign,
+                textDirection = MaterialTheme.typography.bodySmall.textDirection,
             )
         )
         Text(
             text = fromTime,
-            style = MaterialTheme.typography.bodyMedium.copy(
-                fontFamily = FontFamily(Font(R.font.inknut_antiqua_regular))
+            style = MaterialTheme.typography.bodySmall.copy(
+                fontFamily = FontFamily(Font(R.font.inknut_antiqua_medium)),
+                fontSize = MaterialTheme.typography.bodySmall.fontSize,
+                fontWeight = MaterialTheme.typography.bodySmall.fontWeight,
+                letterSpacing = MaterialTheme.typography.bodySmall.letterSpacing,
+                lineHeight = MaterialTheme.typography.bodySmall.lineHeight,
+                platformStyle = MaterialTheme.typography.bodySmall.platformStyle,
+                textAlign = MaterialTheme.typography.bodySmall.textAlign,
+                textDirection = MaterialTheme.typography.bodySmall.textDirection,
             )
         )
     }
@@ -261,14 +285,28 @@ private fun SwitchOffMode() {
     ) {
         Text(
             text = "To",
-            style = MaterialTheme.typography.bodyMedium.copy(
-                fontFamily = FontFamily(Font(R.font.inknut_antiqua_regular))
+            style = MaterialTheme.typography.bodySmall.copy(
+                fontFamily = FontFamily(Font(R.font.inknut_antiqua_medium)),
+                fontSize = MaterialTheme.typography.bodySmall.fontSize,
+                fontWeight = MaterialTheme.typography.bodySmall.fontWeight,
+                letterSpacing = MaterialTheme.typography.bodySmall.letterSpacing,
+                lineHeight = MaterialTheme.typography.bodySmall.lineHeight,
+                platformStyle = MaterialTheme.typography.bodySmall.platformStyle,
+                textAlign = MaterialTheme.typography.bodySmall.textAlign,
+                textDirection = MaterialTheme.typography.bodySmall.textDirection,
             )
         )
         Text(
             text = toTime,
-            style = MaterialTheme.typography.bodyMedium.copy(
-                fontFamily = FontFamily(Font(R.font.inknut_antiqua_regular))
+            style = MaterialTheme.typography.bodySmall.copy(
+                fontFamily = FontFamily(Font(R.font.inknut_antiqua_medium)),
+                fontSize = MaterialTheme.typography.bodySmall.fontSize,
+                fontWeight = MaterialTheme.typography.bodySmall.fontWeight,
+                letterSpacing = MaterialTheme.typography.bodySmall.letterSpacing,
+                lineHeight = MaterialTheme.typography.bodySmall.lineHeight,
+                platformStyle = MaterialTheme.typography.bodySmall.platformStyle,
+                textAlign = MaterialTheme.typography.bodySmall.textAlign,
+                textDirection = MaterialTheme.typography.bodySmall.textDirection,
             )
         )
     }
@@ -282,37 +320,72 @@ private fun SwitchOnMode(
     Text(
         text = "Current location: ${state.results.timezone}",
         modifier = Modifier.padding(8.dp),
-        style = MaterialTheme.typography.bodyMedium.copy(
-            fontFamily = FontFamily(Font(R.font.inknut_antiqua_regular))
+        style = MaterialTheme.typography.bodySmall.copy(
+            fontFamily = FontFamily(Font(R.font.inknut_antiqua_medium)),
+            fontSize = MaterialTheme.typography.bodySmall.fontSize,
+            fontWeight = MaterialTheme.typography.bodySmall.fontWeight,
+            letterSpacing = MaterialTheme.typography.bodySmall.letterSpacing,
+            lineHeight = MaterialTheme.typography.bodySmall.lineHeight,
+            platformStyle = MaterialTheme.typography.bodySmall.platformStyle,
+            textAlign = MaterialTheme.typography.bodySmall.textAlign,
+            textDirection = MaterialTheme.typography.bodySmall.textDirection,
         )
     )
     Text(
         text = "Sunrise: ${state.results.sunrise ?: "N/A"}",
         modifier = Modifier.padding(horizontal = 8.dp),
-        style = MaterialTheme.typography.bodyMedium.copy(
-            fontFamily = FontFamily(Font(R.font.inknut_antiqua_regular))
+        style = MaterialTheme.typography.bodySmall.copy(
+            fontFamily = FontFamily(Font(R.font.inknut_antiqua_medium)),
+            fontSize = MaterialTheme.typography.bodySmall.fontSize,
+            fontWeight = MaterialTheme.typography.bodySmall.fontWeight,
+            letterSpacing = MaterialTheme.typography.bodySmall.letterSpacing,
+            lineHeight = MaterialTheme.typography.bodySmall.lineHeight,
+            platformStyle = MaterialTheme.typography.bodySmall.platformStyle,
+            textAlign = MaterialTheme.typography.bodySmall.textAlign,
+            textDirection = MaterialTheme.typography.bodySmall.textDirection,
         )
     )
     Text(
         text = "Sunset: ${state.results.sunset ?: "N/A"}",
         modifier = Modifier.padding(horizontal = 8.dp),
-        style = MaterialTheme.typography.bodyMedium.copy(
-            fontFamily = FontFamily(Font(R.font.inknut_antiqua_regular))
+        style = MaterialTheme.typography.bodySmall.copy(
+            fontFamily = FontFamily(Font(R.font.inknut_antiqua_medium)),
+            fontSize = MaterialTheme.typography.bodySmall.fontSize,
+            fontWeight = MaterialTheme.typography.bodySmall.fontWeight,
+            letterSpacing = MaterialTheme.typography.bodySmall.letterSpacing,
+            lineHeight = MaterialTheme.typography.bodySmall.lineHeight,
+            platformStyle = MaterialTheme.typography.bodySmall.platformStyle,
+            textAlign = MaterialTheme.typography.bodySmall.textAlign,
+            textDirection = MaterialTheme.typography.bodySmall.textDirection,
         )
     )
 
     Text(
         text = "Country/Town: ${townName ?: "N/A"}",
         modifier = Modifier.padding(horizontal = 8.dp),
-        style = MaterialTheme.typography.bodyMedium.copy(
-            fontFamily = FontFamily(Font(R.font.inknut_antiqua_regular))
+        style = MaterialTheme.typography.bodySmall.copy(
+            fontFamily = FontFamily(Font(R.font.inknut_antiqua_medium)),
+            fontSize = MaterialTheme.typography.bodySmall.fontSize,
+            fontWeight = MaterialTheme.typography.bodySmall.fontWeight,
+            letterSpacing = MaterialTheme.typography.bodySmall.letterSpacing,
+            lineHeight = MaterialTheme.typography.bodySmall.lineHeight,
+            platformStyle = MaterialTheme.typography.bodySmall.platformStyle,
+            textAlign = MaterialTheme.typography.bodySmall.textAlign,
+            textDirection = MaterialTheme.typography.bodySmall.textDirection,
         )
     )
     Text(
         text = "Calculating sunset and sunrise times requires a one-time check of your approximate location. Note that this location is only stored locally on your device.",
         modifier = Modifier.padding(vertical = 8.dp),
         style = MaterialTheme.typography.bodyMedium.copy(
-            fontFamily = FontFamily(Font(R.font.inknut_antiqua_regular))
+            fontFamily = FontFamily(Font(R.font.inknut_antiqua_medium)),
+            fontSize = MaterialTheme.typography.bodyMedium.fontSize,
+            fontWeight = MaterialTheme.typography.bodyMedium.fontWeight,
+            letterSpacing = MaterialTheme.typography.bodyMedium.letterSpacing,
+            lineHeight = MaterialTheme.typography.bodyMedium.lineHeight,
+            platformStyle = MaterialTheme.typography.bodyMedium.platformStyle,
+            textAlign = MaterialTheme.typography.bodyMedium.textAlign,
+            textDirection = MaterialTheme.typography.bodyMedium.textDirection,
         )
     )
 }

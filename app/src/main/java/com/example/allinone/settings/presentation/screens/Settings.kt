@@ -18,7 +18,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.selection.selectableGroup
-import androidx.compose.material.ContentAlpha
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.MenuBook
@@ -29,19 +28,17 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.LargeTopAppBar
 import androidx.compose.material3.ListItem
-import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -49,7 +46,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
@@ -58,7 +54,6 @@ import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -72,26 +67,33 @@ import com.example.allinone.settings.presentation.vm.ReadingModeViewModel
 val languageChangeHelper by lazy { LanguageChangeHelper() }
 
 @OptIn(ExperimentalMaterial3Api::class)
-@Preview(showSystemUi = true, showBackground = true)
 @Composable
 fun SettingScreen(
     navController: NavHostController = rememberNavController()
 ) {
     val viewModel: ReadingModeViewModel = viewModel()
-    val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
+    val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
 
     Scaffold(
         modifier = Modifier
             .fillMaxSize()
             .nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
-            TopAppBar(
+            LargeTopAppBar(
                 title = {
                     Text(
                         text = stringResource(R.string.settings),
-                        style = MaterialTheme.typography.titleMedium.copy(
-                            fontFamily = FontFamily(Font(R.font.inknut_antiqua_semi_bold))
-                        )
+                        style = MaterialTheme.typography.titleLarge.copy(
+                            fontFamily = FontFamily(Font(R.font.inknut_antiqua_semi_bold)),
+                            fontSize = MaterialTheme.typography.titleLarge.fontSize,
+                            fontWeight = MaterialTheme.typography.titleLarge.fontWeight,
+                            letterSpacing = MaterialTheme.typography.titleLarge.letterSpacing,
+                            lineHeight = MaterialTheme.typography.titleLarge.lineHeight,
+                            platformStyle = MaterialTheme.typography.titleLarge.platformStyle,
+                            textAlign = MaterialTheme.typography.titleLarge.textAlign,
+                            textDirection = MaterialTheme.typography.titleLarge.textDirection,
+
+                            )
                     )
                 },
                 navigationIcon = {
@@ -108,6 +110,7 @@ fun SettingScreen(
                 .fillMaxSize()
                 .padding(innerPadding)
         ) {
+            /** Auto-Night Mode */
             item {
                 SettingsItem(
                     title = stringResource(R.string.auto_nigt_mode),
@@ -116,6 +119,8 @@ fun SettingScreen(
                     onClick = { navController.navigate(SettingsScreens.Night.route) }
                 )
             }
+
+            /** Language */
             item {
                 SettingsItemWithSheet(
                     title = stringResource(R.string.language),
@@ -123,6 +128,8 @@ fun SettingScreen(
                     icon = Icons.Default.Language
                 )
             }
+
+            /** Reading Mode */
             item {
                 SettingsItemWithToggle(
                     modifier = Modifier,
@@ -132,6 +139,8 @@ fun SettingScreen(
                     viewModel = viewModel
                 )
             }
+
+            /** Power Saving Mode */
             item {
                 SettingsItem(
                     title = stringResource(R.string.power_saving),
@@ -155,12 +164,16 @@ fun SettingsItem(
     onClick: () -> Unit
 ) {
     Column(
-        modifier = modifier.fillMaxWidth().clickable { onClick() },
+        modifier = modifier
+            .fillMaxWidth()
+            .clickable { onClick() },
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
         Row(
-            modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 12.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
             icon?.let {
@@ -171,7 +184,7 @@ fun SettingsItem(
                     Icon(
                         imageVector = it,
                         contentDescription = null,
-                        modifier = Modifier.size(48.dp)
+                        modifier = Modifier.size(40.dp)
                     )
                 }
             }
@@ -183,19 +196,26 @@ fun SettingsItem(
             ) {
                 Text(
                     text = title,
-                    style = MaterialTheme.typography.bodyLarge.copy(
-                        fontFamily = FontFamily(Font(R.font.inknut_antiqua_semi_bold))
+                    style = MaterialTheme.typography.bodyMedium.copy(
+                        fontFamily = FontFamily(Font(R.font.inknut_antiqua_semi_bold)),
+                        fontSize = MaterialTheme.typography.bodyMedium.fontSize,
+                        fontWeight = MaterialTheme.typography.bodyMedium.fontWeight,
+                        lineHeight = MaterialTheme.typography.bodyMedium.lineHeight,
+                        letterSpacing = MaterialTheme.typography.bodyMedium.letterSpacing,
                     ),
-                    maxLines = 3,
-                    overflow = TextOverflow.Ellipsis
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
                 )
-
-                Spacer(modifier = Modifier.height(4.dp))
 
                 Text(
                     text = description,
                     style = MaterialTheme.typography.bodySmall.copy(
-                        fontFamily = FontFamily(Font(R.font.inknut_antiqua_medium))
+                        fontFamily = FontFamily(Font(R.font.inknut_antiqua_medium)),
+                        fontSize = MaterialTheme.typography.bodySmall.fontSize,
+                        fontWeight = MaterialTheme.typography.bodySmall.fontWeight,
+                        lineHeight = MaterialTheme.typography.bodySmall.lineHeight,
+                        letterSpacing = MaterialTheme.typography.bodySmall.letterSpacing,
+                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.8f),
                     ),
                     maxLines = 3,
                     overflow = TextOverflow.Ellipsis
@@ -228,13 +248,14 @@ fun SettingsItemWithSheet(
             sheetState = sheetState,
             onDismissRequest = { showBottomSheet = false }
         ) {
-            Column {
+            Column(
+                modifier = Modifier.padding(16.dp)
+            ) {
                 Text(
                     text = stringResource(R.string.select_language),
                     style = MaterialTheme.typography.titleLarge.copy(
                         fontFamily = FontFamily(Font(R.font.inknut_antiqua_semi_bold))
                     ),
-                    modifier = Modifier.padding(16.dp)
                 )
                 RadioButtonSingleSelection()
             }
@@ -243,25 +264,33 @@ fun SettingsItemWithSheet(
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .clickable{ showBottomSheet = true },
+            .clickable{ showBottomSheet = true }
     ) {
         ListItem(
             headlineContent = {
                 Text(
                     text = title,
-                    style = MaterialTheme.typography.bodyLarge.copy(
-                        fontFamily = FontFamily(Font(R.font.inknut_antiqua_semi_bold))
-
+                    style = MaterialTheme.typography.bodyMedium.copy(
+                        fontFamily = FontFamily(Font(R.font.inknut_antiqua_semi_bold)),
+                        fontSize = MaterialTheme.typography.bodyMedium.fontSize,
+                        fontWeight = MaterialTheme.typography.bodyMedium.fontWeight,
+                        lineHeight = MaterialTheme.typography.bodyMedium.lineHeight,
+                        letterSpacing = MaterialTheme.typography.bodyMedium.letterSpacing,
                     ),
-                    maxLines = 3,
-                    overflow = TextOverflow.Ellipsis
-                ) },
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                )
+            },
             supportingContent = {
                 Text(
                     text = description,
                     style = MaterialTheme.typography.bodySmall.copy(
-                        fontFamily = FontFamily(Font(R.font.inknut_antiqua_medium))
-
+                        fontFamily = FontFamily(Font(R.font.inknut_antiqua_medium)),
+                        fontSize = MaterialTheme.typography.bodySmall.fontSize,
+                        fontWeight = MaterialTheme.typography.bodySmall.fontWeight,
+                        lineHeight = MaterialTheme.typography.bodySmall.lineHeight,
+                        letterSpacing = MaterialTheme.typography.bodySmall.letterSpacing,
+                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.8f),
                     ),
                     maxLines = 3,
                     overflow = TextOverflow.Ellipsis
@@ -269,11 +298,16 @@ fun SettingsItemWithSheet(
             },
             leadingContent = {
                 icon?.let {
-                    Icon(
-                        imageVector = it,
-                        contentDescription = null,
-                        modifier = Modifier.size(48.dp)
-                    )
+                    Box(
+                        modifier = Modifier.size(48.dp),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Icon(
+                            imageVector = it,
+                            contentDescription = null,
+                            modifier = Modifier.size(40.dp)
+                        )
+                    }
                 }
             },
         )
@@ -300,7 +334,7 @@ fun SettingsItemWithToggle(
     val readingMode = uiState.isReadingModeEnabled
 
     // Create a ContentAlpha value based on reading mode
-    val contentAlpha = if (readingMode) ContentAlpha.medium else ContentAlpha.high
+//    val contentAlpha = if (readingMode) ContentAlpha.medium else ContentAlpha.high
 
     val backgroundColor = if (readingMode) {
         Color(0xFFF8F1E3)
@@ -328,7 +362,7 @@ fun SettingsItemWithToggle(
                     Icon(
                         imageVector = it,
                         contentDescription = null,
-                        modifier = Modifier.size(48.dp)
+                        modifier = Modifier.size(36.dp)
                     )
                 }
             }
@@ -340,12 +374,15 @@ fun SettingsItemWithToggle(
             ) {
                 Text(
                     text = title,
-                    style = MaterialTheme.typography.bodyLarge.copy(
+                    style = MaterialTheme.typography.bodyMedium.copy(
                         fontFamily = FontFamily(Font(R.font.inknut_antiqua_semi_bold)),
-                        color = if (readingMode) sepiaColor else LocalContentColor.current
+                        fontSize = MaterialTheme.typography.bodyMedium.fontSize,
+                        fontWeight = MaterialTheme.typography.bodyMedium.fontWeight,
+                        lineHeight = MaterialTheme.typography.bodyMedium.lineHeight,
+                        letterSpacing = MaterialTheme.typography.bodyMedium.letterSpacing,
                     ),
-                    maxLines = 3,
-                    overflow = TextOverflow.Ellipsis
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
                 )
 
                 Spacer(modifier = Modifier.height(4.dp))
@@ -354,7 +391,11 @@ fun SettingsItemWithToggle(
                     text = description,
                     style = MaterialTheme.typography.bodySmall.copy(
                         fontFamily = FontFamily(Font(R.font.inknut_antiqua_medium)),
-                        color = if (readingMode) sepiaColor.copy(alpha = 0.8f) else LocalContentColor.current.copy(alpha = contentAlpha)
+                        fontSize = MaterialTheme.typography.bodySmall.fontSize,
+                        fontWeight = MaterialTheme.typography.bodySmall.fontWeight,
+                        lineHeight = MaterialTheme.typography.bodySmall.lineHeight,
+                        letterSpacing = MaterialTheme.typography.bodySmall.letterSpacing,
+                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.8f),
                     ),
                     maxLines = 3,
                     overflow = TextOverflow.Ellipsis
@@ -368,7 +409,6 @@ fun SettingsItemWithToggle(
                 Switch(
                     checked = readingMode,
                     onCheckedChange = { newValue ->
-                        // Use the ViewModel to toggle reading mode
                         viewModel.toggleReadingMode(newValue)
                     }
                 )
@@ -383,7 +423,6 @@ fun SettingsItemWithToggle(
     }
 }
 
-// Map UI labels to language codes
 private val languageMapping = mapOf(
     "English" to "en",
     "Russian" to "ru",
@@ -391,17 +430,15 @@ private val languageMapping = mapOf(
 )
 
 @Composable
-fun RadioButtonSingleSelection(modifier: Modifier = Modifier) {
+fun RadioButtonSingleSelection() {
     val context = LocalContext.current
     val currentLanguageCode = languageChangeHelper.getLanguageCode(context)
 
-    // Find the UI label for the current language code
     val initialLanguage = languageMapping.entries.find { it.value == currentLanguageCode }?.key ?: "English"
 
     var selectedOption by remember { mutableStateOf(initialLanguage) }
 
-    // Note that Modifier.selectableGroup() is essential to ensure correct accessibility behavior
-    Column(modifier.selectableGroup()) {
+    Column(Modifier.selectableGroup()) {
         languageMapping.keys.forEach { language ->
             Row(
                 Modifier
@@ -411,10 +448,8 @@ fun RadioButtonSingleSelection(modifier: Modifier = Modifier) {
                         selected = (language == selectedOption),
                         onClick = {
                             selectedOption = language
-                            // Get the language code from our mapping and apply it
                             val languageCode = languageMapping[language] ?: "en"
                             languageChangeHelper.changeLanguage(context, languageCode)
-                            // Inside your click handler after changing the language
                             val intent = context.packageManager.getLaunchIntentForPackage(context.packageName)
                             intent?.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
                             context.startActivity(intent)
@@ -426,7 +461,7 @@ fun RadioButtonSingleSelection(modifier: Modifier = Modifier) {
             ) {
                 RadioButton(
                     selected = (language == selectedOption),
-                    onClick = null // null recommended for accessibility with screen readers
+                    onClick = null
                 )
                 Text(
                     text = language,
@@ -436,59 +471,4 @@ fun RadioButtonSingleSelection(modifier: Modifier = Modifier) {
             }
         }
     }
-}
-
-@Composable
-fun ReadingModeTheme(
-    viewModel: ReadingModeViewModel,
-    content: @Composable () -> Unit
-) {
-    // Collect the reading mode state from the ViewModel
-    val isReadingModeEnabled by viewModel.isReadingModeEnabled.collectAsState()
-
-    // Define colors for reading mode
-    val sepiaColor = Color(0xFF704214)
-    val sepiaBackground = Color(0xFFF8F1E3)
-
-    // Create theme colors based on the reading mode
-    val colors = if (isReadingModeEnabled) {
-        // Custom sepia-themed colors for reading mode
-        MaterialTheme.colorScheme.copy(
-            background = sepiaBackground,
-            surface = sepiaBackground,
-            onBackground = sepiaColor,
-            onSurface = sepiaColor,
-            primary = sepiaColor,
-            secondary = sepiaColor.copy(alpha = 0.7f),
-            tertiary = sepiaColor.copy(alpha = 0.5f),
-            outline = sepiaColor.copy(alpha = 0.3f)
-        )
-    } else {
-        // Use the default theme colors
-        MaterialTheme.colorScheme
-    }
-
-    // Custom typography for reading mode
-    val typography = if (isReadingModeEnabled) {
-        MaterialTheme.typography.copy(
-            bodyLarge = MaterialTheme.typography.bodyLarge.copy(
-                fontFamily = FontFamily(Font(R.font.inknut_antiqua_semi_bold))
-            ),
-            bodyMedium = MaterialTheme.typography.bodyMedium.copy(
-                fontFamily = FontFamily(Font(R.font.inknut_antiqua_medium))
-            ),
-            bodySmall = MaterialTheme.typography.bodySmall.copy(
-                fontFamily = FontFamily(Font(R.font.inknut_antiqua_medium))
-            )
-        )
-    } else {
-        MaterialTheme.typography
-    }
-
-    // Apply the theme
-    MaterialTheme(
-        colorScheme = colors,
-        typography = typography,
-        content = content
-    )
 }

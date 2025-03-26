@@ -7,11 +7,9 @@ import android.speech.RecognizerIntent
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -22,8 +20,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -47,7 +43,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SearchBar
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
@@ -60,11 +55,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
@@ -269,12 +263,20 @@ fun HomeScreen(
                 .fillMaxSize()
                 .padding(innerPadding)
                 .padding(horizontal = 16.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             item {
                 Text(
                     text = stringResource(R.string.courses),
-                    style = MaterialTheme.typography.titleLarge,
+                    style = MaterialTheme.typography.bodyLarge.copy(
+                        fontFamily = FontFamily(Font(R.font.inknut_antiqua_extra_bold)),
+                        fontSize = MaterialTheme.typography.bodyLarge.fontSize,
+                        fontWeight = MaterialTheme.typography.bodyLarge.fontWeight,
+                        letterSpacing = MaterialTheme.typography.bodyLarge.letterSpacing,
+                        lineHeight = MaterialTheme.typography.bodyLarge.lineHeight,
+                        platformStyle = MaterialTheme.typography.bodyLarge.platformStyle,
+                        textAlign = MaterialTheme.typography.bodyLarge.textAlign,
+                        textDirection = MaterialTheme.typography.bodyLarge.textDirection,
+                    ),
                     modifier = Modifier.padding(vertical = 8.dp)
                 )
             }
@@ -287,7 +289,16 @@ fun HomeScreen(
             item {
                 Text(
                     text = stringResource(R.string.other_sections),
-                    style = MaterialTheme.typography.titleLarge,
+                    style = MaterialTheme.typography.bodyLarge.copy(
+                        fontFamily = FontFamily(Font(R.font.inknut_antiqua_extra_bold)),
+                        fontSize = MaterialTheme.typography.bodyLarge.fontSize,
+                        fontWeight = MaterialTheme.typography.bodyLarge.fontWeight,
+                        letterSpacing = MaterialTheme.typography.bodyLarge.letterSpacing,
+                        lineHeight = MaterialTheme.typography.bodyLarge.lineHeight,
+                        platformStyle = MaterialTheme.typography.bodyLarge.platformStyle,
+                        textAlign = MaterialTheme.typography.bodyLarge.textAlign,
+                        textDirection = MaterialTheme.typography.bodyLarge.textDirection,
+                    ),
                     modifier = Modifier.padding(vertical = 8.dp)
                 )
             }
@@ -316,14 +327,14 @@ fun CourseListItem(
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(16.dp)
             .clickable {
                 navController.navigate(
                     HomeScreens.DetailsScreen(
                         id = course.id
                     )
                 )
-            },
+            }
+            .padding(vertical = 16.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         AsyncImage(
@@ -333,19 +344,33 @@ fun CourseListItem(
                 .size(60.dp)
                 .clip(CircleShape)
         )
-
         Spacer(modifier = Modifier.width(16.dp))
-
         Column {
             Text(
                 text = course.title ?: "",
-                style = MaterialTheme.typography.titleMedium,
-                fontWeight = FontWeight.Bold
+                style = MaterialTheme.typography.bodyMedium.copy(
+                    fontFamily = FontFamily(Font(R.font.inknut_antiqua_bold)),
+                    fontSize = MaterialTheme.typography.bodyMedium.fontSize,
+                    fontWeight = MaterialTheme.typography.bodyMedium.fontWeight,
+                    letterSpacing = MaterialTheme.typography.bodyMedium.letterSpacing,
+                    lineHeight = MaterialTheme.typography.bodyMedium.lineHeight,
+                    platformStyle = MaterialTheme.typography.bodyMedium.platformStyle,
+                    textAlign = MaterialTheme.typography.bodyMedium.textAlign,
+                    textDirection = MaterialTheme.typography.bodyMedium.textDirection,
+                ),
             )
-            Spacer(modifier = Modifier.height(4.dp))
             Text(
                 text = course.subtitle ?: "",
-                style = MaterialTheme.typography.bodyMedium
+                style = MaterialTheme.typography.bodySmall.copy(
+                    fontFamily = FontFamily(Font(R.font.inknut_antiqua_regular)),
+                    fontSize = MaterialTheme.typography.bodySmall.fontSize,
+                    fontWeight = MaterialTheme.typography.bodySmall.fontWeight,
+                    letterSpacing = MaterialTheme.typography.bodySmall.letterSpacing,
+                    lineHeight = MaterialTheme.typography.bodySmall.lineHeight,
+                    platformStyle = MaterialTheme.typography.bodySmall.platformStyle,
+                    textAlign = MaterialTheme.typography.bodySmall.textAlign,
+                    textDirection = MaterialTheme.typography.bodySmall.textDirection,
+                ),
             )
         }
     }
