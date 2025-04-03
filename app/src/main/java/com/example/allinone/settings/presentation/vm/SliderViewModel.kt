@@ -8,7 +8,10 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class SliderViewModel @Inject constructor(private val autoNightModeRepository: AutoNightModeRepository) : ViewModel() {
+class SliderViewModel @Inject constructor(
+    private val autoNightModeRepository: AutoNightModeRepository
+) : ViewModel() {
+
     val sliderValue = autoNightModeRepository.sliderFlow
 
     fun updateSliderValue(newValue: Float) {

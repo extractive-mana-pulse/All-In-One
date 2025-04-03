@@ -1,7 +1,6 @@
 package com.example.allinone.settings.presentation.screens
 
 import android.content.Intent
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -35,10 +34,12 @@ import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Switch
+import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -56,22 +57,24 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.allinone.R
 import com.example.allinone.core.helper.LanguageChangeHelper
 import com.example.allinone.navigation.screen.SettingsScreens
-import com.example.allinone.settings.presentation.vm.ReadingModeViewModel
+import com.example.allinone.settings.presentation.vm.ReadingViewModel
+import com.example.allinone.settings.presentation.vm.ThemeViewModel
 
 val languageChangeHelper by lazy { LanguageChangeHelper() }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingScreen(
-    navController: NavHostController = rememberNavController()
+    navController: NavHostController = rememberNavController(),
+    isReadingMode: Boolean,
+    onReadingModeChanged: (Boolean) -> Unit
 ) {
-    val viewModel: ReadingModeViewModel = viewModel()
+    val viewModel: ReadingViewModel = hiltViewModel()
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
 
     Scaffold(
@@ -132,11 +135,11 @@ fun SettingScreen(
             /** Reading Mode */
             item {
                 SettingsItemWithToggle(
-                    modifier = Modifier,
                     title = stringResource(R.string.reading_mode),
                     description = stringResource(R.string.reading_mode_desc),
-                    icon = Icons.AutoMirrored.Default.MenuBook,
-                    viewModel = viewModel
+                    icon = Icons.AutoMirrored.Filled.MenuBook,
+                    checked = isReadingMode,
+                    onCheckedChange = { viewModel.toggleReadingMode(it) }
                 )
             }
 
@@ -325,27 +328,17 @@ fun SettingsItemWithToggle(
     title: String,
     description: String,
     icon: ImageVector? = null,
-    viewModel: ReadingModeViewModel = hiltViewModel()
+    viewModel: ReadingViewModel = hiltViewModel(),
+    checked: Boolean,
+    onCheckedChange: (Boolean) -> Unit
+
 ) {
-    val sepiaColor = Color(0xFF704214)
-
-    // Get the reading mode state from the ViewModel
-    val uiState by viewModel.uiState
-    val readingMode = uiState.isReadingModeEnabled
-
-    // Create a ContentAlpha value based on reading mode
-//    val contentAlpha = if (readingMode) ContentAlpha.medium else ContentAlpha.high
-
-    val backgroundColor = if (readingMode) {
-        Color(0xFFF8F1E3)
-    } else {
-        MaterialTheme.colorScheme.background
-    }
+    val isDarkTheme by viewModel.isDarkTheme.collectAsState()
+    val isReadingMode by viewModel.isReadingModeEnabled.collectAsState()
 
     Column(
         modifier = modifier
-            .fillMaxWidth()
-            .background(backgroundColor),
+            .fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Row(
@@ -362,7 +355,10 @@ fun SettingsItemWithToggle(
                     Icon(
                         imageVector = it,
                         contentDescription = null,
-                        modifier = Modifier.size(36.dp)
+                        modifier = Modifier.size(36.dp),
+                        tint = if (isReadingMode) {
+                            if (isDarkTheme) Color(0xFFE0C3A8) else Color(0xFFAE8F6E)
+                        } else MaterialTheme.colorScheme.primary
                     )
                 }
             }
@@ -407,18 +403,19 @@ fun SettingsItemWithToggle(
                 contentAlignment = Alignment.Center
             ) {
                 Switch(
-                    checked = readingMode,
-                    onCheckedChange = { newValue ->
-                        viewModel.toggleReadingMode(newValue)
-                    }
+                    checked = checked,
+                    onCheckedChange = onCheckedChange,
+                    colors = SwitchDefaults.colors(
+                        checkedThumbColor = if (isDarkTheme) Color(0xFFE0C3A8) else Color(0xFFAE8F6E),
+                        checkedTrackColor = if (isDarkTheme) Color(0xFF3D3630) else Color(0xFFD4BEA7)
+                    )
                 )
             }
         }
-
         HorizontalDivider(
             modifier = Modifier.padding(start = 80.dp, end = 16.dp),
             thickness = 1.dp,
-            color = if (readingMode) sepiaColor.copy(alpha = 0.3f) else MaterialTheme.colorScheme.outline
+            color = MaterialTheme.colorScheme.outline.copy(alpha = 0.3f)
         )
     }
 }

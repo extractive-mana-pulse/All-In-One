@@ -1,6 +1,7 @@
 package com.example.allinone.settings.di
 
 import android.content.Context
+import com.example.allinone.settings.ThemePreferences
 import com.example.allinone.settings.domain.repository.AutoNightModeRepository
 import dagger.Module
 import dagger.Provides
@@ -18,4 +19,10 @@ object AutoNightModeModule {
     fun provideAutoNightModeRepository(
         @ApplicationContext context: Context
     ): AutoNightModeRepository = AutoNightModeRepository(context)
+
+    @Provides
+    @Singleton
+    fun provideReadingModeRepository(
+        @ApplicationContext context: Context
+    ): ThemePreferences = ThemePreferences(context)
 }

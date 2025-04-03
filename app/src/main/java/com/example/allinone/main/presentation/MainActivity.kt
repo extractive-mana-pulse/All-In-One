@@ -8,10 +8,13 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.allinone.navigation.navs.NavigationGraph
 import com.example.allinone.settings.ThemePreferences
+import com.example.allinone.settings.presentation.vm.ReadingViewModel
+import com.example.allinone.settings.presentation.vm.ThemeViewModel
 import com.example.allinone.ui.theme.AllInOneTheme
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
@@ -28,20 +31,26 @@ class MainActivity : ComponentActivity() {
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
         enableEdgeToEdge()
         setContent {
+            val viewModel = hiltViewModel<ReadingViewModel>()
             val scope = rememberCoroutineScope()
             val themePreferences = remember { ThemePreferences(applicationContext) }
-            val isDarkTheme by themePreferences.isDarkTheme.collectAsState(initial = false)
+            val isDarkTheme by viewModel.isDarkTheme.collectAsState()
+            val isReadingTheme by viewModel.isReadingModeEnabled.collectAsState()
+
             AllInOneTheme(
-                darkTheme = isDarkTheme
+                darkTheme = isDarkTheme,
+                readingTheme = isReadingTheme
             ) {
                 val navController: NavHostController = rememberNavController()
                 NavigationGraph(
                     navController = navController,
                     isDarkTheme = isDarkTheme,
-                    onThemeChanged = { newTheme ->
-                        scope.launch {
-                            themePreferences.saveThemePreference(newTheme)
-                        }
+                    isReadingMode = isReadingTheme,
+                    onThemeChanged = { newDarkTheme ->
+                        viewModel.toggleDarkTheme(newDarkTheme)
+                    },
+                    onReadingModeChanged = { newReadingMode ->
+                        viewModel.toggleReadingMode(newReadingMode)
                     },
                     fusedLocationClient = fusedLocationClient
                 )

@@ -20,7 +20,9 @@ import com.google.android.gms.location.FusedLocationProviderClient
 internal fun NavGraphBuilder.settingsNavigation(
     navController: NavHostController,
     isDarkTheme: Boolean,
+    readingMode: Boolean,
     onThemeChanged: (Boolean) -> Unit,
+    onReadingModeChanged: (Boolean) -> Unit,
     fusedLocationClient: FusedLocationProviderClient
 ) {
     navigation(
@@ -32,7 +34,11 @@ internal fun NavGraphBuilder.settingsNavigation(
             enterTransition = { expandHorizontally() + fadeIn() },
             exitTransition = { shrinkHorizontally() + fadeOut() }
         ) {
-            SettingScreen(navController = navController)
+            SettingScreen(
+                navController = navController,
+                isReadingMode = readingMode,
+                onReadingModeChanged = onReadingModeChanged
+            )
         }
         composable(SettingsScreens.Night.route) {
             AutoNightModeScreen(

@@ -4,7 +4,6 @@ import android.content.Context
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.floatPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
-import androidx.datastore.preferences.preferencesDataStore
 import com.example.allinone.settings.dataStore
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -12,16 +11,14 @@ import kotlinx.coroutines.flow.map
 class AutoNightModeRepository(private val context: Context) {
     companion object {
         private val AUTO_NIGHT_MODE_KEY = stringPreferencesKey("auto_night_mode")
+        private val SLIDER_KEY = floatPreferencesKey("slider_value")
     }
-
-    private val SLIDER_KEY = floatPreferencesKey("slider_value")
 
     val sliderFlow: Flow<Float> = context.dataStore.data
         .map { preferences ->
             preferences[SLIDER_KEY] ?: 0.5f
         }
 
-    // Save slider value
     suspend fun saveSliderValue(value: Float) {
         context.dataStore.edit { preferences ->
             preferences[SLIDER_KEY] = value

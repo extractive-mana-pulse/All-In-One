@@ -14,6 +14,7 @@ val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "se
 
 object PreferencesKeys {
     val DARK_THEME = booleanPreferencesKey("dark_theme")
+    val READING_THEME = booleanPreferencesKey("reading_theme")
 }
 
 class ThemePreferences(private val context: Context) {
@@ -23,9 +24,20 @@ class ThemePreferences(private val context: Context) {
             preferences[PreferencesKeys.DARK_THEME] == true
         }
 
+    val isReadingTheme: Flow<Boolean> = context.dataStore.data
+        .map { preferences ->
+            preferences[PreferencesKeys.READING_THEME] == true
+        }
+
     suspend fun saveThemePreference(isDarkTheme: Boolean) {
         context.dataStore.edit { preferences ->
             preferences[PreferencesKeys.DARK_THEME] = isDarkTheme
+        }
+    }
+
+    suspend fun saveReadingModePreference(isReadingMode: Boolean) {
+        context.dataStore.edit { preferences ->
+            preferences[PreferencesKeys.READING_THEME] = isReadingMode
         }
     }
 }

@@ -24,7 +24,9 @@ import com.google.android.gms.location.FusedLocationProviderClient
 fun NavigationGraph(
     navController: NavHostController = rememberNavController(),
     isDarkTheme: Boolean,
+    isReadingMode: Boolean,
     onThemeChanged: (Boolean) -> Unit,
+    onReadingModeChanged: (Boolean) -> Unit,
     fusedLocationClient: FusedLocationProviderClient
 ) {
     val topBarState = rememberSaveable { mutableStateOf(true) }
@@ -61,7 +63,9 @@ fun NavigationGraph(
                     navController = navController,
                     isDarkTheme = isDarkTheme,
                     onThemeChanged = onThemeChanged,
-                    fusedLocationClient = fusedLocationClient
+                    fusedLocationClient = fusedLocationClient,
+                    readingMode = isReadingMode,
+                    onReadingModeChanged = onReadingModeChanged
                 )
                 // later implement auth & onBoarding graphs
             }
