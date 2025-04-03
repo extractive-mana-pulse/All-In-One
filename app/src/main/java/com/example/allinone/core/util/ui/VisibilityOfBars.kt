@@ -3,10 +3,10 @@ package com.example.allinone.core.util.ui
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.navigation.NavBackStackEntry
-import com.example.allinone.navigation.HomeScreens
-import com.example.allinone.navigation.ProfileScreens
-import com.example.allinone.navigation.Screens
-import com.example.allinone.navigation.SettingsScreens
+import com.example.allinone.navigation.screen.HomeScreens
+import com.example.allinone.navigation.screen.ProfileScreens
+import com.example.allinone.navigation.screen.Screens
+import com.example.allinone.navigation.screen.SettingsScreens
 
 @Composable
 fun VisibilityOfUI(

@@ -141,6 +141,10 @@ dependencies {
     // animation
     implementation(libs.androidx.compose.animation)
 
+    // this gradle needed to implement Lazy Vertical Grid inside Lazy Column with right behavior
+    implementation (libs.accompanist.flowlayout)
+
+
     // app compat for language changer
     implementation("androidx.appcompat:appcompat:1.7.0")
 

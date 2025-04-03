@@ -1,4 +1,4 @@
-package com.example.allinone.navigation
+package com.example.allinone.navigation.navs
 
 import androidx.compose.animation.expandHorizontally
 import androidx.compose.animation.fadeIn
@@ -8,6 +8,8 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
+import com.example.allinone.navigation.screen.SettingsScreens
+import com.example.allinone.navigation.graph.Graph
 import com.example.allinone.settings.presentation.screens.AdaptiveModeScreen
 import com.example.allinone.settings.presentation.screens.AutoNightModeScreen
 import com.example.allinone.settings.presentation.screens.BatterySavingScreen

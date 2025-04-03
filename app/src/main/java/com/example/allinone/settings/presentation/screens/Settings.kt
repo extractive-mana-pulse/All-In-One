@@ -61,7 +61,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.allinone.R
 import com.example.allinone.core.helper.LanguageChangeHelper
-import com.example.allinone.navigation.SettingsScreens
+import com.example.allinone.navigation.screen.SettingsScreens
 import com.example.allinone.settings.presentation.vm.ReadingModeViewModel
 
 val languageChangeHelper by lazy { LanguageChangeHelper() }

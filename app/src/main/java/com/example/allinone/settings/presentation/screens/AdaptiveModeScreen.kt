@@ -11,8 +11,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Refresh
-import androidx.compose.material.icons.filled.SettingsBrightness
-import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -23,19 +21,22 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.allinone.core.extension.toastMessage
+import com.example.allinone.settings.presentation.vm.SliderViewModel
 import kotlin.math.roundToInt
-
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -44,42 +45,36 @@ fun AdaptiveModeScreen(
     isDarkTheme: Boolean,
     onThemeChanged: (Boolean) -> Unit
 ) {
-
-    // need to observe current brightness level all the time when app alive. and change theme accordingly.
     val context = LocalContext.current
-    var startBehaveBrightness by remember { mutableFloatStateOf(1f) }
+    val viewModel: SliderViewModel = hiltViewModel()
+    val sliderValue by viewModel.sliderValue.collectAsState(initial = 0.5f)
+    var startBehaveBrightness by remember { mutableStateOf(sliderValue) }
     var currentBrightness by remember { mutableFloatStateOf(getBrightness(context)) }
     val shouldBeDarkTheme = currentBrightness >= startBehaveBrightness
 
-    LaunchedEffect(currentBrightness, startBehaveBrightness) { if (shouldBeDarkTheme != isDarkTheme) onThemeChanged(shouldBeDarkTheme) }
+    LaunchedEffect(sliderValue) {
+        startBehaveBrightness = sliderValue // Update on start
+    }
+
+    LaunchedEffect(currentBrightness, startBehaveBrightness) {
+        if (shouldBeDarkTheme != isDarkTheme) onThemeChanged(shouldBeDarkTheme)
+    }
 
     Scaffold(
         topBar = {
             TopAppBar(
                 title = { Text("Adaptive Mode (Beta)") },
                 navigationIcon = {
-                    IconButton(
-                        onClick = {
-                            navController.navigateUp()
-                        }
-                    ) {
-                        Icon(
-                            Icons.AutoMirrored.Default.ArrowBack,
-                            contentDescription = "Navigate up from Adaptive mode screen"
-                        )
+                    IconButton(onClick = { navController.navigateUp() }) {
+                        Icon(Icons.AutoMirrored.Default.ArrowBack, contentDescription = "Navigate up")
                     }
                 },
                 actions = {
-                    IconButton(
-                        onClick = {
-                            currentBrightness = getBrightness(context)
-                            toastMessage(context, "Brightness updated. Current brightness: ${currentBrightness.roundToInt()}%")
-                        }
-                    ) {
-                        Icon(
-                            Icons.Default.Refresh,
-                            contentDescription = "Refresh current brightness"
-                        )
+                    IconButton(onClick = {
+                        currentBrightness = getBrightness(context)
+                        toastMessage(context, "Brightness updated. Current brightness: ${currentBrightness.roundToInt()}%")
+                    }) {
+                        Icon(Icons.Default.Refresh, contentDescription = "Refresh current brightness")
                     }
                 }
             )
@@ -103,6 +98,9 @@ fun AdaptiveModeScreen(
                 onValueChange = { newValue ->
                     startBehaveBrightness = newValue
                 },
+                onValueChangeFinished = {
+                    viewModel.updateSliderValue(startBehaveBrightness) // Save the new slider value
+                },
                 valueRange = 1f..33f
             )
 
@@ -113,7 +111,6 @@ fun AdaptiveModeScreen(
         }
     }
 }
-
 
 private fun getBrightness(context: Context): Float {
     return try {
@@ -129,32 +126,6 @@ private fun getBrightness(context: Context): Float {
             context = context,
             message = "Error getting brightness: ${e.message}"
         )
-        17f // Default to middle point (17) if there's an error
-    }
-}
-
-private fun setBrightness(context: Context, brightnessValue: Float) {
-    try {
-        // Check for permission and if automatic brightness is disabled
-        // This would need to be handled properly in a real app
-
-        // For the current window
-        val window = (context as? ComponentActivity)?.window
-        val layoutParams = window?.attributes
-        // Convert from 1-33 range to 0.0-1.0 for the screen brightness
-        layoutParams?.screenBrightness = (brightnessValue - 1f) / 32f
-        window?.attributes = layoutParams
-
-        // For system-wide brightness (requires WRITE_SETTINGS permission)
-        // This is commented out because it requires special permission
-        /*
-        Settings.System.putInt(
-            context.contentResolver,
-            Settings.System.SCREEN_BRIGHTNESS,
-            (brightnessValue * 255).toInt()
-        )
-        */
-    } catch (e: Exception) {
-        toastMessage(context, "Some error occur: ${e.message}")
+        17f
     }
 }

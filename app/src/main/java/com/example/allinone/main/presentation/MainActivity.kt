@@ -10,7 +10,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import com.example.allinone.navigation.NavigationGraph
+import com.example.allinone.navigation.navs.NavigationGraph
 import com.example.allinone.settings.ThemePreferences
 import com.example.allinone.ui.theme.AllInOneTheme
 import com.google.android.gms.location.FusedLocationProviderClient

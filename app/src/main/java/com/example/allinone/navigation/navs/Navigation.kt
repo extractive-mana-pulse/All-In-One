@@ -1,4 +1,4 @@
-package com.example.allinone.navigation
+package com.example.allinone.navigation.navs
 
 import androidx.compose.foundation.layout.calculateEndPadding
 import androidx.compose.foundation.layout.calculateStartPadding
@@ -17,6 +17,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.allinone.core.util.ui.NavigationDrawer
 import com.example.allinone.core.util.ui.VisibilityOfUI
+import com.example.allinone.navigation.graph.Graph
 import com.google.android.gms.location.FusedLocationProviderClient
 
 @Composable

@@ -1,4 +1,4 @@
-package com.example.allinone.main.presentation
+package com.example.allinone.main.presentation.sealed
 
 sealed class Resource<T>(val data: T? = null, val message: String? = null) {
 

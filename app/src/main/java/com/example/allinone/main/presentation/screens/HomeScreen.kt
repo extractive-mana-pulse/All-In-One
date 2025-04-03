@@ -7,11 +7,15 @@ import android.speech.RecognizerIntent
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -19,7 +23,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyHorizontalGrid
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -64,35 +70,20 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import coil3.compose.AsyncImage
 import com.example.allinone.R
-import com.example.allinone.navigation.HomeScreens
-import com.example.allinone.navigation.ProfileScreens
+import com.example.allinone.core.extension.toastMessage
+import com.example.allinone.main.domain.model.Course
+import com.example.allinone.main.domain.model.Sections
+import com.example.allinone.navigation.screen.HomeScreens
+import com.example.allinone.navigation.screen.ProfileScreens
+import com.google.accompanist.flowlayout.FlowMainAxisAlignment
+import com.google.accompanist.flowlayout.SizeMode
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.launch
 import java.util.Locale
 
-data class User(
-    val id: Int,
-    val name: String,
-    val email: String,
-    val avatar: String
-)
 
-data class Course(
-    val id: Int,
-    val title: String? = null,
-    val subtitle: String? = null,
-    val description: String? = null,
-    val imageUrl: String? = null
-)
-
-data class Sections(
-    val id: Int,
-    val name: String,
-    val imageUrl: String
-)
-
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
 @Composable
 fun HomeScreen(
     navController: NavHostController = rememberNavController(),
@@ -264,6 +255,7 @@ fun HomeScreen(
                 .padding(innerPadding)
                 .padding(horizontal = 16.dp),
         ) {
+            /** Courses section text. */
             item {
                 Text(
                     text = stringResource(R.string.courses),
@@ -280,12 +272,14 @@ fun HomeScreen(
                     modifier = Modifier.padding(vertical = 8.dp)
                 )
             }
+            /** Courses list. */
             items(courses) {
                 CourseListItem(
                     navController = navController,
                     course = it
                 )
             }
+            /** Other Sections text. */
             item {
                 Text(
                     text = stringResource(R.string.other_sections),
@@ -302,14 +296,19 @@ fun HomeScreen(
                     modifier = Modifier.padding(vertical = 8.dp)
                 )
             }
+            /** Other Sections list. */
             item {
-                LazyRow(
+                FlowRow(
                     modifier = Modifier.fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(16.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalArrangement = Arrangement.spacedBy(16.dp),
+                    maxItemsInEachRow = 3,
                 ) {
-                    items(sections) { section ->
-                        ItemCard(sections = section)
+                    sections.forEach { section ->
+                        ItemCard(
+                            navController = navController,
+                            sections = section
+                        )
                     }
                 }
             }
@@ -322,17 +321,25 @@ fun CourseListItem(
     navController: NavHostController = rememberNavController(),
     course: Course,
 ) {
+    val context = LocalContext.current
     if (course.title.isNullOrEmpty() && course.subtitle.isNullOrEmpty()) return
 
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .clickable {
-                navController.navigate(
-                    HomeScreens.DetailsScreen(
-                        id = course.id
+                if (course.title == "In maintenance" && course.subtitle == "In maintenance") {
+                    toastMessage(
+                        context = context,
+                        message = "This page is not available now."
                     )
-                )
+                } else {
+                    navController.navigate(
+                        HomeScreens.DetailsScreen(
+                            id = course.id
+                        )
+                    )
+                }
             }
             .padding(vertical = 16.dp),
         verticalAlignment = Alignment.CenterVertically
@@ -378,13 +385,25 @@ fun CourseListItem(
 }
 
 @Composable
-fun ItemCard(sections: Sections) {
+fun ItemCard(
+    navController : NavHostController = rememberNavController(),
+    sections: Sections
+) {
     Card(
-        modifier = Modifier.size(120.dp),
-        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
+        modifier = Modifier
+            .size(120.dp)
+            .clickable {
+                navController.navigate(
+                    HomeScreens.SectionScreen(
+                        id = sections.id ?: 0
+                    )
+                )
+            },
     ) {
         Column(
-            modifier = Modifier.padding(12.dp).align(Alignment.CenterHorizontally),
+            modifier = Modifier
+                .padding(12.dp)
+                .align(Alignment.CenterHorizontally),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
@@ -395,10 +414,19 @@ fun ItemCard(sections: Sections) {
                     .size(60.dp)
                     .clip(RoundedCornerShape(8.dp))
             )
-            Spacer(modifier = Modifier.height(4.dp))
+            Spacer(modifier = Modifier.height(6.dp))
             Text(
-                text = sections.name,
-                style = MaterialTheme.typography.bodySmall,
+                text = sections.name ?: "Section not found",
+                style = MaterialTheme.typography.bodySmall.copy(
+                    fontFamily = FontFamily(Font(R.font.inknut_antiqua_light)),
+                    fontSize = MaterialTheme.typography.bodySmall.fontSize,
+                    fontWeight = MaterialTheme.typography.bodySmall.fontWeight,
+                    letterSpacing = MaterialTheme.typography.bodySmall.letterSpacing,
+                    lineHeight = MaterialTheme.typography.bodySmall.lineHeight,
+                    platformStyle = MaterialTheme.typography.bodySmall.platformStyle,
+                    textAlign = MaterialTheme.typography.bodySmall.textAlign,
+                    textDirection = MaterialTheme.typography.bodySmall.textDirection,
+                ),
                 maxLines = 2,
                 overflow = TextOverflow.Ellipsis
             )
@@ -408,10 +436,8 @@ fun ItemCard(sections: Sections) {
 
 fun loadCoursesFromJson(context: Context) : List<Course> {
     try {
-        // Open and read the JSON file from assets
         val jsonString = context.assets.open("course.json").bufferedReader().use { it.readText() }
 
-        // Parse JSON using Gson
         val gson = Gson()
         val courseType = object : TypeToken<List<Course>>() {}.type
         return gson.fromJson(jsonString, courseType)
@@ -423,10 +449,8 @@ fun loadCoursesFromJson(context: Context) : List<Course> {
 
 fun loadSectionsFromJson(context: Context) : List<Sections> {
     try {
-        // Open and read the JSON file from assets
         val jsonString = context.assets.open("sections.json").bufferedReader().use { it.readText() }
 
-        // Parse JSON using Gson
         val gson = Gson()
         val courseType = object : TypeToken<List<Sections>>() {}.type
         return gson.fromJson(jsonString, courseType)

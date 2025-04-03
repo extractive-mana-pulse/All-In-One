@@ -13,5 +13,10 @@
     "id": 3,
     "name": "Blogs",
     "imageUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQt8hVInSPn5FlNrKHGMNY6Dvd0R7JtU18TyQ&s"
+  },
+  {
+    "id": 4,
+    "name": "Github commands",
+    "imageUrl": "https://cdn-icons-png.flaticon.com/512/25/25231.png"
   }
 ]

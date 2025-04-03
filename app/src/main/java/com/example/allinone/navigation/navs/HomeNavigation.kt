@@ -1,4 +1,4 @@
-package com.example.allinone.navigation
+package com.example.allinone.navigation.navs
 
 import androidx.compose.animation.expandHorizontally
 import androidx.compose.animation.fadeIn
@@ -14,6 +14,9 @@ import androidx.navigation.toRoute
 import com.example.allinone.main.presentation.screens.DetailsScreen
 import com.example.allinone.main.presentation.screens.HelpAndFeedbackScreen
 import com.example.allinone.main.presentation.screens.HomeScreen
+import com.example.allinone.main.presentation.screens.SectionScreen
+import com.example.allinone.navigation.graph.Graph
+import com.example.allinone.navigation.screen.HomeScreens
 
 internal fun NavGraphBuilder.mainNavigation(
     navController: NavHostController,
@@ -43,6 +46,13 @@ internal fun NavGraphBuilder.mainNavigation(
         composable<HomeScreens.DetailsScreen> {
             val argument = it.toRoute<HomeScreens.DetailsScreen>()
             DetailsScreen(
+                navController = navController,
+                id = argument.id
+            )
+        }
+        composable<HomeScreens.SectionScreen> {
+            val argument = it.toRoute<HomeScreens.SectionScreen>()
+            SectionScreen(
                 navController = navController,
                 id = argument.id
             )

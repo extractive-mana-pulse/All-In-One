@@ -1,4 +1,4 @@
-package com.example.allinone.navigation
+package com.example.allinone.navigation.navs
 
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.tween
@@ -15,6 +15,7 @@ import com.example.allinone.codelabs.presentation.screens.ComposeQuadrant
 import com.example.allinone.codelabs.presentation.screens.Lemonade
 import com.example.allinone.codelabs.presentation.screens.TaskManager
 import com.example.allinone.codelabs.presentation.screens.TipTimeLayout
+import com.example.allinone.navigation.screen.Screens
 
 fun NavGraphBuilder.codelabsNavigation(
     navController: NavHostController
@@ -154,7 +155,8 @@ fun NavGraphBuilder.codelabsNavigation(
     composable(Screens.TaskManagerScreen.route) {
         TaskManager(navController = navController)
     }
-    composable(Screens.ArtSpace.route,
+    composable(
+        Screens.ArtSpace.route,
         enterTransition = {
             slideInVertically(
                 initialOffsetY = { -80 },

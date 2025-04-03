@@ -51,4 +51,5 @@
     <string name="power_saving">Power saving mode</string>
     <string name="power_saving_desc">Automatically reduce power usage and animations when your battery is below 20%.</string>
     <string name="location_permission_required">Location Permission not granted!</string>
+    <string name="from_other_sections_to_somewhere">Navigate up from Other Sections screen</string>
 </resources>

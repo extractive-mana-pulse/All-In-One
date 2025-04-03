@@ -36,8 +36,8 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.allinone.BuildConfig
 import com.example.allinone.R
-import com.example.allinone.navigation.HomeScreens
-import com.example.allinone.navigation.SettingsScreens
+import com.example.allinone.navigation.screen.HomeScreens
+import com.example.allinone.navigation.screen.SettingsScreens
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)

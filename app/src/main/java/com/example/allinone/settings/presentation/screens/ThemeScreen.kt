@@ -1,7 +1,5 @@
 package com.example.allinone.settings.presentation.screens
 
-import android.content.Context
-import android.content.res.Configuration
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -22,7 +20,6 @@ import androidx.compose.material3.LargeTopAppBar
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -39,8 +36,8 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.allinone.R
-import com.example.allinone.core.extension.toastMessage
-import com.example.allinone.navigation.SettingsScreens
+import com.example.allinone.core.extension.isInDarkMode
+import com.example.allinone.navigation.screen.SettingsScreens
 import com.example.allinone.settings.presentation.vm.ThemeViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -173,12 +170,4 @@ private fun AutoNightModeItem(
         }
     }
     HorizontalDivider(modifier = Modifier.padding(start = 16.dp))
-}
-
-fun Context.isInDarkMode(): Boolean {
-    return when (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) {
-        Configuration.UI_MODE_NIGHT_YES -> true
-        Configuration.UI_MODE_NIGHT_NO -> false
-        else -> false
-    }
 }

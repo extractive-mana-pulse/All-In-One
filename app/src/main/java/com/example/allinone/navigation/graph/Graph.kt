@@ -1,4 +1,4 @@
-package com.example.allinone.navigation
+package com.example.allinone.navigation.graph
 
 object Graph {
     const val ROOT = "root_graph"

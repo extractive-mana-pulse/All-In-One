@@ -3,8 +3,7 @@ package com.example.allinone.main.presentation.vm
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.allinone.main.presentation.Resource
-import com.example.allinone.main.presentation.screens.Course
+import com.example.allinone.main.presentation.sealed.Resource
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import dagger.hilt.android.lifecycle.HiltViewModel

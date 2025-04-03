@@ -1,31 +1,25 @@
-package com.example.allinone.navigation
+package com.example.allinone.navigation.screen
 
 import kotlinx.serialization.Serializable
 
 @Serializable
 sealed class Screens(val route: String) {
 
-    // implemented
     @Serializable
     object ComposeArticleScreen : Screens("compose_article")
 
-    // not yet
     @Serializable
     object TaskManagerScreen : Screens("task_manager")
 
-    // implemented
     @Serializable
     object Quadrant : Screens("quadrant")
 
-    // implemented
     @Serializable
     object TipCalculator : Screens("tip_calculator")
 
-    // implemented
     @Serializable
     object Lemonade : Screens("lemonade")
 
-    // not yet
     @Serializable
     object ArtSpace : Screens("art_space")
 
@@ -42,6 +36,9 @@ sealed class HomeScreens(val route: String) {
 
     @Serializable
     object Help : HomeScreens("help_and_feedback")
+
+    @Serializable
+    data class SectionScreen(val id: Int) : HomeScreens("section_screen")
 }
 
 @Serializable
@@ -73,10 +70,12 @@ sealed class ProfileScreens(val route: String) {
     object EditProfile : ProfileScreens("edit_profile")
 }
 
+@Serializable
 sealed class BlogsScreens(val route: String) {
 
 }
 
+@Serializable
 sealed class CodeLabsScreens(val route: String) {
 
 }
