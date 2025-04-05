@@ -1,14 +1,13 @@
 package com.example.allinone.settings.presentation.vm
 
-import androidx.compose.runtime.State
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.allinone.settings.ThemePreferences
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.onStart
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -18,23 +17,48 @@ class ReadingViewModel @Inject constructor(
 ) : ViewModel() {
 
     private val _isDarkTheme = MutableStateFlow(false)
-    val isDarkTheme: StateFlow<Boolean> = _isDarkTheme
+    val isDarkTheme = _isDarkTheme
+        .onStart {
+            isDarkTheme()
+        }
+        .stateIn(
+            viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000L),
+            initialValue = false
+        )
 
     private val _isReadingModeEnabled = MutableStateFlow(false)
-    val isReadingModeEnabled: StateFlow<Boolean> = _isReadingModeEnabled
+    val isReadingModeEnabled = _isReadingModeEnabled
+        .onStart {
+            isReadingTheme()
+        }
+        .stateIn(
+            viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000L),
+            initialValue = false
+        )
 
-    init {
+    private fun isDarkTheme() {
         viewModelScope.launch {
             themePreferences.isDarkTheme.collect { isDark ->
                 _isDarkTheme.value = isDark
             }
         }
+    }
 
+    private fun isReadingTheme() {
         viewModelScope.launch {
             themePreferences.isReadingTheme.collect { isReading ->
                 _isReadingModeEnabled.value = isReading
             }
         }
+    }
+    fun enableReadingMode() {
+        _isReadingModeEnabled.value = true
+    }
+
+    fun disableReadingMode() {
+        _isReadingModeEnabled.value = false
     }
 
     fun toggleDarkTheme(enabled: Boolean) {

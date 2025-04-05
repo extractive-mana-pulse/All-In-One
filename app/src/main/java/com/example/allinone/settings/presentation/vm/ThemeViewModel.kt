@@ -8,8 +8,11 @@ import com.example.allinone.settings.domain.repository.AutoNightModeRepository
 import com.example.allinone.settings.domain.repository.TwilightRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.onStart
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -20,9 +23,17 @@ class ThemeViewModel @Inject constructor(
 ) : ViewModel() {
 
     private val _selectedMode = MutableStateFlow("disabled")
-    val selectedMode: StateFlow<String> = _selectedMode.asStateFlow()
+    val selectedMode = _selectedMode
+        .onStart {
+            selectMode()
+        }
+        .stateIn(
+            viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000L),
+            initialValue = "disabled"
+        )
 
-    init {
+    private fun selectMode() {
         viewModelScope.launch {
             autoNightModeRepository.selectedModeFlow.collect { mode ->
                 _selectedMode.value = mode
@@ -34,10 +45,6 @@ class ThemeViewModel @Inject constructor(
         viewModelScope.launch {
             autoNightModeRepository.saveSelectedMode(mode)
         }
-    }
-
-    fun isSelected(mode: String): Boolean {
-        return _selectedMode.value == mode
     }
 
     private val _twilight = MutableStateFlow(Twilight())

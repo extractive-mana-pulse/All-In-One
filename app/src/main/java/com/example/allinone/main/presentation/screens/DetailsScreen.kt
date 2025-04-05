@@ -20,13 +20,19 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -36,56 +42,71 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import coil3.compose.AsyncImage
 import com.example.allinone.R
 import com.example.allinone.core.extension.toastMessage
+import com.example.allinone.main.presentation.vm.TimerViewModel
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DetailsScreen(
     navController: NavHostController = rememberNavController(),
     id: Int,
+    timerViewModel: TimerViewModel
 ) {
     val context = LocalContext.current
+    val snackbarHostState = remember { SnackbarHostState() }
+    val timerValue by timerViewModel.timer.collectAsStateWithLifecycle()
     val courseDetails by remember { mutableStateOf(loadCourseByIdFromJson(context, id)) }
 
+    LaunchedEffect(courseDetails) {
+        if (courseDetails != null) {
+            timerViewModel.startTimer()
+        }
+    }
+
+    LaunchedEffect(timerValue) {
+        Log.d("DetailsScreen", "Timer value: $timerValue")
+        if (timerViewModel.readingModeSnackbar(15)) {
+            snackbarHostState.showSnackbar(
+                message = "Would you like to turn on reading mode?",
+                actionLabel = "Turn On",
+                duration = SnackbarDuration.Indefinite,
+                withDismissAction = true
+            )
+        }
+    }
+
     Scaffold(
+        snackbarHost = {
+            SnackbarHost(hostState = snackbarHostState)
+        },
         topBar = {
             TopAppBar(
                 title = {
-                    Text(
-                        text = courseDetails?.title ?: "Blog"
-                    )
+                    Text(text = courseDetails?.title ?: "Blog")
                 },
                 navigationIcon = {
                     IconButton(
                         onClick = {
                             navController.navigateUp()
+                            timerViewModel.stopTimer()
                         }
                     ) {
-                        Icon(
-                            Icons.AutoMirrored.Default.ArrowBack,
-                            contentDescription = "Navigate up to home screen"
-                        )
+                        Icon(Icons.AutoMirrored.Default.ArrowBack, contentDescription = "Navigate up")
                     }
                 },
                 actions = {
-                    IconButton(
-                        onClick = {
-                            toastMessage(
-                                context = context,
-                                message = "In progress. This feature will be implemented soon"
-                            )
-                        }
-                    ) {
-                        Icon(
-                            Icons.Outlined.BookmarkBorder,
-                            contentDescription = null
-                        )
+                    IconButton(onClick = {
+                        toastMessage(context, "In progress. This feature will be implemented soon")
+                    }) {
+                        Icon(Icons.Outlined.BookmarkBorder, contentDescription = null)
                     }
                 }
             )
@@ -111,9 +132,7 @@ fun DetailsScreen(
                     },
                     modifier = Modifier.align(Alignment.CenterHorizontally)
                 ) {
-                    Text(
-                        text = "Retry"
-                    )
+                    Text(text = "Retry")
                 }
             }
         }

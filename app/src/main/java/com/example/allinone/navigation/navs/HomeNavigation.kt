@@ -15,13 +15,15 @@ import com.example.allinone.main.presentation.screens.DetailsScreen
 import com.example.allinone.main.presentation.screens.HelpAndFeedbackScreen
 import com.example.allinone.main.presentation.screens.HomeScreen
 import com.example.allinone.main.presentation.screens.SectionScreen
+import com.example.allinone.main.presentation.vm.TimerViewModel
 import com.example.allinone.navigation.graph.Graph
 import com.example.allinone.navigation.screen.HomeScreens
 
 internal fun NavGraphBuilder.mainNavigation(
     navController: NavHostController,
     topBarState: MutableState<Boolean>,
-    drawerState: DrawerState
+    drawerState: DrawerState,
+    timerViewModel: TimerViewModel
 ) {
     navigation(
         startDestination = HomeScreens.Home.route,
@@ -47,7 +49,8 @@ internal fun NavGraphBuilder.mainNavigation(
             val argument = it.toRoute<HomeScreens.DetailsScreen>()
             DetailsScreen(
                 navController = navController,
-                id = argument.id
+                id = argument.id,
+                timerViewModel = timerViewModel
             )
         }
         composable<HomeScreens.SectionScreen> {

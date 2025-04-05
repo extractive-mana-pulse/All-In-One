@@ -12,6 +12,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Check
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -37,6 +38,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.allinone.R
 import com.example.allinone.core.extension.isInDarkMode
+import com.example.allinone.core.extension.toastMessage
 import com.example.allinone.navigation.screen.SettingsScreens
 import com.example.allinone.settings.presentation.vm.ThemeViewModel
 
@@ -44,7 +46,6 @@ import com.example.allinone.settings.presentation.vm.ThemeViewModel
 @Composable
 fun AutoNightModeScreen(
     navController: NavHostController = rememberNavController(),
-    isDarkTheme: Boolean,
     onThemeChanged: (Boolean) -> Unit
 ) {
     val context = LocalContext.current
@@ -62,21 +63,12 @@ fun AutoNightModeScreen(
                     Text(
                         text = stringResource(R.string.auto_nigt_mode),
                         style = MaterialTheme.typography.titleLarge.copy(
-                            fontFamily = FontFamily(Font(R.font.inknut_antiqua_regular)),
-                            fontSize = MaterialTheme.typography.titleLarge.fontSize,
-                            color = MaterialTheme.colorScheme.onSurface,
-                            fontWeight = MaterialTheme.typography.titleLarge.fontWeight,
-                            letterSpacing = MaterialTheme.typography.titleLarge.letterSpacing,
-                            lineHeight = MaterialTheme.typography.titleLarge.lineHeight
+                            fontFamily = FontFamily(Font(R.font.inknut_antiqua_regular))
                         )
                     )
                 },
                 navigationIcon = {
-                    IconButton(
-                        onClick = {
-                            navController.navigateUp()
-                        }
-                    ) {
+                    IconButton(onClick = { navController.navigateUp() }) {
                         Icon(
                             Icons.AutoMirrored.Default.ArrowBack,
                             contentDescription = null
@@ -92,8 +84,7 @@ fun AutoNightModeScreen(
                 .fillMaxSize()
                 .padding(innerPadding)
                 .verticalScroll(rememberScrollState()),
-            horizontalAlignment = Alignment.Start,
-            verticalArrangement = Arrangement.Top
+            horizontalAlignment = Alignment.Start
         ) {
             val modes = listOf(
                 stringResource(R.string.disabled),
@@ -109,25 +100,22 @@ fun AutoNightModeScreen(
                     onClick = {
                         viewModel.selectItem(mode)
                         when (mode) {
-                            /** Disabled mode is mode where theme always light.*/
+                            // Disabled mode: theme always light
                             context.getString(R.string.disabled) -> onThemeChanged(false)
 
-                            /** Scheduled mode has 2 options.
-                             * 1. When user can select manually a time range
-                             * 2. User via geolocation can identify location and identify twilight, via these time range set mode.*/
+                            // Scheduled mode: time-based theme switching
                             context.getString(R.string.scheduled) -> {
                                 navController.navigate(SettingsScreens.ScheduledMode.route)
                             }
 
-                            /** Adaptive mode is mode where a brightness goes below set threshold, then theme changes to dark.*/
+                            // Adaptive mode: brightness-based theme switching
                             context.getString(R.string.adaptive) -> {
                                 navController.navigate(SettingsScreens.AdaptiveMode.route)
                             }
 
-                            /** This mode is system default mode. where depending on system mode apps mode going to be defined. */
+                            // System default mode: follows system theme
                             context.getString(R.string.default_mode) -> {
-                                val isDarkMode = context.isInDarkMode()
-                                onThemeChanged(isDarkMode)
+                                onThemeChanged(context.isInDarkMode())
                             }
                         }
                     }
@@ -138,36 +126,33 @@ fun AutoNightModeScreen(
 }
 
 @Composable
-private fun AutoNightModeItem(
+fun AutoNightModeItem(
     content: String,
     isSelected: Boolean,
     onClick: () -> Unit
 ) {
-    val viewModel : ThemeViewModel = hiltViewModel()
-
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clickable {
-                viewModel.selectItem(content)
-                onClick()
+    Column {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .clickable(onClick = onClick)
+                .padding(16.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = content,
+                style = MaterialTheme.typography.bodyMedium.copy(
+                    fontFamily = FontFamily(Font(R.font.inknut_antiqua_semi_bold))
+                )
+            )
+            if (isSelected) {
+                Icon(
+                    Icons.Default.Check,
+                    contentDescription = null
+                )
             }
-            .padding(16.dp),
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Text(
-            text = content,
-            style = MaterialTheme.typography.bodyMedium.copy(
-                fontFamily = FontFamily(Font(R.font.inknut_antiqua_semi_bold))
-            )
-        )
-        if (isSelected) {
-            Icon(
-                Icons.Default.Check,
-                contentDescription = null
-            )
         }
+        HorizontalDivider(modifier = Modifier.padding(start = 16.dp))
     }
-    HorizontalDivider(modifier = Modifier.padding(start = 16.dp))
 }

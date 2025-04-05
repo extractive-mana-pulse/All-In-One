@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.speech.RecognizerIntent
+import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.AnimatedVisibility
@@ -15,7 +16,6 @@ import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -23,9 +23,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyHorizontalGrid
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -37,7 +34,6 @@ import androidx.compose.material.icons.filled.History
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Mic
 import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
@@ -48,9 +44,16 @@ import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SearchBar
+import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
@@ -66,6 +69,8 @@ import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import coil3.compose.AsyncImage
@@ -73,23 +78,34 @@ import com.example.allinone.R
 import com.example.allinone.core.extension.toastMessage
 import com.example.allinone.main.domain.model.Course
 import com.example.allinone.main.domain.model.Sections
+import com.example.allinone.main.presentation.vm.TimerViewModel
 import com.example.allinone.navigation.screen.HomeScreens
 import com.example.allinone.navigation.screen.ProfileScreens
-import com.google.accompanist.flowlayout.FlowMainAxisAlignment
-import com.google.accompanist.flowlayout.SizeMode
+import com.example.allinone.settings.presentation.vm.ReadingViewModel
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.launch
 import java.util.Locale
 
-
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
+@OptIn(
+    ExperimentalMaterial3Api::class,
+    ExperimentalLayoutApi::class
+)
 @Composable
 fun HomeScreen(
     navController: NavHostController = rememberNavController(),
     topBarState: MutableState<Boolean>,
     drawerState: DrawerState
 ) {
+    val timerViewModel: TimerViewModel = hiltViewModel()
+    val readingViewModel: ReadingViewModel = hiltViewModel()
+    val snackbarHostState = remember { SnackbarHostState() }
+    val timerValue by timerViewModel.timer.collectAsStateWithLifecycle()
+    val readingMode by readingViewModel.isReadingModeEnabled.collectAsState()
+
+    Log.d("reading mode state", "HomeScreen: $readingMode")
+    Log.d("timer state", "HomeScreen: $timerValue")
+
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
     var query by remember { mutableStateOf("") }
@@ -97,6 +113,43 @@ fun HomeScreen(
     val courses = remember { loadCoursesFromJson(context) }
     val sections = remember { loadSectionsFromJson(context) }
     var searchHistory = remember { mutableStateListOf<String>() }
+
+    var rowVisible by remember { mutableStateOf(false) }
+
+    // Only start timer if reading mode is enabled and timer isn't already running
+    LaunchedEffect(readingMode) {
+        if (readingMode && timerValue.toInt() == 0) {
+            timerViewModel.startTimer()
+            Log.d("timer start", "Starting timer in reading mode")
+        } else if (!readingMode) {
+            timerViewModel.stopTimer()
+            rowVisible = false
+            Log.d("timer stop", "Reading mode disabled, stopping timer")
+        }
+    }
+
+    LaunchedEffect(timerValue) {
+        if (timerViewModel.readingModeSnackbar(5)) {
+            Log.d("snackbar", "Showing snackbar after 5 seconds")
+            val result = snackbarHostState.showSnackbar(
+                message = "Would you like to turn off reading mode?",
+                actionLabel = "Turn Off",
+                duration = SnackbarDuration.Long,
+            )
+            when (result) {
+                SnackbarResult.ActionPerformed -> {
+                    readingViewModel.disableReadingMode()
+                    rowVisible = false
+                    Log.d("snackbar action", "User turned off reading mode")
+                }
+                SnackbarResult.Dismissed -> {
+                    rowVisible = true
+                    Log.d("snackbar dismissed", "Showing persistent row")
+                }
+            }
+        }
+    }
+
     val speechRecognizerLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.StartActivityForResult()
     ) { result ->
@@ -106,7 +159,11 @@ fun HomeScreen(
             if (spokenText != null) query = spokenText
         }
     }
+
     Scaffold(
+        snackbarHost = {
+            SnackbarHost(hostState = snackbarHostState)
+        },
         topBar = {
             AnimatedVisibility(
                 visible = topBarState.value,
@@ -255,6 +312,62 @@ fun HomeScreen(
                 .padding(innerPadding)
                 .padding(horizontal = 16.dp),
         ) {
+            // Only show the row if reading mode is active and snackbar was dismissed
+            if (rowVisible) {
+                item {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clip(CircleShape)
+                            .background(MaterialTheme.colorScheme.surfaceContainerHigh)
+                            .padding(horizontal = 16.dp, vertical = 8.dp),
+                        horizontalArrangement = Arrangement.SpaceAround,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = "You want to turn off reading mode?",
+                            style = MaterialTheme.typography.bodyMedium.copy(
+                                fontSize = MaterialTheme.typography.bodyMedium.fontSize,
+                                fontWeight = MaterialTheme.typography.bodyMedium.fontWeight,
+                                letterSpacing = MaterialTheme.typography.bodyMedium.letterSpacing,
+                                lineHeight = MaterialTheme.typography.bodyMedium.lineHeight,
+                                platformStyle = MaterialTheme.typography.bodyMedium.platformStyle,
+                                textAlign = MaterialTheme.typography.bodyMedium.textAlign,
+                                textDirection = MaterialTheme.typography.bodyMedium.textDirection,
+                                color = MaterialTheme.colorScheme.primary
+                            )
+                        )
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.End,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            TextButton(
+                                onClick = {
+                                    // Turn off reading mode
+                                    readingViewModel.disableReadingMode()
+                                    rowVisible = false
+                                }
+                            ) {
+                                Text(text = "Turn off")
+                            }
+                            IconButton(
+                                onClick = {
+                                    // Just dismiss this layout
+                                    rowVisible = false
+                                }
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Default.Close,
+                                    contentDescription = null,
+                                    tint = MaterialTheme.colorScheme.primary
+                                )
+                            }
+                        }
+                    }
+                }
+            }
+
             /** Courses section text. */
             item {
                 Text(
@@ -272,6 +385,7 @@ fun HomeScreen(
                     modifier = Modifier.padding(vertical = 8.dp)
                 )
             }
+
             /** Courses list. */
             items(courses) {
                 CourseListItem(

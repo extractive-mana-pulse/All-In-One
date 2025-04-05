@@ -72,7 +72,6 @@ val languageChangeHelper by lazy { LanguageChangeHelper() }
 fun SettingScreen(
     navController: NavHostController = rememberNavController(),
     isReadingMode: Boolean,
-    onReadingModeChanged: (Boolean) -> Unit
 ) {
     val viewModel: ReadingViewModel = hiltViewModel()
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()

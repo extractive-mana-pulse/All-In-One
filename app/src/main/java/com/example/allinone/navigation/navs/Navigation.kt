@@ -17,6 +17,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.allinone.core.util.ui.NavigationDrawer
 import com.example.allinone.core.util.ui.VisibilityOfUI
+import com.example.allinone.main.presentation.vm.TimerViewModel
 import com.example.allinone.navigation.graph.Graph
 import com.google.android.gms.location.FusedLocationProviderClient
 
@@ -25,8 +26,8 @@ fun NavigationGraph(
     navController: NavHostController = rememberNavController(),
     isDarkTheme: Boolean,
     isReadingMode: Boolean,
+    timerViewModel: TimerViewModel,
     onThemeChanged: (Boolean) -> Unit,
-    onReadingModeChanged: (Boolean) -> Unit,
     fusedLocationClient: FusedLocationProviderClient
 ) {
     val topBarState = rememberSaveable { mutableStateOf(true) }
@@ -57,7 +58,8 @@ fun NavigationGraph(
                 mainNavigation(
                     navController = navController,
                     topBarState = topBarState,
-                    drawerState = drawerState
+                    drawerState = drawerState,
+                    timerViewModel = timerViewModel
                 )
                 settingsNavigation(
                     navController = navController,
@@ -65,7 +67,6 @@ fun NavigationGraph(
                     onThemeChanged = onThemeChanged,
                     fusedLocationClient = fusedLocationClient,
                     readingMode = isReadingMode,
-                    onReadingModeChanged = onReadingModeChanged
                 )
                 // later implement auth & onBoarding graphs
             }
