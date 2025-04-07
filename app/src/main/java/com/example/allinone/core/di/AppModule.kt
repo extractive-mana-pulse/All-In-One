@@ -1,6 +1,7 @@
 package com.example.allinone.core.di
 
 import com.example.allinone.BuildConfig
+import com.example.allinone.main.data.repository.TimerRepository
 import com.example.allinone.settings.data.remote.api.TwilightApi
 import com.example.allinone.settings.data.remote.repositoryImpl.TwilightRepositoryImpl
 import com.example.allinone.settings.domain.repository.TwilightRepository
@@ -39,5 +40,11 @@ object AppModule {
     @Singleton
     fun provideTwilightRepository(api: TwilightApi) : TwilightRepository {
         return TwilightRepositoryImpl(api)
+    }
+
+    @Provides
+    @Singleton
+    fun provideTimerRepository() : TimerRepository {
+        return TimerRepository()
     }
 }

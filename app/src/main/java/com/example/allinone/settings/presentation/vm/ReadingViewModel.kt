@@ -1,11 +1,14 @@
 package com.example.allinone.settings.presentation.vm
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.allinone.main.data.repository.TimerRepository
 import com.example.allinone.settings.ThemePreferences
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
@@ -13,8 +16,34 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ReadingViewModel @Inject constructor(
-    private val themePreferences: ThemePreferences
+    private val themePreferences: ThemePreferences,
+    private val timerRepository: TimerRepository
 ) : ViewModel() {
+
+    val timer = timerRepository.timer.stateIn(
+        viewModelScope,
+        started = SharingStarted.WhileSubscribed(5000L),
+        initialValue = 0L
+    )
+
+    fun startTimer() {
+        viewModelScope.launch {
+            timerRepository.startTimer()
+        }
+    }
+
+    fun stopTimer() {
+        timerRepository.stopTimer()
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        stopTimer()
+    }
+
+    fun readingModeSnackbar(seconds: Int): Boolean {
+        return timer.value >= seconds
+    }
 
     private val _isDarkTheme = MutableStateFlow(false)
     val isDarkTheme = _isDarkTheme
@@ -46,9 +75,13 @@ class ReadingViewModel @Inject constructor(
         }
     }
 
+    fun isReadingModeActive(): Boolean {
+        return _isReadingModeEnabled.value
+    }
+
     private fun isReadingTheme() {
         viewModelScope.launch {
-            themePreferences.isReadingTheme.collect { isReading ->
+            themePreferences.isReadingTheme.collectLatest { isReading ->
                 _isReadingModeEnabled.value = isReading
             }
         }

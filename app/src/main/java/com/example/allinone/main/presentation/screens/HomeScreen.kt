@@ -53,7 +53,6 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
@@ -97,31 +96,30 @@ fun HomeScreen(
     topBarState: MutableState<Boolean>,
     drawerState: DrawerState
 ) {
+
     val timerViewModel: TimerViewModel = hiltViewModel()
     val readingViewModel: ReadingViewModel = hiltViewModel()
-    val snackbarHostState = remember { SnackbarHostState() }
     val timerValue by timerViewModel.timer.collectAsStateWithLifecycle()
-    val readingMode by readingViewModel.isReadingModeEnabled.collectAsState()
+    val readingMode by readingViewModel.isReadingModeEnabled.collectAsStateWithLifecycle()
 
-    Log.d("reading mode state", "HomeScreen: $readingMode")
-    Log.d("timer state", "HomeScreen: $timerValue")
+    Log.d("readingMode state", "HomeScreen: readingMode is $readingMode")
+    Log.d("timer state", "HomeScreen: $timerValue seconds")
 
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
     var query by remember { mutableStateOf("") }
     var active by remember { mutableStateOf(false) }
+    var rowVisible by remember { mutableStateOf(false) }
     val courses = remember { loadCoursesFromJson(context) }
+    val snackbarHostState = remember { SnackbarHostState() }
     val sections = remember { loadSectionsFromJson(context) }
     var searchHistory = remember { mutableStateListOf<String>() }
 
-    var rowVisible by remember { mutableStateOf(false) }
-
-    // Only start timer if reading mode is enabled and timer isn't already running
     LaunchedEffect(readingMode) {
-        if (readingMode && timerValue.toInt() == 0) {
+        if (readingMode) {
             timerViewModel.startTimer()
-            Log.d("timer start", "Starting timer in reading mode")
-        } else if (!readingMode) {
+            rowVisible = true
+        } else {
             timerViewModel.stopTimer()
             rowVisible = false
             Log.d("timer stop", "Reading mode disabled, stopping timer")
@@ -129,8 +127,8 @@ fun HomeScreen(
     }
 
     LaunchedEffect(timerValue) {
-        if (timerViewModel.readingModeSnackbar(5)) {
-            Log.d("snackbar", "Showing snackbar after 5 seconds")
+        if (readingMode && timerViewModel.readingModeSnackbar(5)) {
+
             val result = snackbarHostState.showSnackbar(
                 message = "Would you like to turn off reading mode?",
                 actionLabel = "Turn Off",
@@ -144,7 +142,7 @@ fun HomeScreen(
                 }
                 SnackbarResult.Dismissed -> {
                     rowVisible = true
-                    Log.d("snackbar dismissed", "Showing persistent row")
+                    Log.d("snackbar dismissed", "Showing persistent row and resetting timer")
                 }
             }
         }
@@ -312,7 +310,6 @@ fun HomeScreen(
                 .padding(innerPadding)
                 .padding(horizontal = 16.dp),
         ) {
-            // Only show the row if reading mode is active and snackbar was dismissed
             if (rowVisible) {
                 item {
                     Row(
@@ -387,7 +384,10 @@ fun HomeScreen(
             }
 
             /** Courses list. */
-            items(courses) {
+            items(
+                courses,
+                key = { it.id }
+            ) {
                 CourseListItem(
                     navController = navController,
                     course = it

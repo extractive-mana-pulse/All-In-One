@@ -28,14 +28,10 @@ class TimerViewModel : ViewModel() {
         startTimer()
         return if (timer.value >= setSecond) {
             timerJob?.cancel()
-            true // Indicates that the Snackbar should be shown
+            true
         } else {
-            false // Indicates that the Snackbar should not be shown
+            false
         }
-    }
-
-    fun pauseTimer() {
-        timerJob?.cancel()
     }
 
     fun stopTimer() {
