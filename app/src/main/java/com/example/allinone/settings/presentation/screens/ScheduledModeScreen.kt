@@ -1,12 +1,8 @@
 package com.example.allinone.settings.presentation.screens
 
 import android.Manifest.permission.ACCESS_FINE_LOCATION
-import android.annotation.SuppressLint
-import android.content.Context
 import android.content.pm.PackageManager
-import android.location.Geocoder
 import android.location.Location
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -15,11 +11,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.outlined.Keyboard
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -29,27 +23,18 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
-import androidx.compose.material3.TimeInput
-import androidx.compose.material3.TimePicker
-import androidx.compose.material3.TimePickerDefaults
 import androidx.compose.material3.TimePickerState
-import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.material3.rememberTimePickerState
-import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableDoubleStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -65,9 +50,12 @@ import androidx.navigation.compose.rememberNavController
 import com.example.allinone.R
 import com.example.allinone.core.extension.toastMessage
 import com.example.allinone.settings.domain.model.Twilight
+import com.example.allinone.settings.presentation.util.DialPicker
+import com.example.allinone.settings.presentation.vm.LocationRefreshState
+import com.example.allinone.settings.presentation.vm.LocationViewModel
 import com.example.allinone.settings.presentation.vm.ThemeViewModel
 import com.google.android.gms.location.FusedLocationProviderClient
-import com.google.android.gms.tasks.Task
+import com.google.android.gms.location.LocationServices
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
@@ -82,12 +70,12 @@ fun ScheduledModeScreen(
 ) {
     val context = LocalContext.current
     var checked by rememberSaveable { mutableStateOf(false) }
-    val scope = rememberCoroutineScope()
     val viewModel: ThemeViewModel = hiltViewModel()
+
     var latitude by remember { mutableDoubleStateOf(0.0) }
     var longitude by remember { mutableDoubleStateOf(0.0) }
-    var townName by remember { mutableStateOf<String?>(null) }
     var location by remember { mutableStateOf<Location?>(null) }
+
     val state by viewModel.twilight.collectAsStateWithLifecycle()
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
 
@@ -95,24 +83,25 @@ fun ScheduledModeScreen(
         if (ActivityCompat.checkSelfPermission(
                 context,
                 ACCESS_FINE_LOCATION
-            ) != PackageManager.PERMISSION_GRANTED
+            ) == PackageManager.PERMISSION_GRANTED
         ) {
+            fusedLocationClient.lastLocation.addOnSuccessListener { loc: Location? ->
+                loc?.let {
+                    latitude = it.latitude
+                    longitude = it.longitude
+                    location = it
+                    viewModel.getTwilight(latitude, longitude)
+                } ?: run {
+                    toastMessage(
+                        context = context,
+                        message = "Not found"
+                    )
+                }
+            }
+        } else {
             toastMessage(
                 context = context,
                 message = context.getString(R.string.location_permission_required)
-            )
-        } else {
-            getCurrentLocation(fusedLocationClient) { loc ->
-                location = loc
-            }
-        }
-        location?.let {
-            latitude = it.latitude
-            longitude = it.longitude
-            getTownName(
-                townName = townName ?: "Tashkent",
-                location = it,
-                context = context
             )
         }
     }
@@ -163,12 +152,11 @@ fun ScheduledModeScreen(
                 .verticalScroll(rememberScrollState()),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
-            ){
+            ) {
                 Text(
                     text = "Use Local Sunset and Sunrise Times",
                     style = MaterialTheme.typography.bodyMedium.copy(
@@ -180,7 +168,7 @@ fun ScheduledModeScreen(
                         platformStyle = MaterialTheme.typography.bodyMedium.platformStyle,
                         textAlign = MaterialTheme.typography.bodyMedium.textAlign,
                         textDirection = MaterialTheme.typography.bodyMedium.textDirection,
-                        )
+                    )
                 )
                 Switch(
                     checked = checked,
@@ -189,7 +177,15 @@ fun ScheduledModeScreen(
                     },
                 )
             }
-            if (checked) SwitchOnMode(state, townName) else SwitchOffMode()
+            HorizontalDivider()
+            when (checked) {
+                true -> {
+                    SwitchOnMode(state)
+                }
+                false -> {
+                    SwitchOffMode()
+                }
+            }
         }
     }
 }
@@ -236,7 +232,7 @@ private fun SwitchOffMode() {
             .fillMaxWidth()
             .padding(vertical = 8.dp)
             .clickable {
-                isFromSelected = true // Set to From time
+                isFromSelected = true
                 showDialog = true
             },
         horizontalArrangement = Arrangement.SpaceBetween,
@@ -314,265 +310,131 @@ private fun SwitchOffMode() {
 
 @Composable
 private fun SwitchOnMode(
-    state: Twilight,
-    townName: String?
+    state: Twilight
 ) {
-    Text(
-        text = "Current location: ${state.results.timezone}",
-        modifier = Modifier.padding(8.dp),
-        style = MaterialTheme.typography.bodySmall.copy(
-            fontFamily = FontFamily(Font(R.font.inknut_antiqua_medium)),
-            fontSize = MaterialTheme.typography.bodySmall.fontSize,
-            fontWeight = MaterialTheme.typography.bodySmall.fontWeight,
-            letterSpacing = MaterialTheme.typography.bodySmall.letterSpacing,
-            lineHeight = MaterialTheme.typography.bodySmall.lineHeight,
-            platformStyle = MaterialTheme.typography.bodySmall.platformStyle,
-            textAlign = MaterialTheme.typography.bodySmall.textAlign,
-            textDirection = MaterialTheme.typography.bodySmall.textDirection,
-        )
-    )
-    Text(
-        text = "Sunrise: ${state.results.sunrise ?: "N/A"}",
-        modifier = Modifier.padding(horizontal = 8.dp),
-        style = MaterialTheme.typography.bodySmall.copy(
-            fontFamily = FontFamily(Font(R.font.inknut_antiqua_medium)),
-            fontSize = MaterialTheme.typography.bodySmall.fontSize,
-            fontWeight = MaterialTheme.typography.bodySmall.fontWeight,
-            letterSpacing = MaterialTheme.typography.bodySmall.letterSpacing,
-            lineHeight = MaterialTheme.typography.bodySmall.lineHeight,
-            platformStyle = MaterialTheme.typography.bodySmall.platformStyle,
-            textAlign = MaterialTheme.typography.bodySmall.textAlign,
-            textDirection = MaterialTheme.typography.bodySmall.textDirection,
-        )
-    )
-    Text(
-        text = "Sunset: ${state.results.sunset ?: "N/A"}",
-        modifier = Modifier.padding(horizontal = 8.dp),
-        style = MaterialTheme.typography.bodySmall.copy(
-            fontFamily = FontFamily(Font(R.font.inknut_antiqua_medium)),
-            fontSize = MaterialTheme.typography.bodySmall.fontSize,
-            fontWeight = MaterialTheme.typography.bodySmall.fontWeight,
-            letterSpacing = MaterialTheme.typography.bodySmall.letterSpacing,
-            lineHeight = MaterialTheme.typography.bodySmall.lineHeight,
-            platformStyle = MaterialTheme.typography.bodySmall.platformStyle,
-            textAlign = MaterialTheme.typography.bodySmall.textAlign,
-            textDirection = MaterialTheme.typography.bodySmall.textDirection,
-        )
-    )
+    val context = LocalContext.current
+    val fusedLocationClient = remember { LocationServices.getFusedLocationProviderClient(context) }
+    val locationViewModel: LocationViewModel = hiltViewModel()
+    val address by locationViewModel.location
+    val refreshState by locationViewModel.refreshedState.collectAsStateWithLifecycle()
 
-    Text(
-        text = "Country/Town: ${townName ?: "N/A"}",
-        modifier = Modifier.padding(horizontal = 8.dp),
-        style = MaterialTheme.typography.bodySmall.copy(
-            fontFamily = FontFamily(Font(R.font.inknut_antiqua_medium)),
-            fontSize = MaterialTheme.typography.bodySmall.fontSize,
-            fontWeight = MaterialTheme.typography.bodySmall.fontWeight,
-            letterSpacing = MaterialTheme.typography.bodySmall.letterSpacing,
-            lineHeight = MaterialTheme.typography.bodySmall.lineHeight,
-            platformStyle = MaterialTheme.typography.bodySmall.platformStyle,
-            textAlign = MaterialTheme.typography.bodySmall.textAlign,
-            textDirection = MaterialTheme.typography.bodySmall.textDirection,
+    LaunchedEffect(key1 = true) {
+        locationViewModel.getLocation(
+            context = context,
+            fusedLocationClient = fusedLocationClient
         )
-    )
-    Text(
-        text = "Calculating sunset and sunrise times requires a one-time check of your approximate location. Note that this location is only stored locally on your device.",
-        modifier = Modifier.padding(vertical = 8.dp),
-        style = MaterialTheme.typography.bodyMedium.copy(
-            fontFamily = FontFamily(Font(R.font.inknut_antiqua_medium)),
-            fontSize = MaterialTheme.typography.bodyMedium.fontSize,
-            fontWeight = MaterialTheme.typography.bodyMedium.fontWeight,
-            letterSpacing = MaterialTheme.typography.bodyMedium.letterSpacing,
-            lineHeight = MaterialTheme.typography.bodyMedium.lineHeight,
-            platformStyle = MaterialTheme.typography.bodyMedium.platformStyle,
-            textAlign = MaterialTheme.typography.bodyMedium.textAlign,
-            textDirection = MaterialTheme.typography.bodyMedium.textDirection,
-        )
-    )
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun DialPicker(
-    onConfirm: (TimePickerState) -> Unit,
-    onDismiss: () -> Unit,
-    showDialog: Boolean = false
-) {
-    val currentTime = Calendar.getInstance()
-    var showInputDialog by remember { mutableStateOf(false) }
-    var showTimePicker by remember { mutableStateOf(false) }
-    showTimePicker = showDialog
-
-    val timePickerState = rememberTimePickerState(
-        initialHour = currentTime.get(Calendar.HOUR_OF_DAY),
-        initialMinute = currentTime.get(Calendar.MINUTE),
-        is24Hour = true,
-    )
-    if (showInputDialog) {
-        InputPicker(
-            onConfirm = {
-                showInputDialog = false
-                onConfirm(timePickerState)
-            },
-            onDismiss = {
-                showInputDialog = false
-                onDismiss()
-            }
-        )
-        return
     }
 
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 16.dp)
-            .clip(RoundedCornerShape(24.dp))
-            .background(MaterialTheme.colorScheme.surface),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
-    ) {
-        Text(
-            text = "Enter time",
-            style = MaterialTheme.typography.bodyMedium.copy(
-                fontFamily = FontFamily(Font(R.font.inknut_antiqua_light))
-            ),
-            modifier = Modifier
-                .padding(16.dp)
-                .align(Alignment.Start),
-        )
-        TimePicker(
-            state = timePickerState,
-            colors = TimePickerDefaults.colors(
-                containerColor = MaterialTheme.colorScheme.errorContainer,
-            )
-        )
+    LaunchedEffect(refreshState) {
+        when (refreshState) {
+            is LocationRefreshState.Error -> {
+                toastMessage(
+                    context = context,
+                    message = (refreshState as LocationRefreshState.Error).message
+                )
+            }
+
+            LocationRefreshState.Loaded -> {
+                toastMessage(
+                    context = context,
+                    message = "Location updated"
+                )
+            }
+
+            LocationRefreshState.Loading -> {
+                toastMessage(
+                    context = context,
+                    message = "Updating location..."
+                )
+            }
+        }
+    }
+
+    Column {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp),
+                .clickable {
+                    locationViewModel.refreshLocation(
+                        context = context,
+                        fusedLocationClient = fusedLocationClient
+                    )
+                }
+                .padding(vertical = 8.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            IconButton(
-                onClick = {
-                    showTimePicker = false
-                    showInputDialog = true
-                },
-            ) {
-                Icon(
-                    Icons.Outlined.Keyboard,
-                    contentDescription = null
+            Text(
+                text = "Update location",
+                style = MaterialTheme.typography.bodyMedium.copy(
+                    fontFamily = FontFamily(Font(R.font.inknut_antiqua_medium)),
+                    fontSize = MaterialTheme.typography.bodyMedium.fontSize,
+                    fontWeight = MaterialTheme.typography.bodyMedium.fontWeight,
+                    letterSpacing = MaterialTheme.typography.bodyMedium.letterSpacing,
+                    lineHeight = MaterialTheme.typography.bodyMedium.lineHeight,
+                    platformStyle = MaterialTheme.typography.bodyMedium.platformStyle,
+                    textAlign = MaterialTheme.typography.bodyMedium.textAlign,
+                    textDirection = MaterialTheme.typography.bodyMedium.textDirection,
                 )
-            }
-            TimePickerActionsButtons(
-                onDismiss = {
-                    showTimePicker = false
-                    onDismiss()
-                },
-                onConfirm = {
-                    showTimePicker = false
-                    onConfirm(timePickerState)
-                }
+            )
+
+            Text(
+                text = address,
+                style = MaterialTheme.typography.bodyMedium.copy(
+                    fontFamily = FontFamily(Font(R.font.inknut_antiqua_medium)),
+                    fontSize = MaterialTheme.typography.bodyMedium.fontSize,
+                    fontWeight = MaterialTheme.typography.bodyMedium.fontWeight,
+                    letterSpacing = MaterialTheme.typography.bodyMedium.letterSpacing,
+                    lineHeight = MaterialTheme.typography.bodyMedium.lineHeight,
+                    platformStyle = MaterialTheme.typography.bodyMedium.platformStyle,
+                    textAlign = MaterialTheme.typography.bodyMedium.textAlign,
+                    textDirection = MaterialTheme.typography.bodyMedium.textDirection,
+                    color = MaterialTheme.colorScheme.primary
+                )
             )
         }
-    }
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun InputPicker(
-    onConfirm: (TimePickerState) -> Unit,
-    onDismiss: () -> Unit,
-) {
-    val currentTime = Calendar.getInstance()
-
-    val timePickerState = rememberTimePickerState(
-        initialHour = currentTime.get(Calendar.HOUR_OF_DAY),
-        initialMinute = currentTime.get(Calendar.MINUTE),
-        is24Hour = true,
-    )
-
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 16.dp)
-            .clip(RoundedCornerShape(24.dp))
-            .background(MaterialTheme.colorScheme.surface),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
-    ) {
         Text(
-            text = "Select time",
+            text = stringResource(R.string.scheduled_switch_on_info_about_location),
+            modifier = Modifier.padding(vertical = 8.dp),
             style = MaterialTheme.typography.bodyMedium.copy(
-                fontFamily = FontFamily(Font(R.font.inknut_antiqua_light))
-            ),
-            modifier = Modifier
-                .padding(16.dp)
-                .align(Alignment.Start),
+                fontFamily = FontFamily(Font(R.font.inknut_antiqua_medium)),
+                fontSize = MaterialTheme.typography.bodyMedium.fontSize,
+                fontWeight = MaterialTheme.typography.bodyMedium.fontWeight,
+                letterSpacing = MaterialTheme.typography.bodyMedium.letterSpacing,
+                lineHeight = MaterialTheme.typography.bodyMedium.lineHeight,
+                platformStyle = MaterialTheme.typography.bodyMedium.platformStyle,
+                textAlign = MaterialTheme.typography.bodyMedium.textAlign,
+                textDirection = MaterialTheme.typography.bodyMedium.textDirection,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
         )
-        TimeInput(
-            state = timePickerState,
+        Text(
+            text = "Sunrise: ${state.results.sunrise ?: "N/A"}",
+            style = MaterialTheme.typography.bodySmall.copy(
+                fontFamily = FontFamily(Font(R.font.inknut_antiqua_medium)),
+                fontSize = MaterialTheme.typography.bodySmall.fontSize,
+                fontWeight = MaterialTheme.typography.bodySmall.fontWeight,
+                letterSpacing = MaterialTheme.typography.bodySmall.letterSpacing,
+                lineHeight = MaterialTheme.typography.bodySmall.lineHeight,
+                platformStyle = MaterialTheme.typography.bodySmall.platformStyle,
+                textAlign = MaterialTheme.typography.bodySmall.textAlign,
+                textDirection = MaterialTheme.typography.bodySmall.textDirection,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
         )
-        TimePickerActionsButtons(
-            onDismiss = {
-                onDismiss()
-            },
-            onConfirm = {
-                onConfirm(timePickerState)
-            }
+        Text(
+            text = "Sunset: ${state.results.sunset ?: "N/A"}",
+            style = MaterialTheme.typography.bodySmall.copy(
+                fontFamily = FontFamily(Font(R.font.inknut_antiqua_medium)),
+                fontSize = MaterialTheme.typography.bodySmall.fontSize,
+                fontWeight = MaterialTheme.typography.bodySmall.fontWeight,
+                letterSpacing = MaterialTheme.typography.bodySmall.letterSpacing,
+                lineHeight = MaterialTheme.typography.bodySmall.lineHeight,
+                platformStyle = MaterialTheme.typography.bodySmall.platformStyle,
+                textAlign = MaterialTheme.typography.bodySmall.textAlign,
+                textDirection = MaterialTheme.typography.bodySmall.textDirection,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
         )
-    }
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-private fun TimePickerActionsButtons(
-    onDismiss: () -> Unit,
-    onConfirm: () -> Unit
-) {
-
-    Row(
-        modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.End,
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        TextButton(
-            onClick = onDismiss
-        ) {
-            Text("Cancel")
-        }
-        TextButton(
-            onClick = onConfirm
-        ) {
-            Text("Ok")
-        }
-    }
-}
-
-@SuppressLint("MissingPermission")
-private fun getCurrentLocation(
-    fusedLocationClient: FusedLocationProviderClient,
-    onSuccess: (Location?) -> Unit
-) {
-    val task: Task<Location> = fusedLocationClient.lastLocation
-    task.addOnSuccessListener { location: Location? ->
-        onSuccess(location)
-    }
-}
-
-private fun getTownName(
-    townName: String?,
-    location: Location,
-    context: Context
-) {
-    var mutableTownName = townName
-    val geocoder = Geocoder(context, Locale.getDefault())
-    try {
-        val addresses = geocoder.getFromLocation(location.latitude, location.longitude, 1)
-        if (addresses?.isNotEmpty() == true) {
-            val address = addresses[0]
-            mutableTownName = address.locality
-        }
-    } catch (e: Exception) {
-        e.printStackTrace()
     }
 }

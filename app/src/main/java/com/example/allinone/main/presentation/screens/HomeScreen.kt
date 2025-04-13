@@ -8,6 +8,11 @@ import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -80,7 +85,7 @@ import com.example.allinone.main.domain.model.Sections
 import com.example.allinone.main.presentation.vm.TimerViewModel
 import com.example.allinone.navigation.screen.HomeScreens
 import com.example.allinone.navigation.screen.ProfileScreens
-import com.example.allinone.settings.presentation.vm.ReadingViewModel
+import com.example.allinone.settings.presentation.vm.ReadingModeViewModel
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.launch
@@ -98,12 +103,11 @@ fun HomeScreen(
 ) {
 
     val timerViewModel: TimerViewModel = hiltViewModel()
-    val readingViewModel: ReadingViewModel = hiltViewModel()
+    val readingViewModel: ReadingModeViewModel = hiltViewModel()
     val timerValue by timerViewModel.timer.collectAsStateWithLifecycle()
     val readingMode by readingViewModel.isReadingModeEnabled.collectAsStateWithLifecycle()
 
     Log.d("readingMode state", "HomeScreen: readingMode is $readingMode")
-    Log.d("timer state", "HomeScreen: $timerValue seconds")
 
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
@@ -116,15 +120,10 @@ fun HomeScreen(
     var searchHistory = remember { mutableStateListOf<String>() }
 
     LaunchedEffect(readingMode) {
-        if (readingMode) {
-            timerViewModel.startTimer()
-            rowVisible = true
-        } else {
-            timerViewModel.stopTimer()
-            rowVisible = false
-            Log.d("timer stop", "Reading mode disabled, stopping timer")
-        }
+        if (readingMode) timerViewModel.startTimer() else rowVisible = false
     }
+
+    Log.d("timer state", "HomeScreen: $timerValue seconds")
 
     LaunchedEffect(timerValue) {
         if (readingMode && timerViewModel.readingModeSnackbar(5)) {
@@ -312,59 +311,61 @@ fun HomeScreen(
         ) {
             if (rowVisible) {
                 item {
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .clip(CircleShape)
-                            .background(MaterialTheme.colorScheme.surfaceContainerHigh)
-                            .padding(horizontal = 16.dp, vertical = 8.dp),
-                        horizontalArrangement = Arrangement.SpaceAround,
-                        verticalAlignment = Alignment.CenterVertically
+                    AnimatedVisibility(
+                        visible = rowVisible,
+                        enter = fadeIn(animationSpec = tween(durationMillis = 3000)) +
+                                slideInHorizontally(animationSpec = tween(durationMillis = 3000)) { fullWidth ->
+                                    -fullWidth / 3
+                                },
+                        exit = fadeOut(animationSpec = tween(durationMillis = 3000)) +
+                                slideOutHorizontally(animationSpec = tween(durationMillis = 3000)) { fullWidth ->
+                                    fullWidth / 3
+                                }
                     ) {
-                        Text(
-                            text = "You want to turn off reading mode?",
-                            style = MaterialTheme.typography.bodyMedium.copy(
-                                fontSize = MaterialTheme.typography.bodyMedium.fontSize,
-                                fontWeight = MaterialTheme.typography.bodyMedium.fontWeight,
-                                letterSpacing = MaterialTheme.typography.bodyMedium.letterSpacing,
-                                lineHeight = MaterialTheme.typography.bodyMedium.lineHeight,
-                                platformStyle = MaterialTheme.typography.bodyMedium.platformStyle,
-                                textAlign = MaterialTheme.typography.bodyMedium.textAlign,
-                                textDirection = MaterialTheme.typography.bodyMedium.textDirection,
-                                color = MaterialTheme.colorScheme.primary
-                            )
-                        )
                         Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.End,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .clip(RoundedCornerShape(8.dp))
+                                .background(MaterialTheme.colorScheme.surfaceContainerHigh)
+                                .padding(horizontal = 16.dp, vertical = 8.dp),
+                            horizontalArrangement = Arrangement.SpaceAround,
                             verticalAlignment = Alignment.CenterVertically
                         ) {
-                            TextButton(
-                                onClick = {
-                                    // Turn off reading mode
-                                    readingViewModel.disableReadingMode()
-                                    rowVisible = false
-                                }
-                            ) {
-                                Text(text = "Turn off")
-                            }
-                            IconButton(
-                                onClick = {
-                                    // Just dismiss this layout
-                                    rowVisible = false
-                                }
-                            ) {
-                                Icon(
-                                    imageVector = Icons.Default.Close,
-                                    contentDescription = null,
-                                    tint = MaterialTheme.colorScheme.primary
+                            Text(
+                                text = "You want to turn off reading mode?",
+                                style = MaterialTheme.typography.bodyMedium.copy(
+                                    color = MaterialTheme.colorScheme.primary
                                 )
+                            )
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.End,
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                TextButton(
+                                    onClick = {
+                                        readingViewModel.disableReadingMode()
+                                        rowVisible = false
+                                    }
+                                ) {
+                                    Text(text = "Turn off")
+                                }
+                                IconButton(
+                                    onClick = {
+                                        rowVisible = false
+                                    }
+                                ) {
+                                    Icon(
+                                        imageVector = Icons.Default.Close,
+                                        contentDescription = null,
+                                        tint = MaterialTheme.colorScheme.primary
+                                    )
+                                }
                             }
                         }
                     }
                 }
             }
-
             /** Courses section text. */
             item {
                 Text(
@@ -382,7 +383,6 @@ fun HomeScreen(
                     modifier = Modifier.padding(vertical = 8.dp)
                 )
             }
-
             /** Courses list. */
             items(
                 courses,
@@ -442,13 +442,12 @@ fun CourseListItem(
         modifier = Modifier
             .fillMaxWidth()
             .clickable {
-                if (course.title == "In maintenance" && course.subtitle == "In maintenance") {
-                    toastMessage(
+                when (course.title == "In maintenance" && course.subtitle == "In maintenance") {
+                    true -> toastMessage(
                         context = context,
                         message = "This page is not available now."
                     )
-                } else {
-                    navController.navigate(
+                    else -> navController.navigate(
                         HomeScreens.DetailsScreen(
                             id = course.id
                         )
@@ -466,6 +465,7 @@ fun CourseListItem(
                 .clip(CircleShape)
         )
         Spacer(modifier = Modifier.width(16.dp))
+//      title and subtitle column
         Column {
             Text(
                 text = course.title ?: "",
@@ -483,7 +483,7 @@ fun CourseListItem(
             Text(
                 text = course.subtitle ?: "",
                 style = MaterialTheme.typography.bodySmall.copy(
-                    fontFamily = FontFamily(Font(R.font.inknut_antiqua_regular)),
+                    fontFamily = FontFamily(Font(R.font.inknut_antiqua_light)),
                     fontSize = MaterialTheme.typography.bodySmall.fontSize,
                     fontWeight = MaterialTheme.typography.bodySmall.fontWeight,
                     letterSpacing = MaterialTheme.typography.bodySmall.letterSpacing,
@@ -492,6 +492,8 @@ fun CourseListItem(
                     textAlign = MaterialTheme.typography.bodySmall.textAlign,
                     textDirection = MaterialTheme.typography.bodySmall.textDirection,
                 ),
+                maxLines = 2,
+                overflow = TextOverflow.Ellipsis
             )
         }
     }

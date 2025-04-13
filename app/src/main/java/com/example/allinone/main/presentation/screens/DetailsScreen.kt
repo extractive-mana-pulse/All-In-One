@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.outlined.BookmarkBorder
@@ -23,7 +22,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
-import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
@@ -32,26 +30,24 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import coil3.compose.AsyncImage
 import com.example.allinone.R
 import com.example.allinone.core.extension.toastMessage
+import com.example.allinone.main.domain.model.CourseDetails
 import com.example.allinone.main.presentation.vm.TimerViewModel
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -90,7 +86,19 @@ fun DetailsScreen(
         topBar = {
             TopAppBar(
                 title = {
-                    Text(text = courseDetails?.title ?: "Blog")
+                    Text(
+                        text = courseDetails?.title ?: "Blog",
+                        style = MaterialTheme.typography.titleLarge.copy(
+                            fontFamily = FontFamily(Font(R.font.inknut_antiqua_bold)),
+                            fontSize = MaterialTheme.typography.titleLarge.fontSize,
+                            fontWeight = MaterialTheme.typography.titleLarge.fontWeight,
+                            letterSpacing = MaterialTheme.typography.titleLarge.letterSpacing,
+                            lineHeight = MaterialTheme.typography.titleLarge.lineHeight,
+                            platformStyle = MaterialTheme.typography.titleLarge.platformStyle,
+                            textAlign = MaterialTheme.typography.titleLarge.textAlign,
+                            textDirection = MaterialTheme.typography.titleLarge.textDirection,
+                        )
+                    )
                 },
                 navigationIcon = {
                     IconButton(
@@ -99,14 +107,25 @@ fun DetailsScreen(
                             timerViewModel.stopTimer()
                         }
                     ) {
-                        Icon(Icons.AutoMirrored.Default.ArrowBack, contentDescription = "Navigate up")
+                        Icon(
+                            Icons.AutoMirrored.Default.ArrowBack,
+                            contentDescription = "Navigate up from details screen"
+                        )
                     }
                 },
                 actions = {
-                    IconButton(onClick = {
-                        toastMessage(context, "In progress. This feature will be implemented soon")
-                    }) {
-                        Icon(Icons.Outlined.BookmarkBorder, contentDescription = null)
+                    IconButton(
+                        onClick = {
+                            toastMessage(
+                                context = context,
+                                message = "In progress. This feature will be implemented soon"
+                            )
+                        }
+                    ) {
+                        Icon(
+                            Icons.Outlined.BookmarkBorder,
+                            contentDescription = null
+                        )
                     }
                 }
             )
@@ -118,21 +137,24 @@ fun DetailsScreen(
                 .padding(innerPadding)
                 .padding(16.dp)
         ) {
-            if (courseDetails != null) {
-                DetailsItem(course = courseDetails!!)
-            } else {
-                Text(
-                    text = "Course details not found, Please check the ID and try again",
-                    style = MaterialTheme.typography.titleLarge,
-                    modifier = Modifier.padding(16.dp)
-                )
-                Button(
-                    onClick = {
-                        // Handle retry logic here
-                    },
-                    modifier = Modifier.align(Alignment.CenterHorizontally)
-                ) {
-                    Text(text = "Retry")
+            when (courseDetails) {
+                null -> {
+                    Text(
+                        text = "Course details not found, Please check the ID and try again",
+                        style = MaterialTheme.typography.titleLarge,
+                        modifier = Modifier.padding(16.dp)
+                    )
+                    Button(
+                        onClick = {
+                            // Handle retry logic here
+                        },
+                        modifier = Modifier.align(Alignment.CenterHorizontally)
+                    ) {
+                        Text(text = "Retry")
+                    }
+                }
+                else -> {
+                    DetailsItem(course = courseDetails!!)
                 }
             }
         }
@@ -155,15 +177,36 @@ private fun DetailsItem(course: CourseDetails) {
                     .clip(RectangleShape)
             )
             Row(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
-                Text(
-                    text = course.author ?: "John Doe",
-                    fontSize = 20.sp,
-                    fontWeight = FontWeight.Bold,
-                    modifier = Modifier.weight(1f)
-                )
+                Column(
+                    modifier = Modifier
+                        .weight(1f),
+                ) {
+                    Text(
+                        text = course.author ?: "John Doe",
+                        style = MaterialTheme.typography.bodyLarge.copy(
+                            fontFamily = FontFamily(Font(R.font.inknut_antiqua_extra_bold)),
+                            fontSize = MaterialTheme.typography.bodyLarge.fontSize,
+                            fontWeight = MaterialTheme.typography.bodyLarge.fontWeight,
+                            lineHeight = MaterialTheme.typography.bodyLarge.lineHeight,
+                            letterSpacing = MaterialTheme.typography.bodyLarge.letterSpacing,
+                        )
+                    )
+                    Text(
+                        text = course.publishedDate ?: "Published · Oct, 28 2025",
+                        style = MaterialTheme.typography.bodySmall.copy(
+                            fontFamily = FontFamily(Font(R.font.inknut_antiqua_regular)),
+                            fontSize = MaterialTheme.typography.bodySmall.fontSize,
+                            fontWeight = MaterialTheme.typography.bodySmall.fontWeight,
+                            lineHeight = MaterialTheme.typography.bodySmall.lineHeight,
+                            letterSpacing = MaterialTheme.typography.bodySmall.letterSpacing,
+                            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.8f),
+                        ),
+                    )
+                }
                 TextButton(
                     onClick = {
                         toastMessage(
@@ -175,15 +218,16 @@ private fun DetailsItem(course: CourseDetails) {
                     Text("Follow")
                 }
             }
-            Text(
-                text = course.publishedDate ?: "Published · Oct, 28 2025",
-                fontSize = 12.sp,
-                color = Color.Gray
-            )
             Spacer(modifier = Modifier.height(16.dp))
             Text(
                 text = course.description ?: "No description available",
-                style = MaterialTheme.typography.bodyMedium
+                style = MaterialTheme.typography.bodyMedium.copy(
+                    fontFamily = FontFamily(Font(R.font.inknut_antiqua_light)),
+                    fontSize = MaterialTheme.typography.bodyMedium.fontSize,
+                    fontWeight = MaterialTheme.typography.bodyMedium.fontWeight,
+                    lineHeight = MaterialTheme.typography.bodyMedium.lineHeight,
+                    letterSpacing = MaterialTheme.typography.bodyMedium.letterSpacing,
+                ),
             )
         }
         Button(
@@ -213,16 +257,10 @@ private fun loadCourseByIdFromJson(context: Context, id: Int): CourseDetails? {
         coursesList.find { it.id == id }
     } catch (e: Exception) {
         Log.d("DetailsScreen", "Error loading course details: ${e.message}")
+        toastMessage(
+            context = context,
+            message = "Error loading course details: ${e.message}"
+        )
         null
     }
 }
-
-data class CourseDetails (
-    val id: Int,
-    val title: String? = null,
-    val subtitle: String? = null,
-    val description: String? = null,
-    val imageUrl: String? = null,
-    val publishedDate: String? = null,
-    val author: String? = null,
-)

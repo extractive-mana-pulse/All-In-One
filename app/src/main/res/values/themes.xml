@@ -2,4 +2,12 @@
 <resources>
 
     <style name="Theme.AllInOne" parent="android:Theme.Material.Light.NoActionBar" />
+
+    <style name="Theme.AllInOne.Splash" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">@color/white</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/avd_all_in_one</item>
+        <item name="windowSplashScreenAnimationDuration">2500</item>
+        <item name="postSplashScreenTheme">@style/Theme.AllInOne</item>
+    </style>
+
 </resources>

@@ -1,13 +1,17 @@
 package com.example.allinone.core.util.ui
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.HelpOutline
@@ -30,6 +34,8 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
@@ -49,7 +55,6 @@ fun NavigationDrawer(
     gesturesEnabledState: MutableState<Boolean>,
     drawerState: DrawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
 ) {
-
     ModalNavigationDrawer(
         drawerContent = {
             ModalDrawerSheet {
@@ -68,7 +73,7 @@ fun NavigationDrawer(
                     bottomBarState = bottomBarState,
                     navController = navController
                 )
-            }
+            },
         ) { innerPadding ->
             content(innerPadding)
         }
@@ -90,11 +95,26 @@ private fun NavigationDrawerContent(
                 .verticalScroll(rememberScrollState())
                 .fillMaxWidth()
         ) {
-            Text(
-                text = stringResource(R.string.app_name),
-                modifier = Modifier.padding(vertical = 16.dp),
-                style = MaterialTheme.typography.titleLarge
-            )
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Image(
+                    painter = painterResource(id = R.drawable.logo),
+                    contentDescription = stringResource(R.string.app_name),
+                    modifier = Modifier
+                        .padding(end = 16.dp, bottom = 8.dp)
+                        .size(60.dp)
+                        .clip(CircleShape)
+                )
+                Text(
+                    text = stringResource(R.string.app_name),
+                    modifier = Modifier.padding(vertical = 16.dp),
+                    style = MaterialTheme.typography.titleLarge
+                )
+            }
+
 
             HorizontalDivider()
 

@@ -2,7 +2,6 @@ package com.example.allinone.settings.domain.model
 
 import com.google.gson.annotations.SerializedName
 
-
 data class Results (
 
   @SerializedName("date"        ) var date       : String? = null,

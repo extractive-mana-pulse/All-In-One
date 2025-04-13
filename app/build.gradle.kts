@@ -54,7 +54,9 @@ android {
     }
     buildFeatures {
         compose = true
-        buildConfig = true
+        // buildConfig itself is deprecated and will be removed in version 10.0 of gradle.
+        // so use code below instead to keep using this feature.
+        android.buildFeatures.buildConfig = true
     }
 
     packaging {
@@ -144,6 +146,8 @@ dependencies {
     // this gradle needed to implement Lazy Vertical Grid inside Lazy Column with right behavior
     implementation (libs.accompanist.flowlayout)
 
+    // splash screen
+    implementation(libs.androidx.core.splashscreen)
 
     // app compat for language changer
     implementation("androidx.appcompat:appcompat:1.7.0")

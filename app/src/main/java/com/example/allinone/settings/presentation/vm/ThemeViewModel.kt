@@ -9,8 +9,8 @@ import com.example.allinone.settings.domain.repository.TwilightRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
@@ -33,20 +33,6 @@ class ThemeViewModel @Inject constructor(
             initialValue = "disabled"
         )
 
-    private fun selectMode() {
-        viewModelScope.launch {
-            autoNightModeRepository.selectedModeFlow.collect { mode ->
-                _selectedMode.value = mode
-            }
-        }
-    }
-
-    fun selectItem(mode: String) {
-        viewModelScope.launch {
-            autoNightModeRepository.saveSelectedMode(mode)
-        }
-    }
-
     private val _twilight = MutableStateFlow(Twilight())
     val twilight = _twilight.asStateFlow()
 
@@ -58,6 +44,20 @@ class ThemeViewModel @Inject constructor(
             } catch (e: Exception) {
                 Log.e("ThemeViewModel", "Error fetching twilight data", e)
             }
+        }
+    }
+
+    private fun selectMode() {
+        viewModelScope.launch {
+            autoNightModeRepository.selectedModeFlow.collectLatest { mode ->
+                _selectedMode.value = mode
+            }
+        }
+    }
+
+    fun selectItem(mode: String) {
+        viewModelScope.launch {
+            autoNightModeRepository.saveSelectedMode(mode)
         }
     }
 }

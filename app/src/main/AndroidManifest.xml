@@ -10,6 +10,10 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
+<!--    android:enableOnBackInvokedCallback="true"
+        this piece of code above is for activating predictive navigation back.
+-->
+
     <application
         android:name=".App"
         android:allowBackup="true"
@@ -19,13 +23,14 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.AllInOne"
+        android:enableOnBackInvokedCallback="true"
+        android:theme="@style/Theme.AllInOne.Splash"
         android:localeConfig="@xml/local_config"
         tools:targetApi="33">
         <activity
             android:name=".main.presentation.MainActivity"
             android:exported="true"
-            android:theme="@style/Theme.AllInOne">
+            android:theme="@style/Theme.AllInOne.Splash">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

@@ -34,19 +34,16 @@ import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Switch
-import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
@@ -55,6 +52,7 @@ import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
@@ -62,8 +60,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.allinone.R
 import com.example.allinone.core.helper.LanguageChangeHelper
 import com.example.allinone.navigation.screen.SettingsScreens
-import com.example.allinone.settings.presentation.vm.ReadingViewModel
-import com.example.allinone.settings.presentation.vm.ThemeViewModel
+import com.example.allinone.settings.presentation.vm.ReadingModeViewModel
 
 val languageChangeHelper by lazy { LanguageChangeHelper() }
 
@@ -73,7 +70,7 @@ fun SettingScreen(
     navController: NavHostController = rememberNavController(),
     isReadingMode: Boolean,
 ) {
-    val viewModel: ReadingViewModel = hiltViewModel()
+    val viewModel: ReadingModeViewModel = hiltViewModel()
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
 
     Scaffold(
@@ -133,7 +130,7 @@ fun SettingScreen(
 
             /** Reading Mode */
             item {
-                SettingsItemWithToggle(
+                SettingWithSwitch(
                     title = stringResource(R.string.reading_mode),
                     description = stringResource(R.string.reading_mode_desc),
                     icon = Icons.AutoMirrored.Filled.MenuBook,
@@ -266,7 +263,7 @@ fun SettingsItemWithSheet(
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .clickable{ showBottomSheet = true }
+            .clickable { showBottomSheet = true }
     ) {
         ListItem(
             headlineContent = {
@@ -322,19 +319,14 @@ fun SettingsItemWithSheet(
 }
 
 @Composable
-fun SettingsItemWithToggle(
+fun SettingWithSwitch(
     modifier: Modifier = Modifier,
     title: String,
     description: String,
     icon: ImageVector? = null,
-    viewModel: ReadingViewModel = hiltViewModel(),
     checked: Boolean,
     onCheckedChange: (Boolean) -> Unit
-
 ) {
-    val isDarkTheme by viewModel.isDarkTheme.collectAsState()
-    val isReadingMode by viewModel.isReadingModeEnabled.collectAsState()
-
     Column(
         modifier = modifier
             .fillMaxWidth(),
@@ -346,20 +338,15 @@ fun SettingsItemWithToggle(
                 .padding(horizontal = 16.dp, vertical = 12.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            icon?.let {
-                Box(
-                    modifier = Modifier.size(48.dp),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Icon(
-                        imageVector = it,
-                        contentDescription = null,
-                        modifier = Modifier.size(36.dp),
-                        tint = if (isReadingMode) {
-                            if (isDarkTheme) Color(0xFFE0C3A8) else Color(0xFFAE8F6E)
-                        } else MaterialTheme.colorScheme.primary
-                    )
-                }
+            Box(
+                modifier = Modifier.size(48.dp),
+                contentAlignment = Alignment.Center
+            ) {
+                Icon(
+                    imageVector = icon ?: Icons.AutoMirrored.Default.MenuBook,
+                    contentDescription = null,
+                    modifier = Modifier.size(36.dp),
+                )
             }
 
             Spacer(modifier = Modifier.width(16.dp))
@@ -404,10 +391,6 @@ fun SettingsItemWithToggle(
                 Switch(
                     checked = checked,
                     onCheckedChange = onCheckedChange,
-                    colors = SwitchDefaults.colors(
-                        checkedThumbColor = if (isDarkTheme) Color(0xFFE0C3A8) else Color(0xFFAE8F6E),
-                        checkedTrackColor = if (isDarkTheme) Color(0xFF3D3630) else Color(0xFFD4BEA7)
-                    )
                 )
             }
         }
@@ -446,7 +429,8 @@ fun RadioButtonSingleSelection() {
                             selectedOption = language
                             val languageCode = languageMapping[language] ?: "en"
                             languageChangeHelper.changeLanguage(context, languageCode)
-                            val intent = context.packageManager.getLaunchIntentForPackage(context.packageName)
+                            val intent =
+                                context.packageManager.getLaunchIntentForPackage(context.packageName)
                             intent?.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
                             context.startActivity(intent)
                         },
@@ -465,6 +449,89 @@ fun RadioButtonSingleSelection() {
                     modifier = Modifier.padding(start = 16.dp)
                 )
             }
+        }
+    }
+}
+
+@Preview(showBackground = true, showSystemUi = true)
+@Composable
+fun SettingWithSwitchPreview() {
+    Scaffold { innerPadding ->
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(innerPadding),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Box(
+                    modifier = Modifier.size(48.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Default.MenuBook,
+                        contentDescription = null,
+                        modifier = Modifier.size(36.dp),
+                    )
+                }
+
+                Spacer(modifier = Modifier.width(16.dp))
+
+                Column(
+                    modifier = Modifier.weight(1f)
+                ) {
+                    Text(
+                        text = "Reading Mode",
+                        style = MaterialTheme.typography.bodyMedium.copy(
+                            fontFamily = FontFamily(Font(R.font.inknut_antiqua_semi_bold)),
+                            fontSize = MaterialTheme.typography.bodyMedium.fontSize,
+                            fontWeight = MaterialTheme.typography.bodyMedium.fontWeight,
+                            lineHeight = MaterialTheme.typography.bodyMedium.lineHeight,
+                            letterSpacing = MaterialTheme.typography.bodyMedium.letterSpacing,
+                        ),
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
+                    )
+
+                    Spacer(modifier = Modifier.height(4.dp))
+
+                    Text(
+                        text = "Reading mode mainly used for reading articles. it\\'s decrease a light-blue color and make it less pain for your eyes.",
+                        style = MaterialTheme.typography.bodySmall.copy(
+                            fontFamily = FontFamily(Font(R.font.inknut_antiqua_medium)),
+                            fontSize = MaterialTheme.typography.bodySmall.fontSize,
+                            fontWeight = MaterialTheme.typography.bodySmall.fontWeight,
+                            lineHeight = MaterialTheme.typography.bodySmall.lineHeight,
+                            letterSpacing = MaterialTheme.typography.bodySmall.letterSpacing,
+                            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.8f),
+                        ),
+                        maxLines = 3,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                }
+
+                Box(
+                    modifier = Modifier.padding(start = 8.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Switch(
+                        checked = true,
+                        onCheckedChange = {
+                            it
+                        },
+                    )
+                }
+            }
+            HorizontalDivider(
+                modifier = Modifier.padding(start = 80.dp, end = 16.dp),
+                thickness = 1.dp,
+                color = MaterialTheme.colorScheme.outline.copy(alpha = 0.3f)
+            )
         }
     }
 }

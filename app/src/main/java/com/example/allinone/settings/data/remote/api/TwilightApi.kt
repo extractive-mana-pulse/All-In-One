@@ -9,6 +9,7 @@ interface TwilightApi {
     @GET("json")
     suspend fun getTwilight(
         @Query("lat") latitude: Double,
-        @Query("lng") longitude: Double
+        @Query("lng") longitude: Double,
+        @Query("time_format") timeFormat: String = "24",
     ): Twilight
 }
