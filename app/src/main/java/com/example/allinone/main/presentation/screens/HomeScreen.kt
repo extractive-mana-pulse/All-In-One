@@ -85,7 +85,7 @@ import com.example.allinone.main.domain.model.Sections
 import com.example.allinone.main.presentation.vm.TimerViewModel
 import com.example.allinone.navigation.screen.HomeScreens
 import com.example.allinone.navigation.screen.ProfileScreens
-import com.example.allinone.settings.presentation.vm.ReadingModeViewModel
+import com.example.allinone.settings.readingMode.presentation.vm.ReadingModeViewModel
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.launch

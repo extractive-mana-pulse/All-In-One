@@ -1,10 +1,11 @@
 package com.example.allinone.core.di
 
 import android.content.Context
+import com.example.allinone.core.preferences.ReadingModePreferences
 import com.example.allinone.core.preferences.ThemePreferences
-import com.example.allinone.settings.data.remote.repositoryImpl.LocationRepositoryImpl
-import com.example.allinone.settings.domain.repository.AutoNightModeRepository
-import com.example.allinone.settings.domain.repository.LocationRepository
+import com.example.allinone.settings.autoNight.data.remote.repositoryImpl.LocationRepositoryImpl
+import com.example.allinone.settings.autoNight.domain.repository.AutoNightModeRepository
+import com.example.allinone.settings.autoNight.domain.repository.LocationRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -24,9 +25,15 @@ object SettingsModule {
 
     @Provides
     @Singleton
-    fun provideReadingModeRepository(
+    fun provideThemeRepository(
         @ApplicationContext context: Context
     ): ThemePreferences = ThemePreferences(context)
+
+    @Provides
+    @Singleton
+    fun provideReadingModeRepository(
+        @ApplicationContext context: Context
+    ): ReadingModePreferences = ReadingModePreferences(context)
 
     @Provides
     @Singleton

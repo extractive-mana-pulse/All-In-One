@@ -1,9 +1,9 @@
 package com.example.allinone.core.di
 
 import com.example.allinone.BuildConfig
-import com.example.allinone.settings.data.remote.api.TwilightApi
-import com.example.allinone.settings.data.remote.repositoryImpl.TwilightRepositoryImpl
-import com.example.allinone.settings.domain.repository.TwilightRepository
+import com.example.allinone.settings.autoNight.data.remote.api.TwilightApi
+import com.example.allinone.settings.autoNight.data.remote.repositoryImpl.TwilightRepositoryImpl
+import com.example.allinone.settings.autoNight.domain.repository.TwilightRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

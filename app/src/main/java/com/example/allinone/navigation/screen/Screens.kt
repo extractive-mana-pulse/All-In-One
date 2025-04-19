@@ -3,6 +3,35 @@ package com.example.allinone.navigation.screen
 import kotlinx.serialization.Serializable
 
 @Serializable
+sealed class AuthScreens(val route: String) {
+
+    @Serializable
+    object SignIn : AuthScreens("sign_in")
+
+    @Serializable
+    object SignUp : AuthScreens("sign_up")
+
+    @Serializable
+    object ForgotPassword : AuthScreens("forgot_password")
+
+    @Serializable
+    object ResetPassword : AuthScreens("reset_password")
+
+    @Serializable
+    object VerifyEmail : AuthScreens("verify_email")
+
+    @Serializable
+    object VerifyPhoneNumber : AuthScreens("verify_phone_number")
+
+    @Serializable
+    object VerifyOTP : AuthScreens("verify_otp")
+
+    @Serializable
+    object CreatePassword : AuthScreens("create_password")
+
+}
+
+@Serializable
 sealed class Screens(val route: String) {
 
     @Serializable

@@ -54,4 +54,11 @@
     <string name="from_other_sections_to_somewhere">Navigate up from Other Sections screen</string>
     <string name="adaptive_mode">Adaptive Mode</string>
     <string name="scheduled_switch_on_info_about_location">Calculating sunset and sunrise times requires a one-time check of your approximate location. Note that this location is only stored locally on your device.</string>
+    <string name="off">Off</string>
+    <string name="on">On</string>
+    <string name="adaptive_mode_to_somewhere">Navigate up from Adaptive Mode screen</string>
+    <string name="refresh_icon">Refresh current brightness icon</string>
+    <string name="sign_in">Sign in</string>
+    <string name="sign_out">Sign out</string>
+    <string name="edit_profile">Edit Profile</string>
 </resources>

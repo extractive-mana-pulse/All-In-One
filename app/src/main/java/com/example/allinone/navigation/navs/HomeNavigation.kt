@@ -1,5 +1,6 @@
 package com.example.allinone.navigation.navs
 
+import android.content.Context
 import androidx.compose.animation.expandHorizontally
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -11,6 +12,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import androidx.navigation.toRoute
+import com.example.allinone.auth.data.remote.impl.AuthenticationManager
 import com.example.allinone.main.presentation.screens.DetailsScreen
 import com.example.allinone.main.presentation.screens.HelpAndFeedbackScreen
 import com.example.allinone.main.presentation.screens.HomeScreen
@@ -21,6 +23,7 @@ import com.example.allinone.navigation.screen.HomeScreens
 
 internal fun NavGraphBuilder.mainNavigation(
     navController: NavHostController,
+    context: Context,
     topBarState: MutableState<Boolean>,
     drawerState: DrawerState,
     timerViewModel: TimerViewModel
@@ -64,7 +67,8 @@ internal fun NavGraphBuilder.mainNavigation(
             navController = navController
         )
         profileNavigation(
-            navController = navController
+            navController = navController,
+            authenticationManager = AuthenticationManager(context)
         )
     }
 }

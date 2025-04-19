@@ -1,6 +1,7 @@
 package com.example.allinone.core.util.ui
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -37,6 +38,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
@@ -98,30 +101,47 @@ private fun NavigationDrawerContent(
             Row(
                 modifier = Modifier
                     .fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
             ) {
                 Image(
                     painter = painterResource(id = R.drawable.logo),
                     contentDescription = stringResource(R.string.app_name),
                     modifier = Modifier
-                        .padding(end = 16.dp, bottom = 8.dp)
-                        .size(60.dp)
+                        .size(64.dp)
+                        .padding(8.dp)
                         .clip(CircleShape)
+                        .background(MaterialTheme.colorScheme.secondaryContainer)
                 )
                 Text(
                     text = stringResource(R.string.app_name),
-                    modifier = Modifier.padding(vertical = 16.dp),
-                    style = MaterialTheme.typography.titleLarge
+                    modifier = Modifier
+                        .padding(vertical = 16.dp),
+                    style = MaterialTheme.typography.titleLarge.copy(
+                        color = MaterialTheme.colorScheme.primary,
+                        fontSize = MaterialTheme.typography.titleLarge.fontSize,
+                        fontWeight = MaterialTheme.typography.titleLarge.fontWeight,
+                        letterSpacing = MaterialTheme.typography.titleLarge.letterSpacing,
+                        lineHeight = MaterialTheme.typography.titleLarge.lineHeight,
+                        platformStyle = MaterialTheme.typography.titleLarge.platformStyle,
+                        fontFamily = FontFamily(Font(R.font.inknut_antiqua_semi_bold))
+                    )
                 )
             }
-
 
             HorizontalDivider()
 
             Text(
-                "Main content",
+                text = "Main content",
                 modifier = Modifier.padding(vertical = 16.dp),
-                style = MaterialTheme.typography.titleMedium
+                style = MaterialTheme.typography.titleMedium.copy(
+                    color = MaterialTheme.colorScheme.primary,
+                    fontSize = MaterialTheme.typography.titleMedium.fontSize,
+                    fontWeight = MaterialTheme.typography.titleMedium.fontWeight,
+                    letterSpacing = MaterialTheme.typography.titleMedium.letterSpacing,
+                    lineHeight = MaterialTheme.typography.titleMedium.lineHeight,
+                    platformStyle = MaterialTheme.typography.titleMedium.platformStyle,
+                    fontFamily = FontFamily(Font(R.font.inknut_antiqua_semi_bold))
+                )
             )
 
             NavigationDrawerItem(
@@ -159,9 +179,17 @@ private fun NavigationDrawerContent(
             HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
 
             Text(
-                text = "Settings & Help",
+                text = "Settings and Help",
                 modifier = Modifier.padding(vertical = 16.dp),
-                style = MaterialTheme.typography.titleMedium
+                style = MaterialTheme.typography.titleMedium.copy(
+                    color = MaterialTheme.colorScheme.primary,
+                    fontSize = MaterialTheme.typography.titleMedium.fontSize,
+                    fontWeight = MaterialTheme.typography.titleMedium.fontWeight,
+                    letterSpacing = MaterialTheme.typography.titleMedium.letterSpacing,
+                    lineHeight = MaterialTheme.typography.titleMedium.lineHeight,
+                    platformStyle = MaterialTheme.typography.titleMedium.platformStyle,
+                    fontFamily = FontFamily(Font(R.font.inknut_antiqua_semi_bold))
+                )
             )
             NavigationDrawerItem(
                 label = {
@@ -200,11 +228,9 @@ private fun NavigationDrawerContent(
                 },
             )
 
-            // Add spacer to push version to bottom
+            // spacer to push version to bottom
             Spacer(modifier = Modifier.weight(1f))
         }
-
-        // Version text at bottom
         Text(
             text = stringResource(R.string.app_version) + " " +BuildConfig.VERSION_NAME,
             modifier = Modifier

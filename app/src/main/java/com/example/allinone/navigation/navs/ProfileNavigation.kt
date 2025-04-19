@@ -8,13 +8,15 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
-import com.example.allinone.navigation.screen.ProfileScreens
+import com.example.allinone.auth.data.remote.impl.AuthenticationManager
 import com.example.allinone.navigation.graph.Graph
+import com.example.allinone.navigation.screen.ProfileScreens
 import com.example.allinone.profile.presentation.screens.EditProfileScreen
 import com.example.allinone.profile.presentation.screens.ProfileScreen
 
 internal fun NavGraphBuilder.profileNavigation(
-    navController: NavHostController
+    navController: NavHostController,
+    authenticationManager: AuthenticationManager
 ) {
     navigation(
         startDestination = ProfileScreens.Profile.route,
@@ -25,14 +27,20 @@ internal fun NavGraphBuilder.profileNavigation(
             enterTransition = { expandHorizontally() + fadeIn() },
             exitTransition = { shrinkHorizontally() + fadeOut() }
         ) {
-            ProfileScreen(navController = navController)
+            ProfileScreen(
+                navController = navController,
+                userCredentials = authenticationManager.getSignedInUser()
+            )
         }
         composable(
             ProfileScreens.EditProfile.route,
             enterTransition = { expandHorizontally() + fadeIn() },
             exitTransition = { shrinkHorizontally() + fadeOut() }
         ) {
-            EditProfileScreen(navController = navController)
+            EditProfileScreen(
+                navController = navController,
+                authManager = authenticationManager
+            )
         }
     }
 }

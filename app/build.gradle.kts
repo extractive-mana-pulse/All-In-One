@@ -6,6 +6,7 @@ plugins {
     id("com.google.devtools.ksp") version "2.1.0-1.0.29"
     id ("dagger.hilt.android.plugin")
     id("androidx.room")
+    id("com.google.gms.google-services")
 }
 
 android {
@@ -54,6 +55,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
         // buildConfig itself is deprecated and will be removed in version 10.0 of gradle.
         // so use code below instead to keep using this feature.
         android.buildFeatures.buildConfig = true
@@ -95,6 +97,17 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+
+    // firebase
+    implementation(platform("com.google.firebase:firebase-bom:33.12.0"))
+    implementation("com.google.firebase:firebase-auth:23.2.0")
+
+    implementation("androidx.credentials:credentials:1.5.0")
+    implementation("androidx.credentials:credentials-play-services-auth:1.5.0")
+    implementation("com.google.android.libraries.identity.googleid:googleid:1.1.1")
+
+    implementation ("com.google.firebase:firebase-storage")
+    implementation ("com.google.firebase:firebase-firestore-ktx:23.2.0")
 
     // type-safe navigation
     implementation(libs.navigation.compose)

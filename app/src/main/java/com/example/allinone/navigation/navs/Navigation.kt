@@ -1,5 +1,6 @@
 package com.example.allinone.navigation.navs
 
+import android.content.Context
 import androidx.compose.foundation.layout.calculateEndPadding
 import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.padding
@@ -15,6 +16,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.example.allinone.auth.data.remote.impl.AuthenticationManager
 import com.example.allinone.core.util.ui.NavigationDrawer
 import com.example.allinone.core.util.ui.VisibilityOfUI
 import com.example.allinone.main.presentation.vm.TimerViewModel
@@ -28,7 +30,9 @@ fun NavigationGraph(
     isReadingMode: Boolean,
     timerViewModel: TimerViewModel,
     onThemeChanged: (Boolean) -> Unit,
-    fusedLocationClient: FusedLocationProviderClient
+    fusedLocationClient: FusedLocationProviderClient,
+    context: Context,
+    authenticationManager: AuthenticationManager
 ) {
     val topBarState = rememberSaveable { mutableStateOf(true) }
     val bottomBarState = rememberSaveable { mutableStateOf(true) }
@@ -47,7 +51,7 @@ fun NavigationGraph(
         content = { innerPadding ->
             NavHost(
                 navController = navController,
-                startDestination = Graph.HOME,
+                startDestination = if (authenticationManager.isUserSignedIn()) Graph.HOME else Graph.AUTH,
                 modifier = Modifier.padding(
                     start = innerPadding.calculateStartPadding(LayoutDirection.Ltr),
 //                    top = if (topBarState.value) innerPadding.calculateTopPadding() else 0.dp,
@@ -55,11 +59,15 @@ fun NavigationGraph(
 //                    bottom = if (bottomBarState.value) innerPadding.calculateBottomPadding() else 0.dp
                 )
             ) {
+                authNavigation(
+                    navController = navController
+                )
                 mainNavigation(
                     navController = navController,
                     topBarState = topBarState,
                     drawerState = drawerState,
-                    timerViewModel = timerViewModel
+                    timerViewModel = timerViewModel,
+                    context = context
                 )
                 settingsNavigation(
                     navController = navController,
