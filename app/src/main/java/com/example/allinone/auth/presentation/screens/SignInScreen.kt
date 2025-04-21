@@ -58,8 +58,8 @@ import com.example.allinone.auth.presentation.vm.SignInViewModel
 import com.example.allinone.core.extension.toastMessage
 import com.example.allinone.navigation.screen.AuthScreens
 import com.example.allinone.navigation.screen.HomeScreens
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.launch
 
 // TODO(MUST HAVE TO IMPLEMENT THIS. IT'S IN FIRST PLACE RIGHT NOW)
 // need to finish code, optimize code, also don't forget to implement a navigation inside view model.
@@ -359,17 +359,43 @@ private fun SignInWithGoogle(
 
     Button(
         onClick = {
-            authenticationManager.signInWithGoogle()
-                .onEach { response ->
-                    if (response is AuthResponse.Success) {
+            scope.launch {
+                authenticationManager.signInWithGoogle()
+                    .catch { exception ->
                         toastMessage(
                             context = context,
-                            message = "Sign in successfully!"
+                            message = exception.message ?: "Sign in failed!"
                         )
-                        navController.navigate(HomeScreens.Home.route)
                     }
-                }
-                .launchIn(scope)
+                    .collect { response ->
+                        when (response) {
+                            is AuthResponse.Success -> {
+                                toastMessage(
+                                    context = context,
+                                    message = "Sign in successfully!"
+                                )
+                                navController.navigate(HomeScreens.Home.route) {
+                                    popUpTo(navController.graph.startDestinationId) {
+                                        inclusive = true
+                                    }
+                                }
+                            }
+                            is AuthResponse.Error -> {
+                                toastMessage(
+                                    context = context,
+                                    message = response.message
+                                )
+                            }
+
+                            is AuthResponse.Loading -> {
+                                toastMessage(
+                                    context = context,
+                                    message = "Loading..."
+                                )
+                            }
+                        }
+                    }
+            }
         },
         modifier = Modifier
             .fillMaxWidth()

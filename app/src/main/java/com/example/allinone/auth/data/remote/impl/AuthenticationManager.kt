@@ -252,6 +252,9 @@ class AuthenticationManager(
 
 
     fun signInWithGoogle() : Flow<AuthResponse> = callbackFlow {
+        // Add debug logging
+        Log.d("GoogleSignIn", "Starting Google sign-in process")
+
         val googleIdOption = GetGoogleIdOption.Builder()
             .setFilterByAuthorizedAccounts(false)
             .setServerClientId(context.getString(R.string.web_client_id))
@@ -259,32 +262,54 @@ class AuthenticationManager(
             .setNonce(createNonce())
             .build()
 
+        // Log the web client ID to verify it's correct
+        Log.d("GoogleSignIn", "Using web client ID: ${context.getString(R.string.web_client_id)}")
+
         val request = GetCredentialRequest.Builder()
             .addCredentialOption(googleIdOption)
             .build()
 
         try {
+            Log.d("GoogleSignIn", "Creating credential manager")
             val credentialManager = CredentialManager.create(context)
+
+            Log.d("GoogleSignIn", "Requesting credential")
             val result = credentialManager.getCredential(
                 context = context,
                 request = request
             )
 
             val credential = result.credential
+            Log.d("GoogleSignIn", "Got credential of type: ${credential.javaClass.simpleName}")
+
             if(credential is CustomCredential) {
+                Log.d("GoogleSignIn", "Credential is CustomCredential, type: ${credential.type}")
+
                 if (credential.type == GoogleIdTokenCredential.TYPE_GOOGLE_ID_TOKEN_CREDENTIAL) {
                     try {
+                        Log.d("GoogleSignIn", "Creating GoogleIdTokenCredential")
                         val googleIdTokenCredential = GoogleIdTokenCredential.createFrom(
                             credential.data,
                         )
 
+                        Log.d("GoogleSignIn", "Creating Firebase credential")
                         val firebaseCredential = GoogleAuthProvider.getCredential(
                             googleIdTokenCredential.idToken,
                             null
                         )
 
+                        Log.d("GoogleSignIn", "Signing in with Firebase")
                         auth.signInWithCredential(firebaseCredential)
+                            .addOnSuccessListener {
+                                Log.d("GoogleSignIn", "Firebase sign-in successful. User: ${it.user?.email}")
+                                trySend(AuthResponse.Success)
+                            }
+                            .addOnFailureListener { exception ->
+                                Log.e("GoogleSignIn", "Firebase sign-in failed", exception)
+                                trySend(AuthResponse.Error(message = exception.message ?: "Unknown error"))
+                            }
                             .addOnCompleteListener {
+                                Log.d("GoogleSignIn", "Firebase sign-in complete. Success: ${it.isSuccessful}")
                                 if (it.isSuccessful) {
                                     trySend(AuthResponse.Success)
                                 } else {
@@ -293,14 +318,24 @@ class AuthenticationManager(
                             }
 
                     } catch (e: GoogleIdTokenParsingException) {
+                        Log.e("GoogleSignIn", "Failed to parse Google ID token", e)
                         trySend(AuthResponse.Error(message = e.message ?: "Unknown error with google id token parsing"))
                     }
+                } else {
+                    Log.e("GoogleSignIn", "Unexpected credential type: ${credential.type}")
+                    trySend(AuthResponse.Error(message = "Unexpected credential type"))
                 }
+            } else {
+                Log.e("GoogleSignIn", "Credential is not CustomCredential")
+                trySend(AuthResponse.Error(message = "Unexpected credential format"))
             }
-        } catch (e : Exception) {
+        } catch (e: Exception) {
+            Log.e("GoogleSignIn", "Error during sign-in process", e)
             trySend(AuthResponse.Error(message = e.message ?: "Unknown error"))
         }
-        awaitClose()
+        awaitClose {
+            Log.d("GoogleSignIn", "Flow closed")
+        }
     }
 
     fun signOut() { auth.signOut() }

@@ -109,6 +109,9 @@ dependencies {
     implementation ("com.google.firebase:firebase-storage")
     implementation ("com.google.firebase:firebase-firestore-ktx:23.2.0")
 
+    // lottie files
+    implementation("com.airbnb.android:lottie-compose:6.5.2")
+
     // type-safe navigation
     implementation(libs.navigation.compose)
     implementation(libs.kotlinx.serialization.json)
