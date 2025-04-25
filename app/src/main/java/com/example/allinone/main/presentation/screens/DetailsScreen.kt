@@ -10,8 +10,11 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Preview
 import androidx.compose.material.icons.outlined.BookmarkBorder
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -22,9 +25,11 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -34,7 +39,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
@@ -46,6 +53,7 @@ import com.example.allinone.R
 import com.example.allinone.core.extension.toastMessage
 import com.example.allinone.main.domain.model.CourseDetails
 import com.example.allinone.main.presentation.vm.TimerViewModel
+import com.example.allinone.navigation.screen.Screens
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 
@@ -57,9 +65,11 @@ fun DetailsScreen(
     timerViewModel: TimerViewModel
 ) {
     val context = LocalContext.current
+    val verticalScroll = rememberScrollState()
     val snackbarHostState = remember { SnackbarHostState() }
     val timerValue by timerViewModel.timer.collectAsStateWithLifecycle()
     val courseDetails by remember { mutableStateOf(loadCourseByIdFromJson(context, id)) }
+    val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
 
     LaunchedEffect(courseDetails) {
         if (courseDetails != null) {
@@ -68,18 +78,28 @@ fun DetailsScreen(
     }
 
     LaunchedEffect(timerValue) {
-        Log.d("DetailsScreen", "Timer value: $timerValue")
         if (timerViewModel.readingModeSnackbar(15)) {
-            snackbarHostState.showSnackbar(
-                message = "Would you like to turn on reading mode?",
+            val result = snackbarHostState.showSnackbar(
+                message = "Would you like to turn on reading mode? ",
                 actionLabel = "Turn On",
                 duration = SnackbarDuration.Indefinite,
                 withDismissAction = true
             )
+            when(result) {
+                SnackbarResult.Dismissed -> {
+                    // dismiss snackbar, stop timer
+                }
+                SnackbarResult.ActionPerformed -> {
+                    // turn on reading mode
+                }
+            }
         }
     }
 
     Scaffold(
+        modifier = Modifier
+            .fillMaxSize()
+            .nestedScroll(scrollBehavior.nestedScrollConnection),
         snackbarHost = {
             SnackbarHost(hostState = snackbarHostState)
         },
@@ -103,19 +123,65 @@ fun DetailsScreen(
                 navigationIcon = {
                     IconButton(
                         onClick = {
-                            navController.navigateUp()
                             timerViewModel.stopTimer()
+                            navController.navigateUp()
                         }
                     ) {
                         Icon(
                             Icons.AutoMirrored.Default.ArrowBack,
-                            contentDescription = "Navigate up from details screen"
+                            contentDescription = stringResource(R.string.details_screen_to_somewhere)
                         )
                     }
                 },
                 actions = {
                     IconButton(
                         onClick = {
+                            when (courseDetails?.title) {
+                                "Compose article" -> {
+                                    navController.navigate(Screens.ComposeArticleScreen.route)
+                                }
+                                "Quadrant" -> {
+                                    navController.navigate(Screens.Quadrant.route)
+                                }
+                                "Tip Calculator" -> {
+                                    navController.navigate(Screens.TipCalculator.route)
+                                }
+                                "Art Space App" -> {
+                                    navController.navigate(Screens.ArtSpace.route)
+                                    timerViewModel.stopTimer()
+                                }
+                                "Lemonade" -> {
+                                    navController.navigate(Screens.Lemonade.route)
+                                    timerViewModel.stopTimer()
+                                }
+                                "Task Manager" -> {
+                                    navController.navigate(Screens.TaskManagerScreen.route)
+                                    timerViewModel.stopTimer()
+                                }
+                                "Art Space" -> {
+                                    navController.navigate(Screens.ArtSpace.route)
+                                    timerViewModel.stopTimer()
+                                }
+                                "Business card" -> {
+                                    navController.navigate(Screens.BusinessCard.route)
+                                }
+                                else -> {
+                                    toastMessage(
+                                        context = context,
+                                        message = "Preview not found."
+                                    )
+                                }
+                            }
+                        }
+                    ) {
+                        Icon(
+                            Icons.Default.Preview,
+                            contentDescription = null
+                        )
+                    }
+                    IconButton(
+                        onClick = {
+                            // save article to bookmarks and modify icon.
                             toastMessage(
                                 context = context,
                                 message = "In progress. This feature will be implemented soon"
@@ -127,7 +193,8 @@ fun DetailsScreen(
                             contentDescription = null
                         )
                     }
-                }
+                },
+                scrollBehavior = scrollBehavior
             )
         }
     ) { innerPadding ->
@@ -135,28 +202,39 @@ fun DetailsScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding)
-                .padding(16.dp)
+                .verticalScroll(state = verticalScroll)
+                .padding(horizontal = 16.dp)
         ) {
             when (courseDetails) {
                 null -> {
-                    Text(
-                        text = "Course details not found, Please check the ID and try again",
-                        style = MaterialTheme.typography.titleLarge,
-                        modifier = Modifier.padding(16.dp)
-                    )
-                    Button(
-                        onClick = {
-                            // Handle retry logic here
-                        },
-                        modifier = Modifier.align(Alignment.CenterHorizontally)
-                    ) {
-                        Text(text = "Retry")
-                    }
+                    DetailsNotFound()
                 }
                 else -> {
                     DetailsItem(course = courseDetails!!)
                 }
             }
+        }
+    }
+}
+
+@Composable
+private fun DetailsNotFound() {
+    Column(
+        modifier = Modifier.fillMaxSize(),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Text(
+            text = "Course details not found, Please check the ID and try again",
+            style = MaterialTheme.typography.titleLarge,
+            modifier = Modifier.padding(16.dp)
+        )
+        Button(
+            onClick = {
+                // Handle retry logic here
+            },
+            modifier = Modifier.align(Alignment.CenterHorizontally)
+        ) {
+            Text(text = "Retry")
         }
     }
 }
@@ -168,7 +246,7 @@ private fun DetailsItem(course: CourseDetails) {
         modifier = Modifier
             .fillMaxSize()
     ) {
-        Column{
+        Column {
             AsyncImage(
                 model = course.imageUrl ?: R.drawable.compose_logo,
                 contentDescription = null,
@@ -218,7 +296,9 @@ private fun DetailsItem(course: CourseDetails) {
                     Text("Follow")
                 }
             }
+
             Spacer(modifier = Modifier.height(16.dp))
+
             Text(
                 text = course.description ?: "No description available",
                 style = MaterialTheme.typography.bodyMedium.copy(
@@ -229,21 +309,20 @@ private fun DetailsItem(course: CourseDetails) {
                     letterSpacing = MaterialTheme.typography.bodyMedium.letterSpacing,
                 ),
             )
-        }
-        Button(
-            modifier = Modifier
-                .fillMaxWidth()
-                .align(Alignment.BottomCenter),
-            onClick = {
-                toastMessage(
-                    context = context,
-                    message = "In progress. This feature will be implemented soon"
+            Button(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                onClick = {
+                    toastMessage(
+                        context = context,
+                        message = "In progress. This feature will be implemented soon"
+                    )
+                }
+            ) {
+                Text(
+                    text = stringResource(R.string.take_codelab_btn_text)
                 )
             }
-        ) {
-            Text(
-                text = "Start the code lab"
-            )
         }
     }
 }

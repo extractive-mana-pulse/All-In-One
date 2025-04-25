@@ -52,6 +52,9 @@ sealed class Screens(val route: String) {
     @Serializable
     object ArtSpace : Screens("art_space")
 
+    @Serializable
+    object BusinessCard : Screens("business_card")
+
 }
 
 @Serializable

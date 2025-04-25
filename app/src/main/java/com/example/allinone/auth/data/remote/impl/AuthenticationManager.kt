@@ -11,6 +11,7 @@ import androidx.credentials.GetCredentialRequest
 import com.example.allinone.R
 import com.example.allinone.auth.domain.model.UserCredentials
 import com.example.allinone.auth.presentation.sealed.AuthResponse
+import com.example.allinone.core.extension.toastMessage
 import com.google.android.libraries.identity.googleid.GetGoogleIdOption
 import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
 import com.google.android.libraries.identity.googleid.GoogleIdTokenParsingException
@@ -115,12 +116,7 @@ class AuthenticationManager(
         awaitClose()
     }
 
-    /**
-     * Updates the user profile with optional display name and photo URI
-     * Returns a Flow of AuthResponse to track the operation
-     */
     fun updateUserProfile(
-        displayName: String? = null,
         photoUri: Uri? = null
     ): Flow<AuthResponse> = callbackFlow {
         val user = auth.currentUser ?: run {
@@ -130,7 +126,6 @@ class AuthenticationManager(
         }
 
         val profileUpdates = UserProfileChangeRequest.Builder().apply {
-            displayName?.let { setDisplayName(it) }
             photoUri?.let { setPhotoUri(it) }
         }.build()
 
@@ -143,11 +138,11 @@ class AuthenticationManager(
                 trySend(AuthResponse.Error(exception.message ?: "Unknown error"))
                 close()
             }
-
         awaitClose()
     }
 
     fun uploadProfilePicture(imageUri: Uri): Flow<AuthResponse> = callbackFlow {
+
         val user = auth.currentUser ?: run {
             trySend(AuthResponse.Error("No user is signed in"))
             close()
@@ -161,48 +156,40 @@ class AuthenticationManager(
         }
 
         try {
-            // Convert image Uri to byte array
             val imageByteArray = convertImageUriToByteArray(imageUri)
+
             if (imageByteArray == null || imageByteArray.isEmpty()) {
                 trySend(AuthResponse.Error("Failed to process image"))
                 close()
                 return@callbackFlow
             }
 
-            // Reference to the user's profile picture in storage
             val storageRef = FirebaseStorage.getInstance().reference
-                .child("profile_pictures/${user.uid}")
+                .child("images/${user.uid}")
 
-            // Upload byte array with progress tracking
             val metadata = StorageMetadata.Builder()
-                .setContentType("image/jpeg")
+                .setContentType("image/*")
                 .build()
 
             val uploadTask = storageRef.putBytes(imageByteArray, metadata)
 
-            // Send progress updates
             uploadTask.addOnProgressListener { taskSnapshot ->
                 val progress = (100.0 * taskSnapshot.bytesTransferred / taskSnapshot.totalByteCount).toInt()
                 trySend(AuthResponse.Loading(progress))
             }
 
-            // Handle failures at upload level
             uploadTask.addOnFailureListener { exception ->
                 trySend(AuthResponse.Error("Upload failed: ${exception.message}"))
                 close()
             }
 
-            // Continue with getting download URL and updating profile
             uploadTask.continueWithTask { task ->
                 if (!task.isSuccessful) {
-                    throw task.exception ?: Exception("Unknown error during upload")
+                    val exception = task.exception ?: Exception("Unknown error during upload")
+                    throw exception
                 }
                 storageRef.downloadUrl
             }.addOnSuccessListener { downloadUri ->
-                // Log the URL for debugging purposes
-                Log.d("ProfileUpload", "Download URL: $downloadUri")
-
-                // Instead of collect, use updateProfile directly with the callback pattern
                 user.updateProfile(
                     UserProfileChangeRequest.Builder()
                         .setPhotoUri(downloadUri)
@@ -222,35 +209,46 @@ class AuthenticationManager(
             trySend(AuthResponse.Error("Upload process error: ${e.message}"))
             close()
         }
-
         awaitClose()
     }
 
-    /**
-     * Converts an image URI to a byte array
-     * Includes compression to reduce upload size
-     */
     private fun convertImageUriToByteArray(imageUri: Uri): ByteArray? {
         return try {
             val contentResolver = context.contentResolver
             val inputStream = contentResolver.openInputStream(imageUri) ?: return null
 
-            // Create a bitmap from the input stream
             val bitmap = BitmapFactory.decodeStream(inputStream)
             inputStream.close()
 
-            // Compress the bitmap to a reasonable size (adjust quality as needed)
             val outputStream = ByteArrayOutputStream()
             bitmap.compress(Bitmap.CompressFormat.JPEG, 80, outputStream)
 
             outputStream.toByteArray()
         } catch (e: Exception) {
-            Log.e("ImageConversion", "Failed to convert image: ${e.message}")
             null
         }
     }
 
+    fun deleteImageFromFirebaseStorage(userId: String) {
+        val imagePath = "profile_pictures/$userId.jpg"
 
+        val storage = FirebaseStorage.getInstance()
+        val imageRef = storage.reference.child(imagePath)
+
+        imageRef.delete().addOnSuccessListener {
+            toastMessage(
+                context = context,
+                message = "Image deleted successfully"
+            )
+        }.addOnFailureListener { exception ->
+            toastMessage(
+                context = context,
+                message = "Failed to delete image: ${exception.message}"
+            )
+        }
+    }
+
+    // still in work, error: Developer console is not set up correctly
     fun signInWithGoogle() : Flow<AuthResponse> = callbackFlow {
         // Add debug logging
         Log.d("GoogleSignIn", "Starting Google sign-in process")

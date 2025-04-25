@@ -1,65 +1,65 @@
 [
   {
     "id": 1,
-    "title": "Compose article",
-    "subtitle": "This page represents a compose article and you will learn how to make such screen using Jetpack compose.",
+    "title": "Master Modern UI with Compose",
+    "subtitle": "Build stunning article screens in half the time with Jetpack Compose's revolutionary approach",
     "description": "Jetpack Compose is a modern toolkit for building native Android UI. Compose simplifies and accelerates UI development on Android with less code, powerful tools, and intuitive Kotlin APIs.",
     "imageUrl": "https://developers.google.com/static/profile/badges/playlists/android/android-basics-compose-unit-1-pathway-1/badge.svg"
   },
   {
     "id": 2,
-    "title": "Quadrant",
-    "subtitle": "In this section, you will discover how to use composition effectively.",
+    "title": "Perfect Quadrants, Perfect UI",
+    "subtitle": "Unlock the secret to pixel-perfect layouts using Compose's powerful composition techniques",
     "description": "Displays text and follows the recommended Material Design guidelines.",
     "imageUrl": "https://cdn-icons-png.flaticon.com/512/6699/6699786.png"
   },
   {
     "id": 3,
-    "title": "Tip Calculator",
-    "subtitle": "In this code lab you will learn how to build a tip calculator app.",
+    "title": "Build a Tip Calculator That Impresses",
+    "subtitle": "Create an elegant, functional app that your friends will actually want to use at dinner",
     "description": "",
     "imageUrl": "https://play-lh.googleusercontent.com/kNODo_-kWzlmyLmEMiBJqdk4kYiMkZVxsYhZW04Z_F_PX1oIPLzW-PEaihRh3xOblig"
   },
   {
     "id": 4,
-    "title": "Art Space App",
-    "subtitle": "In this section you will learn how to build an art space app.",
+    "title": "Craft Your Digital Art Gallery",
+    "subtitle": "Transform your phone into a museum-quality exhibition space with this stunning art showcase app",
     "imageUrl": "https://developers.google.com/static/profile/badges/playlists/android/android-basics-compose-unit-2-pathway-3/badge.svg"
   },
   {
     "id": 5,
-    "title": "Lemonade",
-    "subtitle": "This section will teach how to make a thirst quencher lemonade.",
+    "title": "Interactive Lemonade Experience",
+    "subtitle": "From tree to glass: Create a delightful animated app that brings the joy of lemonade-making to life",
     "imageUrl": "https://cdn-icons-png.flaticon.com/512/1425/1425548.png"
   },
   {
     "id": 6,
-    "title": "Task Manager",
-    "subtitle": "This section will teach you task manager.",
+    "title": "Productivity Powerhouse: Task Manager",
+    "subtitle": "Build the task manager app you've always wanted with clean UI, animations, and zero clutter",
     "imageUrl": "https://e7.pngegg.com/pngimages/368/132/png-clipart-getting-things-done-task-management-computer-icons-coelho-blue-angle-thumbnail.png"
   },
   {
     "id": 7,
-    "title": "Art Space",
-    "subtitle": "In this section you mainly going to study modifier of compose.",
+    "title": "Art Space: Mastering Compose Modifiers",
+    "subtitle": "Discover the styling superpowers that will transform your basic layouts into professional designs",
     "imageUrl": "https://developers.google.com/static/profile/badges/playlists/android/android-basics-compose-unit-2-pathway-3/badge.svg"
   },
   {
     "id": 8,
-    "title": "Business card",
-    "subtitle": "By building business card app you will learn how to work with compose Row and Column and arrange them with horizontalAlignment and verticalArrangement parameters.",
+    "title": "Professional Business Card Creator",
+    "subtitle": "Design impressive digital business cards that stand out using advanced layout techniques and Material Design",
     "imageUrl": "https://user-images.githubusercontent.com/29678011/201169741-7f95aae5-4cf7-462c-8cbd-e4dc5b0b2346.svg"
   },
   {
     "id": 9,
-    "title": "In maintenance",
-    "subtitle": "In maintenance",
+    "title": "Coming Soon: Weather Forecast Pro",
+    "subtitle": "Get early access to our most requested course on building a weather app with live data and animations",
     "imageUrl": "https://developers.google.com/static/profile/badges/playlists/android/android-basics-compose-unit-2-pathway-2/badge.svg"
   },
   {
     "id": 10,
-    "title": "In maintenance",
-    "subtitle": "In maintenance",
+    "title": "Coming Soon: Fitness Tracker Revolution",
+    "subtitle": "Be the first to learn how to build the ultimate fitness companion app with sensors and real-time analytics",
     "imageUrl": "https://developers.google.com/static/profile/badges/playlists/android/android-basics-compose-unit-2-pathway-2/badge.svg"
   }
 ]

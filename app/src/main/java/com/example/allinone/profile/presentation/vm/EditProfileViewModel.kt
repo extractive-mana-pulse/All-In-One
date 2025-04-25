@@ -7,6 +7,8 @@ import androidx.lifecycle.viewModelScope
 import com.example.allinone.auth.data.remote.impl.AuthenticationManager
 import com.example.allinone.auth.presentation.sealed.AuthResponse
 import com.example.allinone.profile.domain.model.EditProfileUiState
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.UserProfileChangeRequest
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -90,6 +92,46 @@ class EditProfileViewModel(
         _uiState.value = _uiState.value.copy(selectedImageUri = uri)
     }
 
+    fun deleteProfilePicture() {
+        viewModelScope.launch {
+            _loading.value = true
+
+            try {
+                val userId = FirebaseAuth.getInstance().currentUser?.uid
+
+                if (userId != null) {
+
+                    authManager.deleteImageFromFirebaseStorage(userId)
+
+                    _uiState.value = _uiState.value.copy(
+                        selectedImageUri = null,
+                        profilePictureUrl = null
+                    )
+
+                    val profileUpdates = UserProfileChangeRequest.Builder()
+                        .setPhotoUri(null)
+                        .build()
+
+                    FirebaseAuth.getInstance().currentUser?.updateProfile(profileUpdates)
+                        ?.addOnCompleteListener { task ->
+                            if (task.isSuccessful) {
+                                _successMessage.value = "Profile picture deleted"
+                            } else {
+                                _errorMessage.value = "Failed to update profile: ${task.exception?.message}"
+                            }
+                            _loading.value = false
+                        }
+                } else {
+                    _errorMessage.value = "User not logged in"
+                    _loading.value = false
+                }
+            } catch (e: Exception) {
+                _errorMessage.value = "An unexpected error occurred: ${e.message}"
+                _loading.value = false
+            }
+        }
+    }
+
     fun saveChanges(onSuccessNavigateBack: () -> Unit) {
         viewModelScope.launch {
             _loading.value = true
@@ -99,7 +141,7 @@ class EditProfileViewModel(
                 val imageUri = _uiState.value.selectedImageUri
                 if (imageUri != null) {
                     val imageResult = authManager.uploadProfilePicture(imageUri).first()
-                    when(imageResult){
+                    when(imageResult) {
                         is AuthResponse.Error -> {
                             _errorMessage.value = "Failed to upload image: ${imageResult.message}"
                             _loading.value = false
@@ -112,7 +154,7 @@ class EditProfileViewModel(
 
                 val displayName = _uiState.value.displayName
                 if (displayName.isNotBlank()) {
-                    val displayNameResult = authManager.updateUserProfile(displayName = displayName).first()
+                    val displayNameResult = authManager.updateUserProfile().first()
                     when(displayNameResult) {
                         is AuthResponse.Error -> {
                             _errorMessage.value = "Failed to update display name: ${displayNameResult.message}"

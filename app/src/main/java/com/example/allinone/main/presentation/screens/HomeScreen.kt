@@ -16,6 +16,7 @@ import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
@@ -29,11 +30,13 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.input.TextFieldState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.History
 import androidx.compose.material.icons.filled.Menu
@@ -49,6 +52,7 @@ import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SearchBar
+import androidx.compose.material3.SearchBarDefaults
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
@@ -63,12 +67,17 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.isTraversalGroup
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.traversalIndex
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.style.TextOverflow
@@ -86,6 +95,8 @@ import com.example.allinone.main.presentation.vm.TimerViewModel
 import com.example.allinone.navigation.screen.HomeScreens
 import com.example.allinone.navigation.screen.ProfileScreens
 import com.example.allinone.settings.readingMode.presentation.vm.ReadingModeViewModel
+import com.google.firebase.Firebase
+import com.google.firebase.auth.auth
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.launch
@@ -102,14 +113,12 @@ fun HomeScreen(
     drawerState: DrawerState
 ) {
 
+    val context = LocalContext.current
     val timerViewModel: TimerViewModel = hiltViewModel()
     val readingViewModel: ReadingModeViewModel = hiltViewModel()
     val timerValue by timerViewModel.timer.collectAsStateWithLifecycle()
     val readingMode by readingViewModel.isReadingModeEnabled.collectAsStateWithLifecycle()
 
-    Log.d("readingMode state", "HomeScreen: readingMode is $readingMode")
-
-    val context = LocalContext.current
     val scope = rememberCoroutineScope()
     var query by remember { mutableStateOf("") }
     var active by remember { mutableStateOf(false) }
@@ -119,11 +128,7 @@ fun HomeScreen(
     val sections = remember { loadSectionsFromJson(context) }
     var searchHistory = remember { mutableStateListOf<String>() }
 
-    LaunchedEffect(readingMode) {
-        if (readingMode) timerViewModel.startTimer() else rowVisible = false
-    }
-
-    Log.d("timer state", "HomeScreen: $timerValue seconds")
+    LaunchedEffect(readingMode) { if (readingMode) timerViewModel.startTimer() else rowVisible = false }
 
     LaunchedEffect(timerValue) {
         if (readingMode && timerViewModel.readingModeSnackbar(5)) {
@@ -175,103 +180,110 @@ fun HomeScreen(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(if (active) 0.dp else 16.dp),
-                            query = query,
-                            onQueryChange = { query = it },
-                            onSearch = { newQuery ->
-                                searchHistory.add(newQuery)
-                                active = false
-                                query = ""
-                            },
-                            active = active,
-                            onActiveChange = { active = it },
-                            placeholder = {
-                                Text(
-                                    text = stringResource(R.string.search)
-                                )
-                            },
-                            leadingIcon = {
-                                if (!active) {
-                                    IconButton(
-                                        onClick = {
-                                            scope.launch {
-                                                drawerState.apply {
-                                                    if (isClosed) open() else close()
-                                                }
-                                            }
-                                        }
-                                    ) {
-                                        Icon(
-                                            Icons.Default.Menu,
-                                            contentDescription = stringResource(R.string.search_bar_menu_icon)
+                            inputField = {
+                                SearchBarDefaults.InputField(
+                                    query = query,
+                                    onQueryChange = { query = it },
+                                    onSearch = { newQuery ->
+                                        searchHistory.add(newQuery)
+                                        active = false
+                                        query = ""
+                                    },
+                                    expanded = active,
+                                    onExpandedChange = { active = it },
+                                    placeholder = {
+                                        Text(
+                                            text = stringResource(R.string.search)
                                         )
-                                    }
-                                } else {
-                                    IconButton(
-                                        onClick = {
-                                            active = false
-                                            query = ""
-                                        }
-                                    ) {
-                                        Icon(
-                                            Icons.AutoMirrored.Default.ArrowBack,
-                                            contentDescription = stringResource(R.string.search_bar_close_icon)
-                                        )
-                                    }
-                                }
-                            },
-                            trailingIcon = {
-                                if (!active) {
-                                    IconButton(
-                                        onClick = {
-                                            navController.navigate(ProfileScreens.Profile.route)
-                                        }
-                                    ) {
-                                        Icon(
-                                            Icons.Default.AccountCircle,
-                                            contentDescription = stringResource(R.string.search_bar_profile_icon)
-                                        )
-                                    }
-                                } else {
-                                    Row {
-                                        if (query.isEmpty()) {
-                                            IconButton(onClick = {
-                                                val intent =
-                                                    Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH).apply {
-                                                        putExtra(
-                                                            RecognizerIntent.EXTRA_LANGUAGE_MODEL,
-                                                            RecognizerIntent.LANGUAGE_MODEL_FREE_FORM
-                                                        )
-                                                        putExtra(
-                                                            RecognizerIntent.EXTRA_LANGUAGE,
-                                                            Locale.getDefault()
-                                                        )
-                                                        putExtra(
-                                                            RecognizerIntent.EXTRA_PROMPT,
-                                                            "Speak to search..."
-                                                        )
+                                    },
+                                    leadingIcon = {
+                                        if (!active) {
+                                            IconButton(
+                                                onClick = {
+                                                    scope.launch {
+                                                        drawerState.apply {
+                                                            if (isClosed) open() else close()
+                                                        }
                                                     }
-                                                speechRecognizerLauncher.launch(intent)
-                                            }) {
+                                                }
+                                            ) {
                                                 Icon(
-                                                    Icons.Default.Mic,
-                                                    contentDescription = stringResource(R.string.search_bar_mic_icon)
+                                                    Icons.Default.Menu,
+                                                    contentDescription = stringResource(R.string.search_bar_menu_icon)
                                                 )
                                             }
                                         } else {
                                             IconButton(
                                                 onClick = {
+                                                    active = false
                                                     query = ""
                                                 }
                                             ) {
                                                 Icon(
-                                                    imageVector = Icons.Default.Close,
-                                                    contentDescription = stringResource(R.string.search_bar_clear_icon)
+                                                    Icons.AutoMirrored.Default.ArrowBack,
+                                                    contentDescription = stringResource(R.string.search_bar_close_icon)
                                                 )
                                             }
                                         }
-                                    }
-                                }
-                            }
+                                    },
+                                    trailingIcon = {
+                                        if (!active) {
+                                            IconButton(
+                                                onClick = {
+                                                    navController.navigate(ProfileScreens.Profile.route)
+                                                }
+                                            ) {
+                                                AsyncImage(
+                                                    model = Firebase.auth.currentUser?.photoUrl,
+                                                    contentScale = ContentScale.Crop,
+                                                    contentDescription = stringResource(R.string.search_bar_profile_icon)
+                                                )
+                                            }
+                                        } else {
+                                            Row {
+                                                if (query.isEmpty()) {
+                                                    IconButton(onClick = {
+                                                        val intent =
+                                                            Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH).apply {
+                                                                putExtra(
+                                                                    RecognizerIntent.EXTRA_LANGUAGE_MODEL,
+                                                                    RecognizerIntent.LANGUAGE_MODEL_FREE_FORM
+                                                                )
+                                                                putExtra(
+                                                                    RecognizerIntent.EXTRA_LANGUAGE,
+                                                                    Locale.getDefault()
+                                                                )
+                                                                putExtra(
+                                                                    RecognizerIntent.EXTRA_PROMPT,
+                                                                    "Speak to search..."
+                                                                )
+                                                            }
+                                                        speechRecognizerLauncher.launch(intent)
+                                                    }) {
+                                                        Icon(
+                                                            Icons.Default.Mic,
+                                                            contentDescription = stringResource(R.string.search_bar_mic_icon)
+                                                        )
+                                                    }
+                                                } else {
+                                                    IconButton(
+                                                        onClick = {
+                                                            query = ""
+                                                        }
+                                                    ) {
+                                                        Icon(
+                                                            imageVector = Icons.Default.Close,
+                                                            contentDescription = stringResource(R.string.search_bar_clear_icon)
+                                                        )
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    },
+                                )
+                            },
+                            expanded = active,
+                            onExpandedChange = { active = it },
                         ) {
                             if (searchHistory.isEmpty()) {
                                 Text(
@@ -281,10 +293,30 @@ fun HomeScreen(
                                         .align(Alignment.CenterHorizontally)
                                 )
                             } else {
-                                searchHistory.take(10).forEach { item ->
+                                searchHistory.forEach { item ->
                                     ListItem(
-                                        modifier = Modifier.clickable { query = item },
-                                        headlineContent = { Text(text = item) },
+                                        modifier = Modifier
+                                            .clickable {
+                                                query = item
+                                                active = false
+                                            }
+                                            .fillMaxWidth(),
+                                        headlineContent = {
+                                            Text(
+                                                text = item,
+                                                style = MaterialTheme.typography.bodyMedium.copy(
+                                                    color = MaterialTheme.colorScheme.primary,
+                                                    fontFamily = FontFamily(Font(R.font.inknut_antiqua_bold)),
+                                                    fontSize = MaterialTheme.typography.bodyMedium.fontSize,
+                                                    fontWeight = MaterialTheme.typography.bodyMedium.fontWeight,
+                                                    letterSpacing = MaterialTheme.typography.bodyMedium.letterSpacing,
+                                                    lineHeight = MaterialTheme.typography.bodyMedium.lineHeight,
+                                                    platformStyle = MaterialTheme.typography.bodyMedium.platformStyle,
+                                                    textAlign = MaterialTheme.typography.bodyMedium.textAlign,
+                                                    textDirection = MaterialTheme.typography.bodyMedium.textDirection,
+                                                )
+                                            )
+                                        },
                                         leadingContent = {
                                             Icon(
                                                 Icons.Default.History,
@@ -573,5 +605,58 @@ fun loadSectionsFromJson(context: Context) : List<Sections> {
     } catch (e: Exception) {
         e.printStackTrace()
         return emptyList()
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun SimpleSearchBar(
+    textFieldState: TextFieldState,
+    onSearch: (String) -> Unit,
+    searchResults: List<String>,
+    modifier: Modifier = Modifier
+) {
+    // Controls expansion state of the search bar
+    var expanded by rememberSaveable { mutableStateOf(false) }
+
+    Box(
+        modifier
+            .fillMaxSize()
+            .semantics { isTraversalGroup = true }
+    ) {
+        SearchBar(
+            modifier = Modifier
+                .align(Alignment.TopCenter)
+                .semantics { traversalIndex = 0f },
+            inputField = {
+                SearchBarDefaults.InputField(
+                    query = textFieldState.text.toString(),
+                    onQueryChange = { textFieldState.edit { replace(0, length, it) } },
+                    onSearch = {
+                        onSearch(textFieldState.text.toString())
+                        expanded = false
+                    },
+                    expanded = expanded,
+                    onExpandedChange = { expanded = it },
+                    placeholder = { Text("Search") }
+                )
+            },
+            expanded = expanded,
+            onExpandedChange = { expanded = it },
+        ) {
+            Column(Modifier.verticalScroll(rememberScrollState())) {
+                searchResults.forEach { result ->
+                    ListItem(
+                        headlineContent = { Text(result) },
+                        modifier = Modifier
+                            .clickable {
+                                textFieldState.edit { replace(0, length, result) }
+                                expanded = false
+                            }
+                            .fillMaxWidth()
+                    )
+                }
+            }
+        }
     }
 }

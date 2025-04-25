@@ -1,18 +1,13 @@
 package com.example.allinone.core.util.ui
 
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.HelpOutline
@@ -35,8 +30,6 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
@@ -47,6 +40,7 @@ import com.example.allinone.BuildConfig
 import com.example.allinone.R
 import com.example.allinone.navigation.screen.HomeScreens
 import com.example.allinone.navigation.screen.SettingsScreens
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -98,40 +92,25 @@ private fun NavigationDrawerContent(
                 .verticalScroll(rememberScrollState())
                 .fillMaxWidth()
         ) {
-            Row(
+            Text(
+                text = stringResource(R.string.app_name),
                 modifier = Modifier
-                    .fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
-                Image(
-                    painter = painterResource(id = R.drawable.logo),
-                    contentDescription = stringResource(R.string.app_name),
-                    modifier = Modifier
-                        .size(64.dp)
-                        .padding(8.dp)
-                        .clip(CircleShape)
-                        .background(MaterialTheme.colorScheme.secondaryContainer)
+                    .padding(vertical = 16.dp),
+                style = MaterialTheme.typography.titleLarge.copy(
+                    color = MaterialTheme.colorScheme.primary,
+                    fontSize = MaterialTheme.typography.titleLarge.fontSize,
+                    fontWeight = MaterialTheme.typography.titleLarge.fontWeight,
+                    letterSpacing = MaterialTheme.typography.titleLarge.letterSpacing,
+                    lineHeight = MaterialTheme.typography.titleLarge.lineHeight,
+                    platformStyle = MaterialTheme.typography.titleLarge.platformStyle,
+                    fontFamily = FontFamily(Font(R.font.inknut_antiqua_semi_bold))
                 )
-                Text(
-                    text = stringResource(R.string.app_name),
-                    modifier = Modifier
-                        .padding(vertical = 16.dp),
-                    style = MaterialTheme.typography.titleLarge.copy(
-                        color = MaterialTheme.colorScheme.primary,
-                        fontSize = MaterialTheme.typography.titleLarge.fontSize,
-                        fontWeight = MaterialTheme.typography.titleLarge.fontWeight,
-                        letterSpacing = MaterialTheme.typography.titleLarge.letterSpacing,
-                        lineHeight = MaterialTheme.typography.titleLarge.lineHeight,
-                        platformStyle = MaterialTheme.typography.titleLarge.platformStyle,
-                        fontFamily = FontFamily(Font(R.font.inknut_antiqua_semi_bold))
-                    )
-                )
-            }
+            )
 
             HorizontalDivider()
 
             Text(
-                text = "Main content",
+                text = stringResource(R.string.main_content),
                 modifier = Modifier.padding(vertical = 16.dp),
                 style = MaterialTheme.typography.titleMedium.copy(
                     color = MaterialTheme.colorScheme.primary,
@@ -179,7 +158,7 @@ private fun NavigationDrawerContent(
             HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
 
             Text(
-                text = "Settings and Help",
+                text = stringResource(R.string.settings_and_help),
                 modifier = Modifier.padding(vertical = 16.dp),
                 style = MaterialTheme.typography.titleMedium.copy(
                     color = MaterialTheme.colorScheme.primary,
@@ -205,7 +184,7 @@ private fun NavigationDrawerContent(
                     )
                 },
                 onClick = {
-                    scope.launch { drawerState.close() }
+                    scope.launch(Dispatchers.Main) { drawerState.close() }
                     navController.navigate(SettingsScreens.Settings.route)
                 }
             )
@@ -223,12 +202,11 @@ private fun NavigationDrawerContent(
                     )
                 },
                 onClick = {
-                    scope.launch { drawerState.close() }
+                    scope.launch(Dispatchers.Main) { drawerState.close() }
                     navController.navigate(HomeScreens.Help.route)
                 },
             )
 
-            // spacer to push version to bottom
             Spacer(modifier = Modifier.weight(1f))
         }
         Text(

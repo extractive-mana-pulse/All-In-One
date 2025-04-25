@@ -21,9 +21,11 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Error
+import androidx.compose.material.icons.filled.PersonRemoveAlt1
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -55,8 +57,6 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import coil3.compose.AsyncImage
-import coil3.request.ImageRequest
-import coil3.request.crossfade
 import com.example.allinone.R
 import com.example.allinone.auth.data.remote.impl.AuthenticationManager
 import com.example.allinone.core.util.ui.Loading
@@ -82,7 +82,6 @@ fun EditProfileScreen(
     val successMessage by editProfileViewModel.successMessage.collectAsStateWithLifecycle()
     val fetchStatus by editProfileViewModel.fetchUserDataStatus.collectAsStateWithLifecycle()
 
-    // Image picker
     val imagePickerLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent()
     ) { uri: Uri? -> 
@@ -110,6 +109,18 @@ fun EditProfileScreen(
                         )
                     }
                 },
+                actions = {
+                    IconButton(
+                        onClick = {
+                            editProfileViewModel.deleteProfilePicture()
+                        }
+                    ) {
+                        Icon(
+                            Icons.Default.PersonRemoveAlt1,
+                            contentDescription = null
+                        )
+                    }
+                }
             )
         }
     ) { innerPadding ->
@@ -156,27 +167,21 @@ fun EditProfileScreen(
 
                         if (imageUri != null) {
                             AsyncImage(
-                                model = ImageRequest.Builder(context)
-                                    .data(imageUri)
-                                    .crossfade(true)
-                                    .build(),
+                                model = imageUri,
                                 contentDescription = "Selected profile picture",
                                 modifier = Modifier.fillMaxSize(),
                                 contentScale = ContentScale.Crop
                             )
-                        } else if (imageUrl.isNotBlank()) {
+                        } else if (imageUrl?.isNotBlank() == true) {
                             AsyncImage(
-                                model = ImageRequest.Builder(context)
-                                    .data(imageUrl)
-                                    .crossfade(true)
-                                    .build(),
+                                model = imageUrl,
                                 contentDescription = "Current profile picture",
                                 modifier = Modifier.fillMaxSize(),
                                 contentScale = ContentScale.Crop
                             )
                         } else {
                             Icon(
-                                imageVector = Icons.Default.Edit,
+                                imageVector = Icons.Default.AccountCircle,
                                 contentDescription = null,
                             )
                         }
@@ -270,7 +275,7 @@ fun EditProfileScreen(
 }
 
 @Composable
-private fun FetchStatusError(viewModel: EditProfileViewModel) {
+fun FetchStatusError(viewModel: EditProfileViewModel) {
     Box(
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.Center

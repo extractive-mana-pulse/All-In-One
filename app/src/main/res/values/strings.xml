@@ -80,4 +80,8 @@
     <string name="web_client_id" translatable="false">857053349382-d5rrmu2150m77sms3dqis9sc8eest2pt.apps.googleusercontent.com</string>
     <string name="sign_out">Sign out</string>
     <string name="edit_profile">Edit Profile</string>
+    <string name="main_content">Main content</string>
+    <string name="settings_and_help">Settings and Help</string>
+    <string name="take_codelab_btn_text">Start the code lab</string>
+    <string name="details_screen_to_somewhere">Navigate up from details screen</string>
 </resources>

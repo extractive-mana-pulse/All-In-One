@@ -10,6 +10,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import com.example.allinone.codelabs.presentation.screens.ArtSpace
+import com.example.allinone.codelabs.presentation.screens.BusinessCard
 import com.example.allinone.codelabs.presentation.screens.ComposeArticleScreen
 import com.example.allinone.codelabs.presentation.screens.ComposeQuadrant
 import com.example.allinone.codelabs.presentation.screens.Lemonade
@@ -187,5 +188,8 @@ fun NavGraphBuilder.codelabsNavigation(
         }
     ) {
         ArtSpace(navController = navController)
+    }
+    composable(Screens.BusinessCard.route) {
+        BusinessCard()
     }
 }
