@@ -16,6 +16,7 @@ import com.example.allinone.codelabs.presentation.screens.ComposeQuadrant
 import com.example.allinone.codelabs.presentation.screens.Lemonade
 import com.example.allinone.codelabs.presentation.screens.TaskManager
 import com.example.allinone.codelabs.presentation.screens.TipTimeLayout
+import com.example.allinone.codelabs.presentation.screens.WoofApp
 import com.example.allinone.navigation.screen.Screens
 
 fun NavGraphBuilder.codelabsNavigation(
@@ -189,7 +190,12 @@ fun NavGraphBuilder.codelabsNavigation(
     ) {
         ArtSpace(navController = navController)
     }
+
     composable(Screens.BusinessCard.route) {
         BusinessCard()
+    }
+
+    composable(Screens.Woof.route) {
+        WoofApp(navController = navController)
     }
 }

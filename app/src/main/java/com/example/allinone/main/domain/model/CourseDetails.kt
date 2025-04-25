@@ -6,6 +6,7 @@ data class CourseDetails (
     val subtitle: String? = null,
     val description: String? = null,
     val imageUrl: String? = null,
+    val web_url: String? = null,
     val publishedDate: String? = null,
     val author: String? = null,
 )

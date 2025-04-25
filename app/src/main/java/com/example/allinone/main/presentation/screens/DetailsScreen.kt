@@ -1,6 +1,7 @@
 package com.example.allinone.main.presentation.screens
 
 import android.content.Context
+import android.content.Intent
 import android.util.Log
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -14,6 +15,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Preview
 import androidx.compose.material.icons.outlined.BookmarkBorder
 import androidx.compose.material3.Button
@@ -45,12 +47,14 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
+import androidx.core.net.toUri
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import coil3.compose.AsyncImage
 import com.example.allinone.R
 import com.example.allinone.core.extension.toastMessage
+import com.example.allinone.core.util.ui.CustomAlertDialog
 import com.example.allinone.main.domain.model.CourseDetails
 import com.example.allinone.main.presentation.vm.TimerViewModel
 import com.example.allinone.navigation.screen.Screens
@@ -164,6 +168,9 @@ fun DetailsScreen(
                                 }
                                 "Business card" -> {
                                     navController.navigate(Screens.BusinessCard.route)
+                                }
+                                "Woof" -> {
+                                    navController.navigate(Screens.Woof.route)
                                 }
                                 else -> {
                                     toastMessage(
@@ -293,7 +300,9 @@ private fun DetailsItem(course: CourseDetails) {
                         )
                     }
                 ) {
-                    Text("Follow")
+                    Text(
+                        text = stringResource(R.string.follow)
+                    )
                 }
             }
 
@@ -309,18 +318,37 @@ private fun DetailsItem(course: CourseDetails) {
                     letterSpacing = MaterialTheme.typography.bodyMedium.letterSpacing,
                 ),
             )
+            val intent = Intent(
+                Intent.ACTION_VIEW,
+                course.web_url?.toUri() ?: "https://www.example.com".toUri()
+            )
+
+            val openAlertDialog = remember { mutableStateOf(false) }
+
             Button(
-                modifier = Modifier
-                    .fillMaxWidth(),
+                modifier = Modifier.fillMaxWidth(),
                 onClick = {
-                    toastMessage(
-                        context = context,
-                        message = "In progress. This feature will be implemented soon"
-                    )
+                    openAlertDialog.value = true
                 }
             ) {
                 Text(
                     text = stringResource(R.string.take_codelab_btn_text)
+                )
+            }
+
+            if (openAlertDialog.value) {
+
+                CustomAlertDialog(
+                    onDismissRequest = {
+                        openAlertDialog.value = false
+                    },
+                    onConfirmation = {
+                        openAlertDialog.value = false
+                        context.startActivity(intent)
+                    },
+                    dialogTitle = stringResource(R.string.warning),
+                    dialogText = stringResource(R.string.dialog_txt),
+                    icon = Icons.Default.Info
                 )
             }
         }
