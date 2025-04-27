@@ -1,8 +1,6 @@
 package com.example.allinone.main.presentation.screens
 
-import android.content.Context
 import android.content.Intent
-import android.util.Log
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -48,6 +46,7 @@ import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
@@ -56,10 +55,10 @@ import com.example.allinone.R
 import com.example.allinone.core.extension.toastMessage
 import com.example.allinone.core.util.ui.CustomAlertDialog
 import com.example.allinone.main.domain.model.CourseDetails
+import com.example.allinone.main.presentation.vm.DetailsViewModel
 import com.example.allinone.main.presentation.vm.TimerViewModel
 import com.example.allinone.navigation.screen.Screens
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
+import com.example.allinone.settings.readingMode.presentation.vm.ReadingModeViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -68,12 +67,18 @@ fun DetailsScreen(
     id: Int,
     timerViewModel: TimerViewModel
 ) {
+
+    val detailsViewModel : DetailsViewModel = hiltViewModel()
+    val courseDetails by detailsViewModel.courseDetails.collectAsStateWithLifecycle()
+
     val context = LocalContext.current
     val verticalScroll = rememberScrollState()
     val snackbarHostState = remember { SnackbarHostState() }
+    val readingViewModel : ReadingModeViewModel = hiltViewModel()
     val timerValue by timerViewModel.timer.collectAsStateWithLifecycle()
-    val courseDetails by remember { mutableStateOf(loadCourseByIdFromJson(context, id)) }
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
+
+    LaunchedEffect(key1 = true) { detailsViewModel.loadCourse(id) }
 
     LaunchedEffect(courseDetails) {
         if (courseDetails != null) {
@@ -90,12 +95,8 @@ fun DetailsScreen(
                 withDismissAction = true
             )
             when(result) {
-                SnackbarResult.Dismissed -> {
-                    // dismiss snackbar, stop timer
-                }
-                SnackbarResult.ActionPerformed -> {
-                    // turn on reading mode
-                }
+                SnackbarResult.Dismissed -> timerViewModel.stopTimer()
+                SnackbarResult.ActionPerformed -> readingViewModel.toggleReadingMode(true)
             }
         }
     }
@@ -241,7 +242,9 @@ private fun DetailsNotFound() {
             },
             modifier = Modifier.align(Alignment.CenterHorizontally)
         ) {
-            Text(text = "Retry")
+            Text(
+                text = stringResource(R.string.retry)
+            )
         }
     }
 }
@@ -318,10 +321,18 @@ private fun DetailsItem(course: CourseDetails) {
                     letterSpacing = MaterialTheme.typography.bodyMedium.letterSpacing,
                 ),
             )
-            val intent = Intent(
-                Intent.ACTION_VIEW,
-                course.web_url?.toUri() ?: "https://www.example.com".toUri()
-            )
+
+            val intent = if (course.web_url.isNullOrEmpty()) {
+                Intent(
+                    Intent.ACTION_VIEW,
+                    "https://www.example.com".toUri()
+                )
+            } else {
+                Intent(
+                    Intent.ACTION_VIEW,
+                    course.web_url.toUri()
+                )
+            }
 
             val openAlertDialog = remember { mutableStateOf(false) }
 
@@ -352,22 +363,5 @@ private fun DetailsItem(course: CourseDetails) {
                 )
             }
         }
-    }
-}
-
-private fun loadCourseByIdFromJson(context: Context, id: Int): CourseDetails? {
-    return try {
-        val jsonString = context.assets.open("course_details.json").bufferedReader().use { it.readText() }
-        val gson = Gson()
-        val listType = object : TypeToken<List<CourseDetails>>() {}.type
-        val coursesList: List<CourseDetails> = gson.fromJson(jsonString, listType)
-        coursesList.find { it.id == id }
-    } catch (e: Exception) {
-        Log.d("DetailsScreen", "Error loading course details: ${e.message}")
-        toastMessage(
-            context = context,
-            message = "Error loading course details: ${e.message}"
-        )
-        null
     }
 }

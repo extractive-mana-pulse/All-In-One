@@ -42,8 +42,8 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             val timerViewModel: TimerViewModel by viewModels()
-            val readingModeViewModel = hiltViewModel<ReadingModeViewModel>()
             val darkThemeViewModel = hiltViewModel<DarkThemeViewModel>()
+            val readingModeViewModel = hiltViewModel<ReadingModeViewModel>()
             val isDarkTheme by darkThemeViewModel.isDarkTheme.collectAsStateWithLifecycle()
             val isReadingTheme by readingModeViewModel.isReadingModeEnabled.collectAsStateWithLifecycle()
 
@@ -52,6 +52,7 @@ class MainActivity : ComponentActivity() {
                 readingTheme = isReadingTheme
             ) {
                 val navController: NavHostController = rememberNavController()
+
                 NavigationGraph(
                     navController = navController,
                     isDarkTheme = isDarkTheme,

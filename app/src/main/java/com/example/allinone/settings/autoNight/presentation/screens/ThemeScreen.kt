@@ -23,6 +23,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -39,6 +40,7 @@ import com.example.allinone.R
 import com.example.allinone.core.extension.isInDarkMode
 import com.example.allinone.navigation.screen.SettingsScreens
 import com.example.allinone.settings.autoNight.presentation.vm.ThemeViewModel
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -46,6 +48,7 @@ fun AutoNightModeScreen(
     navController: NavHostController = rememberNavController(),
     onThemeChanged: (Boolean) -> Unit
 ) {
+    val scope = rememberCoroutineScope()
     val context = LocalContext.current
     val viewModel: ThemeViewModel = hiltViewModel()
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
@@ -113,7 +116,9 @@ fun AutoNightModeScreen(
 
                             // System default mode: follows system theme
                             context.getString(R.string.default_mode) -> {
-                                onThemeChanged(context.isInDarkMode())
+                                scope.launch {
+                                    onThemeChanged(context.isInDarkMode())
+                                }
                             }
                         }
                     }

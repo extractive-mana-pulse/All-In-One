@@ -18,7 +18,7 @@
     "title": "Build a Tip Calculator That Impresses",
     "subtitle": "Create an elegant, functional app that your friends will actually want to use at dinner",
     "description": "",
-    "imageUrl": "https://play-lh.googleusercontent.com/kNODo_-kWzlmyLmEMiBJqdk4kYiMkZVxsYhZW04Z_F_PX1oIPLzW-PEaihRh3xOblig"
+    "imageUrl": "https://edykim.com/app/tip-calculator/icon.png"
   },
   {
     "id": 4,
@@ -30,13 +30,13 @@
     "id": 5,
     "title": "Interactive Lemonade Experience",
     "subtitle": "From tree to glass: Create a delightful animated app that brings the joy of lemonade-making to life",
-    "imageUrl": "https://cdn-icons-png.flaticon.com/512/1425/1425548.png"
+    "imageUrl": "https://png.pngtree.com/element_our/20190601/ourmid/pngtree-lemon-icon-image_1347966.jpg"
   },
   {
     "id": 6,
     "title": "Productivity Powerhouse: Task Manager",
     "subtitle": "Build the task manager app you've always wanted with clean UI, animations, and zero clutter",
-    "imageUrl": "https://e7.pngegg.com/pngimages/368/132/png-clipart-getting-things-done-task-management-computer-icons-coelho-blue-angle-thumbnail.png"
+    "imageUrl": "https://cdn2.iconfinder.com/data/icons/greenline/512/check-512.png"
   },
   {
     "id": 7,
@@ -58,8 +58,8 @@
   },
   {
     "id": 10,
-    "title": "Coming Soon: Fitness Tracker Revolution",
-    "subtitle": "Be the first to learn how to build the ultimate fitness companion app with sensors and real-time analytics",
-    "imageUrl": "https://developers.google.com/static/profile/badges/playlists/android/android-basics-compose-unit-2-pathway-2/badge.svg"
+    "title": "Woof",
+    "subtitle": "Be the first to learn how to build the ultimate woof companion app with names and years of age of dogs.",
+    "imageUrl": "https://static.vecteezy.com/system/resources/previews/016/461/327/non_2x/woof-text-in-a-speech-bubble-balloon-sticker-design-cartoon-comics-dog-bark-sound-effect-and-lettering-simple-flat-illustration-on-brown-background-vector.jpg"
   }
 ]

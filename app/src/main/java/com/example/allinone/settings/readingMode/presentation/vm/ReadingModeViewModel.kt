@@ -42,7 +42,9 @@ class ReadingModeViewModel @Inject constructor(
         }
     }
 
-    fun disableReadingMode() {
-        _isReadingModeEnabled.value = false
+    fun disableReadingMode(disabled: Boolean) {
+        viewModelScope.launch {
+            readingModePreferences.removeReadingModePreference(disabled)
+        }
     }
 }

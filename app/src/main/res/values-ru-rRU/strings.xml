@@ -92,4 +92,7 @@
     <string name="warning">Warning</string>
     <string name="dialog_txt">If you proceed next with this code lab, you will be navigated to official web page of this code lab.</string>
     <string name="woof">Woof</string>
+    <string name="turn_off">Turn off</string>
+    <string name="home_screen_custom_row_txt">Would you like to turn off reading mode?</string>
+    <string name="retry">Retry</string>
 </resources>

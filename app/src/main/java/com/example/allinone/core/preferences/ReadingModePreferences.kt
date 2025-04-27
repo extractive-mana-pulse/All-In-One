@@ -20,4 +20,10 @@ class ReadingModePreferences(
             preferences[PreferencesKeys.READING_THEME] = isReadingMode
         }
     }
+
+    suspend fun removeReadingModePreference(isReadingMode: Boolean) {
+        context.dataStore.edit { preferences ->
+            preferences[PreferencesKeys.READING_THEME] = isReadingMode
+        }
+    }
 }

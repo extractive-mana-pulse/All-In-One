@@ -4,7 +4,6 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.speech.RecognizerIntent
-import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.AnimatedVisibility
@@ -13,7 +12,6 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -128,7 +126,12 @@ fun HomeScreen(
     val sections = remember { loadSectionsFromJson(context) }
     var searchHistory = remember { mutableStateListOf<String>() }
 
-    LaunchedEffect(readingMode) { if (readingMode) timerViewModel.startTimer() else rowVisible = false }
+    LaunchedEffect(readingMode) {
+        if (readingMode)
+            timerViewModel.startTimer()
+        else
+            rowVisible = false
+    }
 
     LaunchedEffect(timerValue) {
         if (readingMode && timerViewModel.readingModeSnackbar(5)) {
@@ -140,13 +143,11 @@ fun HomeScreen(
             )
             when (result) {
                 SnackbarResult.ActionPerformed -> {
-                    readingViewModel.disableReadingMode()
+                    readingViewModel.disableReadingMode(false)
                     rowVisible = false
-                    Log.d("snackbar action", "User turned off reading mode")
                 }
                 SnackbarResult.Dismissed -> {
                     rowVisible = true
-                    Log.d("snackbar dismissed", "Showing persistent row and resetting timer")
                 }
             }
         }
@@ -358,13 +359,12 @@ fun HomeScreen(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .clip(RoundedCornerShape(8.dp))
-                                .background(MaterialTheme.colorScheme.surfaceContainerHigh)
                                 .padding(horizontal = 16.dp, vertical = 8.dp),
                             horizontalArrangement = Arrangement.SpaceAround,
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             Text(
-                                text = "You want to turn off reading mode?",
+                                text = stringResource(R.string.home_screen_custom_row_txt),
                                 style = MaterialTheme.typography.bodyMedium.copy(
                                     color = MaterialTheme.colorScheme.primary
                                 )
@@ -376,11 +376,13 @@ fun HomeScreen(
                             ) {
                                 TextButton(
                                     onClick = {
-                                        readingViewModel.disableReadingMode()
+                                        readingViewModel.disableReadingMode(false)
                                         rowVisible = false
                                     }
                                 ) {
-                                    Text(text = "Turn off")
+                                    Text(
+                                        text = stringResource(R.string.turn_off),
+                                    )
                                 }
                                 IconButton(
                                     onClick = {
