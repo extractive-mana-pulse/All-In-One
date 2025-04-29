@@ -12,9 +12,11 @@ import com.example.allinone.navigation.graph.Graph
 import com.example.allinone.navigation.screen.SettingsScreens
 import com.example.allinone.settings.autoNight.presentation.screens.AdaptiveModeScreen
 import com.example.allinone.settings.autoNight.presentation.screens.AutoNightModeScreen
-import com.example.allinone.settings.batterySafe.presentation.screens.BatterySavingScreen
 import com.example.allinone.settings.autoNight.presentation.screens.ScheduledModeScreen
 import com.example.allinone.settings.autoNight.presentation.screens.SettingScreen
+import com.example.allinone.settings.batterySafe.presentation.screens.BatterySavingScreen
+import com.example.allinone.settings.deviceTemp.AllSensorsScreen
+import com.example.allinone.settings.deviceTemp.DeviceTempScreen
 import com.google.android.gms.location.FusedLocationProviderClient
 
 internal fun NavGraphBuilder.settingsNavigation(
@@ -60,6 +62,16 @@ internal fun NavGraphBuilder.settingsNavigation(
                 isDarkTheme = isDarkTheme,
                 onThemeChanged = onThemeChanged,
                 fusedLocationClient = fusedLocationClient
+            )
+        }
+        composable(SettingsScreens.Temperature.route) {
+            DeviceTempScreen(
+                navController = navController
+            )
+        }
+        composable(SettingsScreens.AllSensors.route) {
+            AllSensorsScreen(
+                navController = navController
             )
         }
     }

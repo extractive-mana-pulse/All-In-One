@@ -96,6 +96,12 @@ sealed class SettingsScreens(val route: String) {
 
     @Serializable
     object ScheduledMode: SettingsScreens("scheduled_mode")
+
+    @Serializable
+    object Temperature: SettingsScreens("temperature")
+
+    @Serializable
+    object AllSensors: SettingsScreens("all_sensors")
 }
 
 @Serializable

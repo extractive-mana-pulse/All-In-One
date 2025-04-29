@@ -9,7 +9,10 @@
 
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.BODY_SENSORS" />
 
+    <uses-feature android:name="android.hardware.sensor.ambient_temperature" android:required="false" />
+    <uses-feature android:name="android.hardware.sensor.temperature" android:required="false" />
 <!--    android:enableOnBackInvokedCallback="true"
         this piece of code above is for activating predictive navigation back.
 -->

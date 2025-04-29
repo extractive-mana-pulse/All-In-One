@@ -21,6 +21,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.MenuBook
 import androidx.compose.material.icons.filled.BatterySaver
+import androidx.compose.material.icons.filled.DeviceThermostat
 import androidx.compose.material.icons.filled.Language
 import androidx.compose.material.icons.filled.NightsStay
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -146,6 +147,18 @@ fun SettingScreen(
                     icon = Icons.Default.BatterySaver,
                     onClick = {
                         navController.navigate(SettingsScreens.PowerSaving.route)
+                    }
+                )
+            }
+
+            /** Device temperature */
+            item {
+                SettingsItem(
+                    title = stringResource(R.string.device_temperature),
+                    description = stringResource(R.string.device_temperature_desc),
+                    icon = Icons.Default.DeviceThermostat,
+                    onClick = {
+                        navController.navigate(SettingsScreens.Temperature.route)
                     }
                 )
             }

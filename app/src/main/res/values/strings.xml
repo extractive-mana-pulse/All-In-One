@@ -114,4 +114,8 @@
     <string name="turn_off">Turn off</string>
     <string name="home_screen_custom_row_txt">Would you like to turn off reading mode?</string>
     <string name="retry">Retry</string>
+    <string name="device_temperature">Device Temperature</string>
+    <string name="device_temperature_desc">Device temperature will be shown in user friendly graph.</string>
+    <string name="refresh_temp">Refresh temperature</string>
+    <string name="send_feedback">Send Feedback</string>
 </resources>
