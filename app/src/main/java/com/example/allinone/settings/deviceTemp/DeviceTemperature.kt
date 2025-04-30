@@ -24,7 +24,6 @@ import androidx.compose.material.icons.outlined.Feedback
 import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material.icons.outlined.Refresh
 import androidx.compose.material.icons.outlined.Sensors
-import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.DropdownMenu
@@ -36,6 +35,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.LargeTopAppBar
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
@@ -54,10 +54,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
@@ -124,6 +122,7 @@ fun DeviceTempScreen(
             verticalArrangement = Arrangement.Center
         ) {
             Spacer(modifier = Modifier.height(16.dp))
+
             TemperatureStatus(tempData = tempData)
 
             if (sensorAvailable) {
@@ -143,7 +142,7 @@ private fun IfSensorsAvailable(tempData: TemperatureData) {
         modifier = Modifier
             .fillMaxWidth()
             .padding(16.dp),
-        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
         Column(
             modifier = Modifier.padding(16.dp),
@@ -151,8 +150,14 @@ private fun IfSensorsAvailable(tempData: TemperatureData) {
         ) {
             Text(
                 text = "${"%.1f".format(tempData.celsius)}°C",
-                fontSize = 48.sp,
-                fontWeight = FontWeight.Bold
+                style = MaterialTheme.typography.headlineMedium.copy(
+                    fontFamily = FontFamily(Font(R.font.inknut_antiqua_extra_bold)),
+                    fontSize = MaterialTheme.typography.headlineMedium.fontSize,
+                    fontWeight = MaterialTheme.typography.headlineMedium.fontWeight,
+                    lineHeight = MaterialTheme.typography.headlineMedium.lineHeight,
+                    letterSpacing = MaterialTheme.typography.headlineMedium.letterSpacing,
+                    textAlign = TextAlign.Justify
+                )
             )
 
             Spacer(modifier = Modifier.height(8.dp))
@@ -163,11 +168,25 @@ private fun IfSensorsAvailable(tempData: TemperatureData) {
             ) {
                 Text(
                     text = tempData.fahrenheit,
-                    fontSize = 20.sp
+                    style = MaterialTheme.typography.bodyMedium.copy(
+                        fontFamily = FontFamily(Font(R.font.inknut_antiqua_light)),
+                        fontSize = MaterialTheme.typography.bodyMedium.fontSize,
+                        fontWeight = MaterialTheme.typography.bodyMedium.fontWeight,
+                        lineHeight = MaterialTheme.typography.bodyMedium.lineHeight,
+                        letterSpacing = MaterialTheme.typography.bodyMedium.letterSpacing,
+                        textAlign = TextAlign.Justify
+                    )
                 )
                 Text(
                     text = tempData.kelvin,
-                    fontSize = 20.sp
+                    style = MaterialTheme.typography.bodyMedium.copy(
+                        fontFamily = FontFamily(Font(R.font.inknut_antiqua_light)),
+                        fontSize = MaterialTheme.typography.bodyMedium.fontSize,
+                        fontWeight = MaterialTheme.typography.bodyMedium.fontWeight,
+                        lineHeight = MaterialTheme.typography.bodyMedium.lineHeight,
+                        letterSpacing = MaterialTheme.typography.bodyMedium.letterSpacing,
+                        textAlign = TextAlign.Justify
+                    )
                 )
             }
         }
@@ -190,7 +209,7 @@ private fun IfSensorsNotAvailable() {
         ) {
             Icon(
                 imageVector = Icons.Default.Warning,
-                contentDescription = "Warning",
+                contentDescription = null,
                 tint = MaterialTheme.colorScheme.error,
                 modifier = Modifier.size(48.dp)
             )
@@ -198,18 +217,30 @@ private fun IfSensorsNotAvailable() {
             Spacer(modifier = Modifier.height(8.dp))
 
             Text(
-                text = "No temperature sensor available",
-                fontSize = 18.sp,
-                color = MaterialTheme.colorScheme.error,
-                textAlign = TextAlign.Center
+                text = stringResource(R.string.no_temp_sensor_available),
+                style = MaterialTheme.typography.bodyLarge.copy(
+                    fontFamily = FontFamily(Font(R.font.inknut_antiqua_regular)),
+                    fontSize = MaterialTheme.typography.bodyLarge.fontSize,
+                    fontWeight = MaterialTheme.typography.bodyLarge.fontWeight,
+                    lineHeight = MaterialTheme.typography.bodyLarge.lineHeight,
+                    letterSpacing = MaterialTheme.typography.bodyLarge.letterSpacing,
+                    textAlign = TextAlign.Justify,
+                    color = MaterialTheme.colorScheme.error
+                ),
             )
 
             Spacer(modifier = Modifier.height(8.dp))
 
             Text(
-                text = "This device doesn't appear to have temperature sensors accessible to applications",
-                fontSize = 14.sp,
-                textAlign = TextAlign.Center
+                text = stringResource(R.string.device_sensors_info),
+                style = MaterialTheme.typography.bodyMedium.copy(
+                    fontFamily = FontFamily(Font(R.font.inknut_antiqua_regular)),
+                    fontSize = MaterialTheme.typography.bodyMedium.fontSize,
+                    fontWeight = MaterialTheme.typography.bodyMedium.fontWeight,
+                    lineHeight = MaterialTheme.typography.bodyMedium.lineHeight,
+                    letterSpacing = MaterialTheme.typography.bodyMedium.letterSpacing,
+                    textAlign = TextAlign.Justify
+                ),
             )
         }
     }
@@ -225,10 +256,10 @@ fun TemperatureStatus(tempData: TemperatureData) {
     }
 
     val statusText = when {
-        tempData.celsius < 10 -> "Cold"
-        tempData.celsius in 10.0..42.0 -> "Normal"
-        tempData.celsius in 43.0..45.0 -> "Warning"
-        else -> "Hot"
+        tempData.celsius < 10 -> stringResource(R.string.cold)
+        tempData.celsius in 10.0..42.0 -> stringResource(R.string.normal)
+        tempData.celsius in 43.0..45.0 -> stringResource(R.string.warning)
+        else -> stringResource(R.string.hot)
     }
 
     Column(
@@ -262,7 +293,7 @@ fun TemperatureStatus(tempData: TemperatureData) {
         )
 
         Text(
-            text = "Device temperature is estimated based on multiple internal sensors",
+            text = stringResource(R.string.device_temp_sensors_desc),
             style = MaterialTheme.typography.bodySmall.copy(
                 fontFamily = FontFamily(Font(R.font.inknut_antiqua_light)),
                 fontSize = MaterialTheme.typography.bodySmall.fontSize,
@@ -280,8 +311,8 @@ fun DropdownMenuWithDetails(
     navController: NavHostController,
     sensorManager: TemperatureSensorManager
 ) {
-    var showAboutBottomSheet by remember { mutableStateOf(false) }
     var expanded by remember { mutableStateOf(false) }
+    var showAboutBottomSheet by remember { mutableStateOf(false) }
 
     Box {
         IconButton(
@@ -376,33 +407,36 @@ fun DropdownMenuWithDetails(
             )
         }
     }
-
-    // Move the bottom sheet outside the Box for better component structure
     if (showAboutBottomSheet) {
-        AboutWithSheet(onDismiss = { showAboutBottomSheet = false })
+        AboutWithSheet(
+            onDismiss = { showAboutBottomSheet = false },
+            tempData = tempData
+        )
     }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AboutWithSheet(onDismiss: () -> Unit) {
+fun AboutWithSheet(
+    onDismiss: () -> Unit,
+    tempData: TemperatureData
+) {
     val sheetState = rememberModalBottomSheetState(
         skipPartiallyExpanded = false
     )
-    val scope = rememberCoroutineScope()
 
     ModalBottomSheet(
         modifier = Modifier.fillMaxWidth(),
         sheetState = sheetState,
-        onDismissRequest = { onDismiss() }  // Call the onDismiss callback
+        onDismissRequest = { onDismiss() }
     ) {
         Column(
             modifier = Modifier
                 .padding(16.dp)
-                .verticalScroll(rememberScrollState())  // Make content scrollable
+                .verticalScroll(rememberScrollState())
         ) {
             Text(
-                text = "About page",
+                text = stringResource(R.string.about_device_temp),
                 style = MaterialTheme.typography.titleLarge.copy(
                     fontFamily = FontFamily(Font(R.font.inknut_antiqua_semi_bold))
                 ),
@@ -410,18 +444,62 @@ fun AboutWithSheet(onDismiss: () -> Unit) {
             )
 
             Text(
-                text = "The device temperature screen in Android provides users with information about the current temperature of their device's hardware components, such as the CPU and battery." +
-                        " This feature helps monitor performance and prevent overheating, which can lead to hardware damage or reduced efficiency. " +
-                        "Users can typically access this information through the device's settings or diagnostic tools, allowing them to take necessary actions if temperatures exceed safe thresholds."
+                text = stringResource(R.string.about_device_temp_desc),
+                style = MaterialTheme.typography.bodySmall.copy(
+                    fontFamily = FontFamily(Font(R.font.inknut_antiqua_regular)),
+                    fontSize = MaterialTheme.typography.bodySmall.fontSize,
+                    fontWeight = MaterialTheme.typography.bodySmall.fontWeight,
+                    lineHeight = MaterialTheme.typography.bodySmall.lineHeight,
+                    letterSpacing = MaterialTheme.typography.bodySmall.letterSpacing,
+                    textAlign = TextAlign.Justify
+                )
             )
 
-            Button(
+            Text(
+                text = "Sensor: ${tempData.sensorName}, is used to measure temperature.",
+                style = MaterialTheme.typography.bodySmall.copy(
+                    fontFamily = FontFamily(Font(R.font.inknut_antiqua_extra_bold)),
+                    fontSize = MaterialTheme.typography.bodySmall.fontSize,
+                    fontWeight = MaterialTheme.typography.bodySmall.fontWeight,
+                    lineHeight = MaterialTheme.typography.bodySmall.lineHeight,
+                    letterSpacing = MaterialTheme.typography.bodySmall.letterSpacing,
+                    textAlign = TextAlign.Justify
+                )
+            )
+            Text(
+                text = tempData.lastUpdated,
+                style = MaterialTheme.typography.bodySmall.copy(
+                    fontFamily = FontFamily(Font(R.font.inknut_antiqua_extra_bold)),
+                    fontSize = MaterialTheme.typography.bodySmall.fontSize,
+                    fontWeight = MaterialTheme.typography.bodySmall.fontWeight,
+                    lineHeight = MaterialTheme.typography.bodySmall.lineHeight,
+                    letterSpacing = MaterialTheme.typography.bodySmall.letterSpacing,
+                    textAlign = TextAlign.Justify
+                )
+            )
+
+            Text(
+                text = stringResource(R.string.note_device_temp_about_sheet_info),
+                style = MaterialTheme.typography.bodySmall.copy(
+                    fontFamily = FontFamily(Font(R.font.inknut_antiqua_extra_bold)),
+                    fontSize = MaterialTheme.typography.bodySmall.fontSize,
+                    fontWeight = MaterialTheme.typography.bodySmall.fontWeight,
+                    lineHeight = MaterialTheme.typography.bodySmall.lineHeight,
+                    letterSpacing = MaterialTheme.typography.bodySmall.letterSpacing,
+                    textAlign = TextAlign.Justify,
+                    color = MaterialTheme.colorScheme.error
+                )
+            )
+
+            OutlinedButton(
                 onClick = { onDismiss() },
                 modifier = Modifier
                     .padding(top = 16.dp)
                     .align(Alignment.End)
             ) {
-                Text("Close")
+                Text(
+                    text = stringResource(R.string.close)
+                )
             }
             Spacer(modifier = Modifier.height(32.dp))
         }

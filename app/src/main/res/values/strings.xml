@@ -103,7 +103,7 @@
     <string name="dog_description_7">Bothering her paw-rents</string>
     <string name="dog_description_8">Sunbathing</string>
     <string name="dog_description_9">Sleeping in dangerous places</string>
-    <string name="about">About:</string>
+    <string name="about">About</string>
     <string name="years_old">%d years old</string>
     <string name="expand_button_content_description">See more or less information about a dog.</string>
     <string name="comfirm">Confirm</string>
@@ -118,4 +118,14 @@
     <string name="device_temperature_desc">Device temperature will be shown in user friendly graph.</string>
     <string name="refresh_temp">Refresh temperature</string>
     <string name="send_feedback">Send Feedback</string>
+    <string name="about_device_temp_desc">The device temperature screen in Android provides users with information about the current temperature of their device\'s hardware components, such as the CPU and battery. This feature helps monitor performance and prevent overheating, which can lead to hardware damage or reduced efficiency. Users can typically access this information through the device\'s settings or diagnostic tools, allowing them to take necessary actions if temperatures exceed safe thresholds.</string>
+    <string name="close">Close</string>
+    <string name="about_device_temp">About device temperature</string>
+    <string name="device_temp_sensors_desc">Device temperature is estimated based on multiple internal sensors</string>
+    <string name="cold">Cold</string>
+    <string name="normal">Normal</string>
+    <string name="hot">Hot</string>
+    <string name="no_temp_sensor_available">No temperature sensor available</string>
+    <string name="device_sensors_info">This device doesn\'t appear to have temperature sensors accessible to applications</string>
+    <string name="note_device_temp_about_sheet_info">[ATTENTION] Please note that the temperature displayed on the device may not be accurate. There could be a difference of about 3 to 5 degrees Celsius.</string>
 </resources>
