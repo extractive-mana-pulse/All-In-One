@@ -1,4 +1,4 @@
-package com.example.allinone.settings.deviceTemp
+package com.example.allinone.settings.deviceTemp.presentation.screens
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -41,6 +41,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -56,14 +57,16 @@ import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.allinone.R
 import com.example.allinone.navigation.screen.HomeScreens
 import com.example.allinone.navigation.screen.SettingsScreens
-import com.example.allinone.settings.TemperatureData
-import com.example.allinone.settings.TemperatureSensorManager
+import com.example.allinone.settings.deviceTemp.data.remote.repositoryImpl.TemperatureSensorManager
+import com.example.allinone.settings.deviceTemp.domain.model.TemperatureData
+import com.example.allinone.widget.presentation.vm.TemperatureDataViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -75,6 +78,13 @@ fun DeviceTempScreen(
     val sensorManager = remember { TemperatureSensorManager(context) }
     val tempData by sensorManager.temperatureData.collectAsStateWithLifecycle()
     val sensorAvailable = remember { sensorManager.sensorAvailable }
+    val temperatureDataViewModel: TemperatureDataViewModel = hiltViewModel()
+
+    LaunchedEffect(tempData) {
+        if (sensorAvailable && tempData.celsius != 0.0f) {
+            temperatureDataViewModel.insertTemperature(tempData)
+        }
+    }
 
     DisposableEffect(key1 = sensorManager) {
         sensorManager.startMonitoring(scope)
@@ -88,7 +98,17 @@ fun DeviceTempScreen(
             LargeTopAppBar(
                 title = {
                     Text(
-                        text = stringResource(R.string.device_temperature)
+                        text = stringResource(R.string.device_temperature),
+                        style = MaterialTheme.typography.titleLarge.copy(
+                            fontFamily = FontFamily(Font(R.font.inknut_antiqua_regular)),
+                            fontSize = MaterialTheme.typography.titleLarge.fontSize,
+                            fontWeight = MaterialTheme.typography.titleLarge.fontWeight,
+                            letterSpacing = MaterialTheme.typography.titleLarge.letterSpacing,
+                            lineHeight = MaterialTheme.typography.titleLarge.lineHeight,
+                            platformStyle = MaterialTheme.typography.titleLarge.platformStyle,
+                            textAlign = MaterialTheme.typography.titleLarge.textAlign,
+                            textDirection = MaterialTheme.typography.titleLarge.textDirection,
+                        )
                     )
                 },
                 navigationIcon = {
@@ -99,7 +119,7 @@ fun DeviceTempScreen(
                     ) {
                         Icon(
                             Icons.AutoMirrored.Default.ArrowBack,
-                            contentDescription = null
+                            contentDescription = stringResource(R.string.device_temperature_to_somewhere)
                         )
                     }
                 },
@@ -125,13 +145,7 @@ fun DeviceTempScreen(
 
             TemperatureStatus(tempData = tempData)
 
-            if (sensorAvailable) {
-                IfSensorsAvailable(
-                    tempData = tempData
-                )
-            } else {
-                IfSensorsNotAvailable()
-            }
+            if (sensorAvailable) IfSensorsAvailable(tempData = tempData) else IfSensorsNotAvailable()
         }
     }
 }
@@ -249,9 +263,9 @@ private fun IfSensorsNotAvailable() {
 @Composable
 fun TemperatureStatus(tempData: TemperatureData) {
     val backgroundColor = when {
-        tempData.celsius < 10 -> Color.Green
-        tempData.celsius in 10.0..35.0 -> Color.Green
-        tempData.celsius in 36.0..45.0 -> Color.Yellow
+        tempData.celsius < 10 -> Color(37,111,255)
+        tempData.celsius in 10.0..35.0 -> Color(0,128,0)
+        tempData.celsius in 36.0..45.0 -> Color(255,222,33)
         else -> Color.Red
     }
 

@@ -1,12 +1,12 @@
-package com.example.allinone.settings
+package com.example.allinone.settings.deviceTemp.data.remote.repositoryImpl
 
 import android.content.Context
 import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
-import android.util.Log
-import android.widget.Toast
+import com.example.allinone.settings.deviceTemp.domain.model.SensorReading
+import com.example.allinone.settings.deviceTemp.domain.model.TemperatureData
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -19,9 +19,10 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
-// TemperatureSensorManager.kt
 class TemperatureSensorManager(private val context: Context) {
+
     private val sensorManager = context.getSystemService(Context.SENSOR_SERVICE) as SensorManager
+
     private val _temperatureData = MutableStateFlow(TemperatureData())
     val temperatureData: StateFlow<TemperatureData> = _temperatureData
 
@@ -31,7 +32,6 @@ class TemperatureSensorManager(private val context: Context) {
     // Track last update time to prevent constant UI updates
     private var lastUIUpdateTime = 0L
 
-    // Get all temperature sensors from the device
     val allTempSensors = mutableListOf<Sensor>().apply {
         sensorManager.getDefaultSensor(Sensor.TYPE_AMBIENT_TEMPERATURE)?.let { add(it) }
         sensorManager.getDefaultSensor(Sensor.TYPE_TEMPERATURE)?.let { add(it) }
@@ -43,13 +43,11 @@ class TemperatureSensorManager(private val context: Context) {
         }
     }
 
-    // Get all sensors
     val allSensors: List<Sensor> = sensorManager.getSensorList(Sensor.TYPE_ALL)
 
     val sensorAvailable: Boolean
         get() = allTempSensors.isNotEmpty()
 
-    // Map to store all sensor readings
     private val _allSensorReadings = MutableStateFlow<Map<Sensor, SensorReading>>(emptyMap())
     val allSensorReadings: StateFlow<Map<Sensor, SensorReading>> = _allSensorReadings
 
@@ -82,7 +80,6 @@ class TemperatureSensorManager(private val context: Context) {
                         )
                     }
 
-                    // Update the specific sensor reading in the map
                     _allSensorReadings.update { currentMap ->
                         val newMap = currentMap.toMutableMap()
                         newMap[event.sensor] = SensorReading(
@@ -111,13 +108,8 @@ class TemperatureSensorManager(private val context: Context) {
         // Schedule periodic update every 10 minutes
         updateJob = scope.launch {
             while (isActive) {
-                delay(10 * 60 * 1000) // 10 minutes in milliseconds
-
-                // Reset the last update time to force an update on next sensor reading
+                delay(10 * 60 * 1000)
                 lastUIUpdateTime = 0L
-
-                // Log the scheduled update
-                Log.d("TemperatureSensorManager", "Scheduled 10-minute update triggered")
             }
         }
     }
@@ -125,10 +117,6 @@ class TemperatureSensorManager(private val context: Context) {
     fun refreshTemperature() {
         // Reset the last update time to force an update on next sensor reading
         lastUIUpdateTime = 0L
-
-        // Show a toast to indicate refresh request
-        Toast.makeText(context, "Refreshing temperature data...", Toast.LENGTH_SHORT).show()
-
         // Force a refresh by unregistering and re-registering the listener
         sensorEventListener?.let {
             sensorManager.unregisterListener(it)
@@ -152,26 +140,5 @@ class TemperatureSensorManager(private val context: Context) {
         updateJob = null
     }
 
-    // Get all sensor names for debugging
-    fun getAllSensorNames(): String {
-        return allSensors.joinToString("\n") { it.name }
-    }
+    fun getAllSensorNames(): String = allSensors.joinToString("\n") { it.name }
 }
-
-
-data class TemperatureData(
-    val celsius: Float = 0.0f,
-    val fahrenheit: String = "--",
-    val kelvin: String = "--",
-    val sensorName: String = "Unknown",
-    val lastUpdated: String = "Not yet updated",
-    val accuracy: Int = 0
-)
-
-data class SensorReading(
-    val celsius: Float,
-    val fahrenheit: Float,
-    val kelvin: Float,
-    val accuracy: Int,
-    val lastUpdated: Long
-)

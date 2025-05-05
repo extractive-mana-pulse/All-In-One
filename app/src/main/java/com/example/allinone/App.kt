@@ -13,24 +13,25 @@ import dagger.hilt.android.HiltAndroidApp
 
 @HiltAndroidApp
 class App: Application(), SingletonImageLoader.Factory {
-    override fun newImageLoader(context: PlatformContext): ImageLoader {
-        return ImageLoader(context)
-            .newBuilder()
-            .memoryCachePolicy(CachePolicy.ENABLED)
-            .memoryCache {
-                MemoryCache.Builder()
-                    .maxSizePercent(context,0.1)
-                    .strongReferencesEnabled(true)
-                    .build()
-            }
-            .diskCachePolicy(CachePolicy.ENABLED)
-            .diskCache {
-                DiskCache.Builder()
-                    .maxSizePercent(0.03)
-                    .directory(context.cacheDir)
-                    .build()
-            }
-            .logger(DebugLogger())
-            .build()
-    }
+
+    override fun newImageLoader(
+        context: PlatformContext
+    ): ImageLoader = ImageLoader(context)
+        .newBuilder()
+        .memoryCachePolicy(CachePolicy.ENABLED)
+        .memoryCache {
+            MemoryCache.Builder()
+                .maxSizePercent(context,0.1)
+                .strongReferencesEnabled(true)
+                .build()
+        }
+        .diskCachePolicy(CachePolicy.ENABLED)
+        .diskCache {
+            DiskCache.Builder()
+                .maxSizePercent(0.03)
+                .directory(context.cacheDir)
+                .build()
+        }
+        .logger(DebugLogger())
+        .build()
 }

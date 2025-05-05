@@ -15,8 +15,8 @@ import com.example.allinone.settings.autoNight.presentation.screens.AutoNightMod
 import com.example.allinone.settings.autoNight.presentation.screens.ScheduledModeScreen
 import com.example.allinone.settings.autoNight.presentation.screens.SettingScreen
 import com.example.allinone.settings.batterySafe.presentation.screens.BatterySavingScreen
-import com.example.allinone.settings.deviceTemp.AllSensorsScreen
-import com.example.allinone.settings.deviceTemp.DeviceTempScreen
+import com.example.allinone.settings.deviceTemp.presentation.screens.AllSensorsScreen
+import com.example.allinone.settings.deviceTemp.presentation.screens.DeviceTempScreen
 import com.google.android.gms.location.FusedLocationProviderClient
 
 internal fun NavGraphBuilder.settingsNavigation(

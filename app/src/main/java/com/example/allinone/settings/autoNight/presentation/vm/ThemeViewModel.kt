@@ -4,7 +4,7 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.allinone.settings.autoNight.domain.model.Twilight
-import com.example.allinone.settings.autoNight.domain.repository.AutoNightModeRepository
+import com.example.allinone.settings.autoNight.data.remote.repositoryImpl.AutoNightModePreference
 import com.example.allinone.settings.autoNight.domain.repository.TwilightRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -19,7 +19,7 @@ import javax.inject.Inject
 @HiltViewModel
 class ThemeViewModel @Inject constructor(
     private val repository: TwilightRepository,
-    private val autoNightModeRepository: AutoNightModeRepository
+    private val autoNightModeRepository: AutoNightModePreference
 ) : ViewModel() {
 
     private val _selectedMode = MutableStateFlow("disabled")

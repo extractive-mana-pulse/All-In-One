@@ -1,4 +1,4 @@
-package com.example.allinone.settings.deviceTemp
+package com.example.allinone.settings.deviceTemp.presentation.screens
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -33,7 +33,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
-import com.example.allinone.settings.TemperatureSensorManager
+import com.example.allinone.settings.deviceTemp.data.remote.repositoryImpl.TemperatureSensorManager
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale

@@ -173,4 +173,11 @@ dependencies {
 
     // location
     implementation ("com.google.android.gms:play-services-location:21.3.0")
+
+    // glance
+    implementation (libs.androidx.glance.material3)
+    implementation (libs.androidx.glance.appwidget)
+
+    // work manager + coroutine
+    implementation(libs.androidx.work.runtime.ktx)
 }

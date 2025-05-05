@@ -21,6 +21,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.remember
@@ -33,12 +34,13 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.allinone.R
 import com.example.allinone.core.extension.getBatteryPercentage
+import com.example.allinone.settings.batterySafe.presentation.vm.BatterySliderViewModel
 
 // implement logic of battery icon. when battery level is 20% corresponding icon when 50% corresponding icon and so on.
 // also implement logic when power saving mode is active these actions.
@@ -47,53 +49,65 @@ import com.example.allinone.core.extension.getBatteryPercentage
 // 3. turn off unused features: bluetooth, wi_fi and so on
 // 4. limit notifications if they exist locally.
 
-@Preview(showSystemUi = true, showBackground = true)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BatterySavingScreen(
     navController: NavHostController = rememberNavController()
 ) {
     val context = LocalContext.current
-    var sliderPosition by remember { mutableFloatStateOf(0f) }
+    val viewModel: BatterySliderViewModel = hiltViewModel()
+    val sliderValue by viewModel.sliderValue.collectAsState(0.5f)
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
+    var startBehaveBrightness by remember { mutableFloatStateOf(sliderValue) }
 
-        Scaffold(
-            modifier = Modifier
-                .fillMaxSize()
-                .nestedScroll(scrollBehavior.nestedScrollConnection),
-            topBar = {
-                LargeTopAppBar(
-                    title = {
-                        Text(
-                            text = stringResource(R.string.battery_saving),
-                            style = MaterialTheme.typography.titleLarge.copy(
-                                fontFamily = FontFamily(Font(R.font.inknut_antiqua_semi_bold)),
-                                fontSize = MaterialTheme.typography.titleLarge.fontSize,
-                                fontWeight = MaterialTheme.typography.titleLarge.fontWeight,
-                                letterSpacing = MaterialTheme.typography.titleLarge.letterSpacing,
-                                lineHeight = MaterialTheme.typography.titleLarge.lineHeight,
-                                platformStyle = MaterialTheme.typography.titleLarge.platformStyle,
-                                textAlign = MaterialTheme.typography.titleLarge.textAlign,
-                                textDirection = MaterialTheme.typography.titleLarge.textDirection,
+    LaunchedEffect(sliderValue) { startBehaveBrightness = sliderValue }
+
+    LaunchedEffect(context.getBatteryPercentage()) {
+        if (context.getBatteryPercentage() != null && context.getBatteryPercentage()!! < sliderValue) {
+            // activate dark theme
+            // reduce brightness to 20%
+            // turn off unused features: bluetooth, wi_fi and etc.
+            // limit notifications if they exist locally.
+        }
+    }
+
+    Scaffold(
+        modifier = Modifier
+            .fillMaxSize()
+            .nestedScroll(scrollBehavior.nestedScrollConnection),
+        topBar = {
+            LargeTopAppBar(
+                title = {
+                    Text(
+                        text = stringResource(R.string.battery_saving),
+                        style = MaterialTheme.typography.titleLarge.copy(
+                            fontFamily = FontFamily(Font(R.font.inknut_antiqua_semi_bold)),
+                            fontSize = MaterialTheme.typography.titleLarge.fontSize,
+                            fontWeight = MaterialTheme.typography.titleLarge.fontWeight,
+                            letterSpacing = MaterialTheme.typography.titleLarge.letterSpacing,
+                            lineHeight = MaterialTheme.typography.titleLarge.lineHeight,
+                            platformStyle = MaterialTheme.typography.titleLarge.platformStyle,
+                            textAlign = MaterialTheme.typography.titleLarge.textAlign,
+                            textDirection = MaterialTheme.typography.titleLarge.textDirection,
 
                             )
-                        )
-                    },
-                    navigationIcon = {
-                        IconButton(
-                            onClick = {
-                                navController.navigateUp()
-                            }
-                        ) {
-                            Icon(
-                                Icons.AutoMirrored.Default.ArrowBack,
-                                contentDescription = stringResource(R.string.from_power_saving_to_somewhere)
-                            )
+                    )
+                },
+                navigationIcon = {
+                    IconButton(
+                        onClick = {
+                            navController.navigateUp()
                         }
-                    },
-                    scrollBehavior = scrollBehavior
-                )
-            }
+                    ) {
+                        Icon(
+                            Icons.AutoMirrored.Default.ArrowBack,
+                            contentDescription = stringResource(R.string.from_power_saving_to_somewhere)
+                        )
+                    }
+                },
+                scrollBehavior = scrollBehavior
+            )
+        }
     ) { innerPadding ->
         Column(
             modifier = Modifier
@@ -103,14 +117,7 @@ fun BatterySavingScreen(
                 .verticalScroll(rememberScrollState()),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            LaunchedEffect(context.getBatteryPercentage()) {
-                if (context.getBatteryPercentage() != null && context.getBatteryPercentage()!! < sliderPosition) {
-                    // activate dark theme
-                    // reduce brightness to 20%
-                    // turn off unused features: bluetooth, wi_fi and etc.
-                    // limit notifications if they exist locally.
-                }
-            }
+
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
@@ -130,7 +137,7 @@ fun BatterySavingScreen(
                     )
                 )
                 Text(
-                    text = "When below ${sliderPosition.toInt()}%.",
+                    text = "When below ${sliderValue.toInt()}%.",
                     textAlign = TextAlign.Center,
                     style = MaterialTheme.typography.bodySmall.copy(
                         fontFamily = FontFamily(Font(R.font.inknut_antiqua_medium)),
@@ -157,13 +164,21 @@ fun BatterySavingScreen(
                     )
                 )
             }
+
+
             Slider(
-                value = sliderPosition,
-                onValueChange = { sliderPosition = it },
-                valueRange = 0f..100f,
+                value = startBehaveBrightness,
+                onValueChange = { newValue ->
+                    startBehaveBrightness = newValue
+                },
+                onValueChangeFinished = {
+                    viewModel.updateSliderValue(startBehaveBrightness)
+                },
+                valueRange = 1f..100f
             )
+
             Text(
-                text = "Automatically reduce power usage and animations when your battery is below ${sliderPosition.toInt()}%",
+                text = "Automatically reduce power usage and animations when your battery is below ${sliderValue.toInt()}%",
                 style = MaterialTheme.typography.bodyMedium.copy(
                     fontFamily = FontFamily(Font(R.font.inknut_antiqua_medium)),
                     fontSize = MaterialTheme.typography.bodyMedium.fontSize,

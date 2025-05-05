@@ -1,4 +1,4 @@
-package com.example.allinone.settings.autoNight.domain.repository
+package com.example.allinone.settings.autoNight.data.remote.repositoryImpl
 
 import android.content.Context
 import androidx.datastore.preferences.core.edit
@@ -8,7 +8,7 @@ import com.example.allinone.core.extension.dataStore
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
-class AutoNightModeRepository(
+class AutoNightModePreference(
     private val context: Context
 ) {
     companion object {

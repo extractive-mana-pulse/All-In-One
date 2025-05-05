@@ -3,9 +3,10 @@ package com.example.allinone.core.di
 import android.content.Context
 import com.example.allinone.core.preferences.ReadingModePreferences
 import com.example.allinone.core.preferences.ThemePreferences
+import com.example.allinone.settings.autoNight.data.remote.repositoryImpl.AutoNightModePreference
 import com.example.allinone.settings.autoNight.data.remote.repositoryImpl.LocationRepositoryImpl
-import com.example.allinone.settings.autoNight.domain.repository.AutoNightModeRepository
 import com.example.allinone.settings.autoNight.domain.repository.LocationRepository
+import com.example.allinone.settings.batterySafe.data.local.repositoryImpl.BatterySaverPreferences
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -21,7 +22,13 @@ object SettingsModule {
     @Singleton
     fun provideAutoNightModeRepository(
         @ApplicationContext context: Context
-    ): AutoNightModeRepository = AutoNightModeRepository(context)
+    ): AutoNightModePreference = AutoNightModePreference(context)
+
+    @Provides
+    @Singleton
+    fun provideBatterySaverPreferences(
+        @ApplicationContext context: Context
+    ): BatterySaverPreferences = BatterySaverPreferences(context)
 
     @Provides
     @Singleton

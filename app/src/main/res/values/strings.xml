@@ -128,4 +128,6 @@
     <string name="no_temp_sensor_available">No temperature sensor available</string>
     <string name="device_sensors_info">This device doesn\'t appear to have temperature sensors accessible to applications</string>
     <string name="note_device_temp_about_sheet_info">[ATTENTION] Please note that the temperature displayed on the device may not be accurate. There could be a difference of about 3 to 5 degrees Celsius.</string>
+    <string name="device_temperature_to_somewhere">Navigate up from device temperature screen</string>
+    <string name="widget_xml_info">Device temperature widget.</string>
 </resources>
