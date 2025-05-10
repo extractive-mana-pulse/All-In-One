@@ -10,13 +10,13 @@ junitVersion = "1.2.1"
 espressoCore = "3.6.1"
 lifecycleRuntimeKtx = "2.8.7"
 activityCompose = "1.10.1"
-composeBom = "2025.03.00"
+composeBom = "2025.04.01"
 appcompat = "1.7.0"
 material = "1.12.0"
-composeNavigation = "2.8.8"
-composeMaterial = "1.7.8"
+composeNavigation = "2.8.9"
+composeMaterial = "1.8.0"
 serialization = "1.6.3"
-uiTestJunit4Android = "1.7.8"
+uiTestJunit4Android = "1.8.0"
 accompanistPagerIndicators = "0.28.0"
 accompanistPager = "0.28.0"
 coilCompose = "3.0.4"
@@ -28,9 +28,10 @@ hiltCompiler = "1.2.0"
 loggingInterceptor = "4.9.3"
 pagingCompose = "3.3.6"
 retrofit = "2.9.0"
-roomKtx = "2.6.1"
-animation = "1.7.8"
+roomKtx = "2.7.1"
+animation = "1.8.0"
 workRuntimeKtx = "2.10.1"
+iconExtend = "1.7.8"
 
 
 [libraries]
@@ -79,7 +80,7 @@ androidx-paging-runtime-ktx = { module = "androidx.paging:paging-runtime-ktx", v
 accompanist-pager-indicators = { module = "com.google.accompanist:accompanist-pager-indicators", version.ref = "accompanistPagerIndicators" }
 
 # icons-extend
-androidx-material-icons-extended = { module = "androidx.compose.material:material-icons-extended", version.ref = "composeMaterial" }
+androidx-material-icons-extended = { module = "androidx.compose.material:material-icons-extended", version.ref = "iconExtend" }
 
 # room
 androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref = "roomKtx" }

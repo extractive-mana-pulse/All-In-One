@@ -7,9 +7,10 @@
     android:minHeight="56dp"
     android:minWidth="109dp"
     android:minResizeHeight="56dp"
-    android:minResizeWidth="128dp"
+    android:minResizeWidth="109dp"
     android:targetCellWidth="2"
-    android:targetCellHeight="2"
+    android:targetCellHeight="1"
     android:widgetCategory="home_screen"
     tools:targetApi="31"
-    android:initialLayout="@layout/glance_default_loading_layout"/>
+    android:initialLayout="@layout/glance_default_loading_layout"
+    android:previewLayout="@layout/widget_preview"/>

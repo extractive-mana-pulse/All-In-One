@@ -33,6 +33,7 @@ import androidx.glance.layout.size
 import androidx.glance.text.Text
 import androidx.glance.text.TextStyle
 import com.example.allinone.R
+import com.example.allinone.core.extension.toastMessage
 import com.example.allinone.settings.deviceTemp.domain.model.TemperatureData
 import com.example.allinone.widget.domain.repository.GlanceWidgetRepository
 import kotlinx.coroutines.flow.Flow
@@ -40,8 +41,8 @@ import kotlinx.coroutines.flow.Flow
 class DeviceTempWidget : GlanceAppWidget() {
 
     companion object {
-        private val SMALL_SQUARE = DpSize(110.dp, 110.dp)
-        private val MEDIUM_RECT = DpSize(250.dp, 110.dp)
+        private val SMALL_SQUARE = DpSize(109.dp, 56.dp)
+        private val MEDIUM_RECT = DpSize(109.dp, 110.dp)
         private val LARGE_SQUARE = DpSize(250.dp, 250.dp)
     }
 
@@ -68,6 +69,7 @@ class DeviceTempWidget : GlanceAppWidget() {
     private fun getErrorIntent(context: Context, throwable: Throwable): PendingIntent {
         val intent = Intent(context, DeviceTempWidget::class.java)
         intent.action = "widgetError"
+        Log.d("Error widget", "Error Message: `${throwable.message}`")
         return PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_IMMUTABLE)
     }
 
@@ -86,6 +88,8 @@ class DeviceTempWidget : GlanceAppWidget() {
         rv.setOnClickPendingIntent(R.id.error_icon, getErrorIntent(context, throwable))
         AppWidgetManager.getInstance(context).updateAppWidget(appWidgetId, rv)
     }
+
+
 }
 
 @Composable
@@ -94,11 +98,12 @@ fun WidgetContent(
     tempData: Flow<TemperatureData>,
     widgetSize: DpSize?
 ) {
+
     val state = tempData.collectAsState(initial = null)
     val data = state.value
 
     val isSmallWidget = widgetSize?.let { it.width <= 110.dp } == true
-    val isLargeWidget = widgetSize?.let { it.width >= 250.dp && it.height >= 250.dp } == true
+//    val isLargeWidget = widgetSize?.let { it.width >= 250.dp && it.height >= 250.dp } == true
 
     val backgroundColor = when {
         (data?.celsius ?: 0.0f) < 10 -> Color(37, 111, 255)
@@ -107,48 +112,53 @@ fun WidgetContent(
         else -> Color(139, 0, 0)
     }
 
-    Box(
+    Column(
         modifier = GlanceModifier
             .fillMaxSize()
             .background(GlanceTheme.colors.widgetBackground)
-            .cornerRadius(256.dp)
-            .padding(if (isSmallWidget) 4.dp else 8.dp),
+            .cornerRadius(50.dp)
+            .padding(vertical = 16.dp)
+            .padding(if (isSmallWidget) 0.dp else 8.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalAlignment = Alignment.CenterVertically
     ) {
-        Column(
+        Image(
+            provider = ImageProvider(R.drawable.device_thermostat),
+            contentDescription = null,
             modifier = GlanceModifier
-                .padding(16.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-        ) {
-            Image(
-                provider = ImageProvider(R.drawable.device_thermostat),
-                contentDescription = null,
-                modifier = GlanceModifier
-                    .cornerRadius(24.dp)
-                    .size(if (isSmallWidget) 32.dp else 48.dp)
-                    .background(backgroundColor)
-                    .padding(if (isSmallWidget) 8.dp else 16.dp),
+                .cornerRadius(24.dp)
+                .size(if (isSmallWidget) 32.dp else 48.dp)
+                .background(backgroundColor)
+                .padding(if (isSmallWidget) 2.dp else 8.dp),
+        )
+        Text(
+            text = "${data?.celsius}°C",
+            style = TextStyle(
+                color = GlanceTheme.colors.onBackground,
+                fontSize = if (isSmallWidget) 16.sp else 24.sp
             )
-            Text(
-                text = "${data?.celsius}°C",
-                style = TextStyle(
-                    color = GlanceTheme.colors.onBackground,
-                    fontSize = if (isSmallWidget) 16.sp else 24.sp
-                )
-            )
-        }
+        )
+    }
 
+    Box(
+        modifier = GlanceModifier
+            .fillMaxSize()
+            .padding(if (isSmallWidget) 4.dp else 8.dp),
+        contentAlignment = Alignment.TopEnd
+    ) {
+//      Need to find out the way when button is clicked update the information on the screen.
         SquareIconButton(
             imageProvider = ImageProvider(R.drawable.refresh_ic),
             contentDescription = null,
             onClick = {
-                // Handle refresh action
+                toastMessage(
+                    context = context,
+                    message = "Button clicked"
+                )
             },
             modifier = GlanceModifier
-                .size(56.dp)
-                .padding(16.dp),
-
-            .
-            enabled = true
+                .size(56.dp),
+            enabled = true,
         )
     }
 }

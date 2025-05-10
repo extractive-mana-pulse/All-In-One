@@ -22,7 +22,6 @@ import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageMetadata
-import com.google.firebase.storage.ktx.storage
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
@@ -35,7 +34,6 @@ class AuthenticationManager(
 ) {
 
     private val auth = Firebase.auth
-    private val storage = Firebase.storage.reference
     private val db = Firebase.firestore
 
     init {
@@ -88,7 +86,7 @@ class AuthenticationManager(
             id = this.uid,
             email = this.email ?: "",
             displayName = this.displayName ?: "",
-            imageUrl = this.photoUrl?.toString() ?: ""
+            imageUrl = this.photoUrl
         )
     }
 
@@ -112,22 +110,45 @@ class AuthenticationManager(
         } else {
             trySend(null)
         }
-
         awaitClose()
     }
 
-    fun updateUserProfile(
-        photoUri: Uri? = null
+    fun updateDisplayNameProfile(
+        photoUri: Uri? = null,
+        displayName: String? = null
     ): Flow<AuthResponse> = callbackFlow {
+
+        val profileUpdatesBuilder = UserProfileChangeRequest.Builder()
+        var hasChanges = false
+
         val user = auth.currentUser ?: run {
-            trySend(AuthResponse.Error("No user is signed in"))
+            trySend(
+                AuthResponse.Error(
+                    message = "No user is signed in"
+                )
+            )
             close()
             return@callbackFlow
         }
 
-        val profileUpdates = UserProfileChangeRequest.Builder().apply {
-            photoUri?.let { setPhotoUri(it) }
-        }.build()
+
+        photoUri?.let {
+            profileUpdatesBuilder.photoUri = it
+            hasChanges = true
+        }
+
+        displayName?.let {
+            profileUpdatesBuilder.displayName = it
+            hasChanges = true
+        }
+
+        if (!hasChanges) {
+            trySend(AuthResponse.Success)
+            close()
+            return@callbackFlow
+        }
+
+        val profileUpdates = profileUpdatesBuilder.build()
 
         user.updateProfile(profileUpdates)
             .addOnSuccessListener {
@@ -144,13 +165,21 @@ class AuthenticationManager(
     fun uploadProfilePicture(imageUri: Uri): Flow<AuthResponse> = callbackFlow {
 
         val user = auth.currentUser ?: run {
-            trySend(AuthResponse.Error("No user is signed in"))
+            trySend(
+                AuthResponse.Error(
+                    message = "No user is signed in"
+                )
+            )
             close()
             return@callbackFlow
         }
 
         if (imageUri == Uri.EMPTY) {
-            trySend(AuthResponse.Error("No image selected"))
+            trySend(
+                AuthResponse.Error(
+                    message = "No image selected"
+                )
+            )
             close()
             return@callbackFlow
         }
@@ -159,7 +188,11 @@ class AuthenticationManager(
             val imageByteArray = convertImageUriToByteArray(imageUri)
 
             if (imageByteArray == null || imageByteArray.isEmpty()) {
-                trySend(AuthResponse.Error("Failed to process image"))
+                trySend(
+                    AuthResponse.Error(
+                        message = "Failed to process image"
+                    )
+                )
                 close()
                 return@callbackFlow
             }
@@ -179,7 +212,11 @@ class AuthenticationManager(
             }
 
             uploadTask.addOnFailureListener { exception ->
-                trySend(AuthResponse.Error("Upload failed: ${exception.message}"))
+                trySend(
+                    AuthResponse.Error(
+                        message = "Upload failed: ${exception.message}"
+                    )
+                )
                 close()
             }
 
@@ -198,15 +235,27 @@ class AuthenticationManager(
                     trySend(AuthResponse.Success)
                     close()
                 }.addOnFailureListener { exception ->
-                    trySend(AuthResponse.Error("Failed to update profile: ${exception.message}"))
+                    trySend(
+                        AuthResponse.Error(
+                            message = "Failed to update profile: ${exception.message}"
+                        )
+                    )
                     close()
                 }
             }.addOnFailureListener { exception ->
-                trySend(AuthResponse.Error("Failed to get download URL: ${exception.message}"))
+                trySend(
+                    AuthResponse.Error(
+                        message = "Failed to get download URL: ${exception.message}"
+                    )
+                )
                 close()
             }
         } catch (e: Exception) {
-            trySend(AuthResponse.Error("Upload process error: ${e.message}"))
+            trySend(
+                AuthResponse.Error(
+                    message = "Upload process error: ${e.message}"
+                )
+            )
             close()
         }
         awaitClose()
@@ -230,7 +279,7 @@ class AuthenticationManager(
     }
 
     fun deleteImageFromFirebaseStorage(userId: String) {
-        val imagePath = "profile_pictures/$userId.jpg"
+        val imagePath = "images/${userId}"
 
         val storage = FirebaseStorage.getInstance()
         val imageRef = storage.reference.child(imagePath)
@@ -250,7 +299,7 @@ class AuthenticationManager(
 
     // still in work, error: Developer console is not set up correctly
     fun signInWithGoogle() : Flow<AuthResponse> = callbackFlow {
-        // Add debug logging
+
         Log.d("GoogleSignIn", "Starting Google sign-in process")
 
         val googleIdOption = GetGoogleIdOption.Builder()

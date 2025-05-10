@@ -6,15 +6,16 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.allinone.R
-
 
 @Composable
 fun CustomAlertDialog(
@@ -22,6 +23,8 @@ fun CustomAlertDialog(
     onConfirmation: () -> Unit,
     dialogTitle: String,
     dialogText: String,
+    confirmText: String,
+    dismissText: String,
     icon: ImageVector,
 ) {
     AlertDialog(
@@ -33,12 +36,30 @@ fun CustomAlertDialog(
         },
         title = {
             Text(
-                text = dialogTitle
+                text = dialogTitle,
+                style = MaterialTheme.typography.headlineSmall.copy(
+                    fontFamily = FontFamily(Font(R.font.inknut_antiqua_bold)),
+                    fontWeight = MaterialTheme.typography.headlineSmall.fontWeight,
+                    fontSize = MaterialTheme.typography.headlineSmall.fontSize,
+                    letterSpacing = MaterialTheme.typography.headlineSmall.letterSpacing,
+                    lineHeight = MaterialTheme.typography.headlineSmall.lineHeight,
+                    platformStyle = MaterialTheme.typography.headlineSmall.platformStyle,
+                    textDirection = MaterialTheme.typography.headlineSmall.textDirection,
+                )
             )
         },
         text = {
             Text(
-                text = dialogText
+                text = dialogText,
+                style = MaterialTheme.typography.bodyMedium.copy(
+                    fontFamily = FontFamily(Font(R.font.inknut_antiqua_light)),
+                    fontWeight = MaterialTheme.typography.bodyMedium.fontWeight,
+                    fontSize = MaterialTheme.typography.bodyMedium.fontSize,
+                    letterSpacing = MaterialTheme.typography.bodyMedium.letterSpacing,
+                    lineHeight = MaterialTheme.typography.bodyMedium.lineHeight,
+                    platformStyle = MaterialTheme.typography.bodyMedium.platformStyle,
+                    textDirection = MaterialTheme.typography.bodyMedium.textDirection,
+                )
             )
         },
         onDismissRequest = {
@@ -51,7 +72,16 @@ fun CustomAlertDialog(
                 }
             ) {
                 Text(
-                    text = stringResource(R.string.comfirm)
+                    text = confirmText,
+                    style = MaterialTheme.typography.labelLarge.copy(
+                        fontFamily = FontFamily(Font(R.font.inknut_antiqua_bold)),
+                        fontWeight = MaterialTheme.typography.labelLarge.fontWeight,
+                        fontSize = MaterialTheme.typography.labelLarge.fontSize,
+                        letterSpacing = MaterialTheme.typography.labelLarge.letterSpacing,
+                        lineHeight = MaterialTheme.typography.labelLarge.lineHeight,
+                        platformStyle = MaterialTheme.typography.labelLarge.platformStyle,
+                        textDirection = MaterialTheme.typography.labelLarge.textDirection,
+                    )
                 )
             }
         },
@@ -62,7 +92,16 @@ fun CustomAlertDialog(
                 }
             ) {
                 Text(
-                    text = stringResource(R.string.dismiss)
+                    text = dismissText,
+                    style = MaterialTheme.typography.labelLarge.copy(
+                        fontFamily = FontFamily(Font(R.font.inknut_antiqua_bold)),
+                        fontWeight = MaterialTheme.typography.labelLarge.fontWeight,
+                        fontSize = MaterialTheme.typography.labelLarge.fontSize,
+                        letterSpacing = MaterialTheme.typography.labelLarge.letterSpacing,
+                        lineHeight = MaterialTheme.typography.labelLarge.lineHeight,
+                        platformStyle = MaterialTheme.typography.labelLarge.platformStyle,
+                        textDirection = MaterialTheme.typography.labelLarge.textDirection,
+                    )
                 )
             }
         },
@@ -80,9 +119,12 @@ fun CustomAlertDialogPreview() {
         CustomAlertDialog(
             onDismissRequest = {},
             onConfirmation = {},
-            dialogTitle = "Dialog Title",
-            dialogText = "This is a sample dialog text.",
-            icon = Icons.Default.Info // Change to your desired icon
+            dialogTitle = "Lorem Ipsum",
+            dialogText = "Lorem Ipsum is simply dummy text of the printing and typesetting industry.\n" +
+                    "Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. ",
+            icon = Icons.Default.Info, // Change to your desired icon,
+            confirmText = "Confirm",
+            dismissText = "Dismiss"
         )
     }
 }

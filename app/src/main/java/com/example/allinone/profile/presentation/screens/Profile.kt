@@ -15,6 +15,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.Logout
+import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -37,9 +38,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import coil3.compose.AsyncImage
@@ -52,11 +54,11 @@ import com.example.allinone.R
 import com.example.allinone.auth.data.remote.impl.AuthenticationManager
 import com.example.allinone.auth.domain.model.UserCredentials
 import com.example.allinone.core.extension.toastMessage
+import com.example.allinone.core.util.ui.CustomAlertDialog
 import com.example.allinone.core.util.ui.Loading
 import com.example.allinone.navigation.screen.AuthScreens
 import com.example.allinone.navigation.screen.ProfileScreens
 import com.example.allinone.profile.presentation.vm.EditProfileViewModel
-import com.example.allinone.profile.presentation.vm.EditProfileViewModelFactory
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
 
@@ -69,28 +71,22 @@ fun ProfileScreen(
 
     val context = LocalContext.current
     val authenticationManager = AuthenticationManager(context)
+    val imageUrl = Firebase.auth.currentUser?.photoUrl
     val tabTitles = listOf(
         "Blogs",
         "Bookmarks"
     )
     val selectedTabIndex = remember { mutableIntStateOf(0) }
-
     val composition by rememberLottieComposition(
         LottieCompositionSpec.RawRes(R.raw.empty_page)
     )
     var isPlaying by remember { mutableStateOf(true) }
-
     val progress by animateLottieCompositionAsState(
         composition,
         isPlaying = isPlaying
     )
-
-    val authManager = AuthenticationManager(context)
-
-    val editProfileViewModel: EditProfileViewModel = viewModel(
-        factory = EditProfileViewModelFactory(authManager)
-    )
-
+    val openAlertDialog = remember { mutableStateOf(false) }
+    val editProfileViewModel: EditProfileViewModel = hiltViewModel()
     val fetchStatus by editProfileViewModel.fetchUserDataStatus.collectAsStateWithLifecycle()
 
     Scaffold(
@@ -99,11 +95,11 @@ fun ProfileScreen(
                 title = { Text(text = "") },
                 navigationIcon = {
                     IconButton(
-                        onClick = { navController.popBackStack() }
+                        onClick = { navController.navigateUp() }
                     ) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Default.ArrowBack,
-                            contentDescription = null
+                            contentDescription = stringResource(R.string.from_profile_to_somewhere)
                         )
                     }
                 },
@@ -111,12 +107,7 @@ fun ProfileScreen(
 
                     IconButton(
                         onClick = {
-                            // create a logic with SignIn.route.
-                            // i need to implement if possible a state as a string or no meter. so when user press sign out button
-                            // user have to sign out depending on state from authentication manager.
-                            // if sign out was successful, then use navController.
-                            authenticationManager.signOut()
-                            navController.navigate(AuthScreens.SignIn.route)
+                            openAlertDialog.value = true
                         }
                     ) {
                         Icon(
@@ -141,15 +132,28 @@ fun ProfileScreen(
         }
     )
     { paddingValues ->
+
+        if (openAlertDialog.value) {
+            CustomAlertDialog(
+                dialogTitle = stringResource(R.string.logout),
+                dialogText = stringResource(R.string.logout_desc),
+                onDismissRequest = { openAlertDialog.value = false },
+                onConfirmation = {
+                    openAlertDialog.value = false
+                    authenticationManager.signOut()
+                    navController.navigate(AuthScreens.SignIn.route)
+                },
+                icon = Icons.AutoMirrored.Default.Logout,
+                confirmText = stringResource(R.string.logout),
+                dismissText = stringResource(R.string.dismiss)
+            )
+        }
+
         when(fetchStatus) {
 
-            EditProfileViewModel.FetchStatus.Loading -> {
-                Loading()
-            }
+            EditProfileViewModel.FetchStatus.Loading -> Loading()
 
-            EditProfileViewModel.FetchStatus.Error -> {
-                FetchStatusError(editProfileViewModel)
-            }
+            EditProfileViewModel.FetchStatus.Error -> FetchStatusError(editProfileViewModel)
 
             else ->  {
                 Box(
@@ -167,19 +171,27 @@ fun ProfileScreen(
 
                         Spacer(modifier = Modifier.height(16.dp))
 
-                        AsyncImage(
-                            model = Firebase.auth.currentUser?.photoUrl,
-                            contentDescription = null,
-                            modifier = Modifier
-                                .size(108.dp)
-                                .clip(CircleShape)
-                                .border(
-                                    width = 2.dp,
-                                    color = MaterialTheme.colorScheme.primary,
-                                    shape = CircleShape
-                                ),
-                            contentScale = ContentScale.Crop
-                        )
+                        if (userCredentials?.imageUrl != null) {
+                            AsyncImage(
+                                model = userCredentials.imageUrl,
+                                contentDescription = null,
+                                modifier = Modifier
+                                    .size(108.dp)
+                                    .clip(CircleShape)
+                                    .border(
+                                        width = 2.dp,
+                                        color = MaterialTheme.colorScheme.primary,
+                                        shape = CircleShape
+                                    ),
+                                contentScale = ContentScale.Crop
+                            )
+                        } else {
+                            Icon(
+                                Icons.Default.AccountCircle,
+                                contentDescription = null,
+                                modifier = Modifier.size(108.dp),
+                            )
+                        }
 
                         Spacer(modifier = Modifier.height(16.dp))
 

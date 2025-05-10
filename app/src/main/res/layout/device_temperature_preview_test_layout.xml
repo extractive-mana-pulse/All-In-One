@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:padding="16dp"
+    android:gravity="center"
+    android:background="@android:color/transparent">
+
+    <TextView
+        android:id="@+id/title_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Monitor device temperature"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:layout_marginBottom="24dp"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_marginBottom="16dp">
+
+        <ImageView
+            android:id="@+id/temperature_icon"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:src="@drawable/device_thermostat"/>
+
+        <TextView
+            android:id="@+id/current_temp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="25°C"
+            android:textSize="48sp"
+            android:textColor="#4EE435"
+            android:layout_marginStart="16dp"/>
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/status_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Temperature status: Normal"
+        android:textSize="18sp"
+        android:layout_marginBottom="32dp"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_horizontal"
+        android:layout_marginBottom="16dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Minimum possible temperature"
+            android:layout_marginEnd="8dp"/>
+
+        <TextView
+            android:id="@+id/min_temp_value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="15°C"
+            android:textColor="#60B3F6"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_horizontal"
+        android:layout_marginBottom="16dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Maximum possible temperature"
+            android:layout_marginEnd="8dp"/>
+
+        <TextView
+            android:id="@+id/max_temp_value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="45°C"
+            android:textColor="#FF4D00"/>
+    </LinearLayout>
+}
+    <ProgressBar
+        android:id="@+id/temperature_progress"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:max="100"
+        android:progress="100"
+        android:progressDrawable="@drawable/curved_progress_bar"
+        android:background="@drawable/curved_progress_background"
+        android:layout_marginBottom="32dp"/>
+
+    <ImageButton
+        android:id="@+id/refresh_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/refresh_ic"
+        android:background="@android:color/transparent"/>
+
+</LinearLayout>

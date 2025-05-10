@@ -35,6 +35,7 @@ import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.History
 import androidx.compose.material.icons.filled.Menu
@@ -86,6 +87,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import coil3.compose.AsyncImage
 import com.example.allinone.R
+import com.example.allinone.auth.domain.model.UserCredentials
 import com.example.allinone.core.extension.toastMessage
 import com.example.allinone.main.domain.model.Course
 import com.example.allinone.main.domain.model.Sections
@@ -93,8 +95,6 @@ import com.example.allinone.main.presentation.vm.TimerViewModel
 import com.example.allinone.navigation.screen.HomeScreens
 import com.example.allinone.navigation.screen.ProfileScreens
 import com.example.allinone.settings.readingMode.presentation.vm.ReadingModeViewModel
-import com.google.firebase.Firebase
-import com.google.firebase.auth.auth
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.launch
@@ -108,7 +108,8 @@ import java.util.Locale
 fun HomeScreen(
     navController: NavHostController = rememberNavController(),
     topBarState: MutableState<Boolean>,
-    drawerState: DrawerState
+    drawerState: DrawerState,
+    userCredentials: UserCredentials?
 ) {
 
     val context = LocalContext.current
@@ -234,11 +235,18 @@ fun HomeScreen(
                                                     navController.navigate(ProfileScreens.Profile.route)
                                                 }
                                             ) {
-                                                AsyncImage(
-                                                    model = Firebase.auth.currentUser?.photoUrl,
-                                                    contentScale = ContentScale.Crop,
-                                                    contentDescription = stringResource(R.string.search_bar_profile_icon)
-                                                )
+                                                if (userCredentials?.imageUrl != null) {
+                                                    AsyncImage(
+                                                        model = userCredentials.imageUrl,
+                                                        contentScale = ContentScale.Crop,
+                                                        contentDescription = stringResource(R.string.search_bar_profile_icon)
+                                                    )
+                                                } else {
+                                                    Icon(
+                                                        Icons.Default.AccountCircle,
+                                                        contentDescription = stringResource(R.string.search_bar_profile_icon)
+                                                    )
+                                                }
                                             }
                                         } else {
                                             Row {

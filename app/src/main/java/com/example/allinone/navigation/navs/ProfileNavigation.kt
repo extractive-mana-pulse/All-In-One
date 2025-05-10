@@ -38,8 +38,7 @@ internal fun NavGraphBuilder.profileNavigation(
             exitTransition = { shrinkHorizontally() + fadeOut() }
         ) {
             EditProfileScreen(
-                navController = navController,
-                authManager = authenticationManager
+                navController = navController
             )
         }
     }

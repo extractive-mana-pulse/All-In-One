@@ -87,7 +87,7 @@
     <string name="about">About:</string>
     <string name="years_old">%d years old</string>
     <string name="expand_button_content_description">See more or less information about a dog.</string>
-    <string name="comfirm">Confirm</string>
+    <string name="confirm">Confirm</string>
     <string name="dismiss">Dismiss</string>
     <string name="warning">Warning</string>
     <string name="dialog_txt">If you proceed next with this code lab, you will be navigated to official web page of this code lab.</string>
@@ -111,4 +111,13 @@
     <string name="note_device_temp_about_sheet_info">Note: That information shown on device temperature screen might not be accurate. There\'s difference could be around 3-5 degrees of C</string>
     <string name="device_temperature_to_somewhere">Navigate up from device temperature screen</string>
     <string name="widget_xml_info">Device temperature widget.</string>
+    <string name="logout">Logout</string>
+    <string name="logout_desc">Do you want to logout? Note that if you logout all unsaved action will be removed.</string>
+    <string name="forgot_password">Forgot Password ?</string>
+    <string name="password">Password</string>
+    <string name="create_an_account">Create an account</string>
+    <string name="email">Email</string>
+    <string name="save_changes">Save Changes</string>
+    <string name="full_name">Full name</string>
+    <string name="from_profile_to_somewhere">Navigate up from profile screen</string>
 </resources>

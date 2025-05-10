@@ -5,7 +5,7 @@ import android.net.Uri
 data class EditProfileUiState(
     val displayName: String = "",
     val username: String = "",
-    val profilePictureUrl: String? = null,
+    val profilePictureUrl: Uri? = null,
     val selectedImageUri: Uri? = null,
     val email: String = ""
 )

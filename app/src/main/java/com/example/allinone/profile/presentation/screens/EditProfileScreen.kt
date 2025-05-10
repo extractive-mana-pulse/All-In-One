@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
@@ -48,33 +49,31 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import coil3.compose.AsyncImage
 import com.example.allinone.R
-import com.example.allinone.auth.data.remote.impl.AuthenticationManager
+import com.example.allinone.auth.presentation.screens.ValidatedEmailTextField
 import com.example.allinone.core.util.ui.Loading
 import com.example.allinone.profile.presentation.vm.EditProfileViewModel
-import com.example.allinone.profile.presentation.vm.EditProfileViewModelFactory
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun EditProfileScreen(
     navController: NavHostController = rememberNavController(),
-    authManager: AuthenticationManager,
 ) {
     val context = LocalContext.current
     val focusManager = LocalFocusManager.current
 
-    val editProfileViewModel: EditProfileViewModel = viewModel(
-        factory = EditProfileViewModelFactory(authManager)
-    )
+    val editProfileViewModel: EditProfileViewModel = hiltViewModel()
 
     val uiState by editProfileViewModel.uiState.collectAsStateWithLifecycle()
     val isLoading by editProfileViewModel.loading.collectAsStateWithLifecycle()
@@ -128,13 +127,114 @@ fun EditProfileScreen(
             EditProfileViewModel.FetchStatus.Loading -> Loading()
             EditProfileViewModel.FetchStatus.Error -> FetchStatusError(editProfileViewModel)
             else -> {
-                Column(
+                Box(
                     modifier = Modifier
                         .fillMaxSize()
                         .padding(innerPadding)
                         .padding(16.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally
                 ) {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(innerPadding)
+                            .padding(16.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+
+                        Box(
+                            modifier = Modifier
+                                .size(120.dp)
+                                .clip(CircleShape)
+                                .background(MaterialTheme.colorScheme.surfaceVariant)
+                                .border(2.dp, MaterialTheme.colorScheme.primary, CircleShape)
+                                .clickable { imagePickerLauncher.launch("image/*") },
+                            contentAlignment = Alignment.Center
+                        ) {
+                            val imageUri = uiState.selectedImageUri
+                            val imageUrl = uiState.profilePictureUrl
+
+                            if (imageUri != null) {
+                                AsyncImage(
+                                    model = imageUri,
+                                    contentDescription = "Selected profile picture",
+                                    modifier = Modifier.fillMaxSize(),
+                                    contentScale = ContentScale.Crop
+                                )
+                            } else {
+                                Icon(
+                                    imageVector = Icons.Default.AccountCircle,
+                                    contentDescription = null,
+                                )
+                            }
+
+                            Box(
+                                modifier = Modifier
+                                    .align(Alignment.BottomEnd)
+                                    .size(36.dp)
+                                    .clip(CircleShape)
+                                    .background(MaterialTheme.colorScheme.primary)
+                                    .padding(8.dp)
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Default.Edit,
+                                    contentDescription = "Change photo",
+                                    tint = MaterialTheme.colorScheme.onPrimary,
+                                    modifier = Modifier.size(20.dp)
+                                )
+                            }
+                        }
+
+                        Spacer(modifier = Modifier.height(24.dp))
+
+                        // full name and email
+                        Column(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 16.dp)
+                        ) {
+                            Text(
+                                text = stringResource(R.string.full_name),
+                                style = MaterialTheme.typography.bodyMedium.copy(
+                                    color = MaterialTheme.colorScheme.outline,
+                                    fontFamily = FontFamily(Font(R.font.inknut_antiqua_light))
+                                )
+                            )
+
+                            OutlinedTextField(
+                                value = uiState.displayName,
+                                onValueChange = { editProfileViewModel.updateDisplayName(it) },
+                                modifier = Modifier.fillMaxWidth(),
+                                shape = RoundedCornerShape(16.dp),
+                                singleLine = true,
+                                keyboardOptions = KeyboardOptions(
+                                    capitalization = KeyboardCapitalization.Words,
+                                    keyboardType = KeyboardType.Text,
+                                    imeAction = ImeAction.Next
+                                ),
+                                keyboardActions = KeyboardActions(
+                                    onNext = {
+                                        focusManager.moveFocus(FocusDirection.Down)
+                                    }
+                                )
+                            )
+
+                            Spacer(modifier = Modifier.height(16.dp))
+
+                            Text(
+                                text = stringResource(R.string.email),
+                                style = MaterialTheme.typography.bodyMedium.copy(
+                                    color = MaterialTheme.colorScheme.outline,
+                                    fontFamily = FontFamily(Font(R.font.inknut_antiqua_light))
+                                )
+                            )
+
+                            ValidatedEmailTextField(
+                                email = uiState.email,
+                                updateState = { input -> editProfileViewModel.updateEmail(input) },
+                                validatorHasErrors = editProfileViewModel.emailHasErrors
+                            )
+                        }
+                    }
                     errorMessage?.let {
                         MessageCard(
                             message = it,
@@ -153,100 +253,6 @@ fun EditProfileScreen(
 
                     Spacer(modifier = Modifier.height(16.dp))
 
-                    Box(
-                        modifier = Modifier
-                            .size(120.dp)
-                            .clip(CircleShape)
-                            .background(MaterialTheme.colorScheme.surfaceVariant)
-                            .border(2.dp, MaterialTheme.colorScheme.primary, CircleShape)
-                            .clickable { imagePickerLauncher.launch("image/*") },
-                        contentAlignment = Alignment.Center
-                    ) {
-                        val imageUri = uiState.selectedImageUri
-                        val imageUrl = uiState.profilePictureUrl
-
-                        if (imageUri != null) {
-                            AsyncImage(
-                                model = imageUri,
-                                contentDescription = "Selected profile picture",
-                                modifier = Modifier.fillMaxSize(),
-                                contentScale = ContentScale.Crop
-                            )
-                        } else if (imageUrl?.isNotBlank() == true) {
-                            AsyncImage(
-                                model = imageUrl,
-                                contentDescription = "Current profile picture",
-                                modifier = Modifier.fillMaxSize(),
-                                contentScale = ContentScale.Crop
-                            )
-                        } else {
-                            Icon(
-                                imageVector = Icons.Default.AccountCircle,
-                                contentDescription = null,
-                            )
-                        }
-
-                        Box(
-                            modifier = Modifier
-                                .align(Alignment.BottomEnd)
-                                .size(36.dp)
-                                .clip(CircleShape)
-                                .background(MaterialTheme.colorScheme.primary)
-                                .padding(8.dp)
-                        ) {
-                            Icon(
-                                imageVector = Icons.Default.Edit,
-                                contentDescription = "Change photo",
-                                tint = MaterialTheme.colorScheme.onPrimary,
-                                modifier = Modifier.size(20.dp)
-                            )
-                        }
-                    }
-
-                    Spacer(modifier = Modifier.height(24.dp))
-
-                    OutlinedTextField(
-                        value = uiState.displayName,
-                        onValueChange = { editProfileViewModel.updateDisplayName(it) },
-                        label = {
-                            Text(
-                                text = "Full Name",
-                            )
-                        },
-                        modifier = Modifier.fillMaxWidth(),
-                        singleLine = true,
-                        keyboardOptions = KeyboardOptions(
-                            capitalization = KeyboardCapitalization.Words,
-                            keyboardType = KeyboardType.Text,
-                            imeAction = ImeAction.Next
-                        ),
-                        keyboardActions = KeyboardActions(
-                            onNext = {
-                                focusManager.moveFocus(FocusDirection.Down)
-                            }
-                        )
-                    )
-
-                    Spacer(modifier = Modifier.height(16.dp))
-
-                    OutlinedTextField(
-                        value = uiState.email,
-                        onValueChange = { editProfileViewModel.updateEmail(it) },
-                        label = {
-                            Text(
-                                text = "Email"
-                            )
-                        },
-                        modifier = Modifier.fillMaxWidth(),
-                        singleLine = true,
-                        keyboardOptions = KeyboardOptions(
-                            keyboardType = KeyboardType.Email,
-                            imeAction = ImeAction.Done
-                        )
-                    )
-
-                    Spacer(modifier = Modifier.height(24.dp))
-
                     Button(
                         onClick = {
                             editProfileViewModel.saveChanges {
@@ -255,17 +261,25 @@ fun EditProfileScreen(
                         },
                         modifier = Modifier
                             .fillMaxWidth()
-                            .height(50.dp),
+                            .height(56.dp)
+                            .align(Alignment.BottomCenter),
                         enabled = !isLoading
                     ) {
                         if (isLoading) {
-                            CircularProgressIndicator(
-                                modifier = Modifier.size(24.dp),
-                                strokeWidth = 2.dp,
-                                color = MaterialTheme.colorScheme.onPrimary
-                            )
+                            CircularProgressIndicator()
                         } else {
-                            Text("Save Changes")
+                            Text(
+                                text = stringResource(R.string.save_changes),
+                                style = MaterialTheme.typography.labelLarge.copy(
+                                    fontFamily = FontFamily(Font(R.font.inknut_antiqua_bold)),
+                                    fontWeight = MaterialTheme.typography.labelLarge.fontWeight,
+                                    fontSize = MaterialTheme.typography.labelLarge.fontSize,
+                                    letterSpacing = MaterialTheme.typography.labelLarge.letterSpacing,
+                                    lineHeight = MaterialTheme.typography.labelLarge.lineHeight,
+                                    platformStyle = MaterialTheme.typography.labelLarge.platformStyle,
+                                    textDirection = MaterialTheme.typography.labelLarge.textDirection,
+                                )
+                            )
                         }
                     }
                 }

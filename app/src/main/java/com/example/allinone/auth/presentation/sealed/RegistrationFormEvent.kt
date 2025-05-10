@@ -2,9 +2,9 @@ package com.example.allinone.auth.presentation.sealed
 
 sealed class RegistrationFormEvent {
 
-    data class EmailChanged(val email: String) : RegistrationFormEvent()
-
     data class PasswordChanged(val password: String) : RegistrationFormEvent()
+
+    object ClearPasswordError : RegistrationFormEvent()
 
     object ForgotPassword : RegistrationFormEvent()
 

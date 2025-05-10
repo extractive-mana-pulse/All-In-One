@@ -67,7 +67,8 @@ fun NavigationGraph(
                     topBarState = topBarState,
                     drawerState = drawerState,
                     timerViewModel = timerViewModel,
-                    context = context
+                    context = context,
+                    authenticationManager = authenticationManager
                 )
                 settingsNavigation(
                     navController = navController,

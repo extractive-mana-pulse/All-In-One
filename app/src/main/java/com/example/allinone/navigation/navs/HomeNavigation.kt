@@ -26,7 +26,8 @@ internal fun NavGraphBuilder.mainNavigation(
     context: Context,
     topBarState: MutableState<Boolean>,
     drawerState: DrawerState,
-    timerViewModel: TimerViewModel
+    timerViewModel: TimerViewModel,
+    authenticationManager: AuthenticationManager
 ) {
     navigation(
         startDestination = HomeScreens.Home.route,
@@ -40,7 +41,8 @@ internal fun NavGraphBuilder.mainNavigation(
             HomeScreen(
                 navController = navController,
                 topBarState = topBarState,
-                drawerState = drawerState
+                drawerState = drawerState,
+                userCredentials = authenticationManager.getSignedInUser()
             )
         }
         composable(HomeScreens.Help.route) {

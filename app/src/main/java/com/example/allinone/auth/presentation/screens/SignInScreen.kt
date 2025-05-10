@@ -15,10 +15,15 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Visibility
+import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
-import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
@@ -30,10 +35,12 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusDirection
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
@@ -44,7 +51,7 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
@@ -61,17 +68,6 @@ import com.example.allinone.navigation.screen.HomeScreens
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
 
-// TODO(MUST HAVE TO IMPLEMENT THIS. IT'S IN FIRST PLACE RIGHT NOW)
-// need to finish code, optimize code, also don't forget to implement a navigation inside view model.
-// it's important to have navigation inside view model cause it's decrease number of code,
-// it improve code quality. no-more one time events.
-// also modify code in SignInForm.
-// after finishing implementation of all of these listed requirements above.
-// check if everything works fine, if(yes) implement save structure to registration(create an account) page.
-
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Preview
 @Composable
 fun SignInScreen(
     navController: NavHostController = rememberNavController()
@@ -87,8 +83,8 @@ fun SignInScreen(
     LaunchedEffect(key1 = context) {
         signInViewModel.validationEvents.collect { event ->
             when (event) {
-                is ValidationEvent.Success -> Log.d("Success case","Successfully logged in.")
 
+                is ValidationEvent.Success -> Log.d("Success case","Successfully logged in.")
 
                 is ValidationEvent.Error -> {
                     toastMessage(
@@ -96,6 +92,7 @@ fun SignInScreen(
                         message = event.message
                     )
                 }
+
                 is ValidationEvent.NavigateToHome -> {
                     navController.navigate(HomeScreens.Home.route) {
                         popUpTo(navController.graph.startDestinationId) {
@@ -172,10 +169,11 @@ private fun SignInForm(
     authenticationManager: AuthenticationManager,
     signInViewModel: SignInViewModel
 ) {
-    val state = signInViewModel.state
     val context = LocalContext.current
+    val state = signInViewModel.state
     var focusManager = LocalFocusManager.current
-    val scope = rememberCoroutineScope()
+    var isPasswordVisible by remember { mutableStateOf(false) }
+
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -195,45 +193,23 @@ private fun SignInForm(
                     .padding(horizontal = 16.dp)
             ) {
                 Text(
-                    text = "Email",
+                    text = stringResource(R.string.email),
                     style = MaterialTheme.typography.bodyMedium.copy(
                         color = MaterialTheme.colorScheme.outline,
                         fontFamily = FontFamily(Font(R.font.inknut_antiqua_light))
                     )
                 )
 
-                OutlinedTextField(
-                    value = state.email,
-                    onValueChange = {
-                        signInViewModel.onEvent(RegistrationFormEvent.EmailChanged(it))
-                    },
-                    isError = state.emailError != null,
-                    modifier = Modifier
-                        .fillMaxWidth(),
-                    shape = RoundedCornerShape(16.dp),
-                    singleLine = true,
-                    keyboardOptions = KeyboardOptions(
-                        imeAction = ImeAction.Next,
-                        keyboardType = KeyboardType.Email
-                    ),
-                    keyboardActions = KeyboardActions(
-                        onNext = {
-                            focusManager.moveFocus(FocusDirection.Down)
-                        }
-                    )
+                ValidatedEmailTextField(
+                    email = signInViewModel.email,
+                    updateState = { input -> signInViewModel.updateEmail(input) },
+                    validatorHasErrors = signInViewModel.emailHasErrors
                 )
-                if (state.emailError != null) {
-                    Text(
-                        text = state.emailError,
-                        color = MaterialTheme.colorScheme.error,
-                        modifier = Modifier.align(Alignment.End)
-                    )
-                }
 
                 Spacer(modifier = Modifier.height(16.dp))
 
                 Text(
-                    text = "Password",
+                    text = stringResource(R.string.password),
                     style = MaterialTheme.typography.bodyMedium.copy(
                         color = MaterialTheme.colorScheme.outline,
                         fontFamily = FontFamily(Font(R.font.inknut_antiqua_light))
@@ -243,14 +219,34 @@ private fun SignInForm(
                 OutlinedTextField(
                     value = state.password,
                     onValueChange = {
-                        signInViewModel.onEvent(RegistrationFormEvent.PasswordChanged(it))
+                        signInViewModel.onEvent(
+                            context = context,
+                            RegistrationFormEvent.PasswordChanged(it)
+                        )
                     },
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(56.dp),
+                        .height(56.dp)
+                        .onFocusChanged { focus ->
+                            if (focus.isFocused) {
+                                state.passwordError == null
+                            }
+                        },
                     shape = RoundedCornerShape(16.dp),
-                    visualTransformation = PasswordVisualTransformation(),
+                    visualTransformation = if (isPasswordVisible) VisualTransformation.None else PasswordVisualTransformation(),
                     singleLine = true,
+                    trailingIcon = {
+                        IconButton(
+                            onClick = {
+                                isPasswordVisible = !isPasswordVisible
+                            }
+                        ) {
+                            Icon(
+                                imageVector = if (isPasswordVisible) Icons.Default.Visibility else Icons.Default.VisibilityOff,
+                                contentDescription = if (isPasswordVisible) "Hide password" else "Show password"
+                            )
+                        }
+                    },
                     isError = state.passwordError != null,
                     keyboardOptions = KeyboardOptions(
                         imeAction = ImeAction.Done
@@ -258,7 +254,10 @@ private fun SignInForm(
                     keyboardActions = KeyboardActions(
                         onDone = {
                             focusManager.clearFocus()
-                            signInViewModel.onEvent(RegistrationFormEvent.Submit)
+                            signInViewModel.onEvent(
+                                context = context,
+                                RegistrationFormEvent.Submit
+                            )
                         }
                     )
                 )
@@ -283,7 +282,7 @@ private fun SignInForm(
                     },
                 ) {
                     Text(
-                        text = "Forgot Password?",
+                        text = stringResource(R.string.forgot_password),
                         style = MaterialTheme.typography.bodySmall.copy(
                             fontFamily = FontFamily(Font(R.font.inknut_antiqua_light))
                         )
@@ -295,7 +294,10 @@ private fun SignInForm(
 
             Button(
                 onClick = {
-                    signInViewModel.onEvent(RegistrationFormEvent.Submit)
+                    signInViewModel.onEvent(
+                        context = context,
+                        RegistrationFormEvent.Submit
+                    )
                 },
                 modifier = Modifier
                     .fillMaxWidth()
@@ -306,20 +308,24 @@ private fun SignInForm(
                     containerColor = MaterialTheme.colorScheme.surfaceContainerLow
                 )
             ) {
-                Text(
-                    text = "Sign in",
-                    style = MaterialTheme.typography.bodyLarge.copy(
-                        color = MaterialTheme.colorScheme.primary,
-                        fontFamily = FontFamily(Font(R.font.inknut_antiqua_semi_bold)),
-                        fontWeight = MaterialTheme.typography.bodyLarge.fontWeight,
-                        lineHeight = MaterialTheme.typography.bodyLarge.lineHeight,
-                        fontSize = MaterialTheme.typography.bodyLarge.fontSize,
-                        letterSpacing = MaterialTheme.typography.bodyLarge.letterSpacing,
-                        platformStyle = MaterialTheme.typography.bodyLarge.platformStyle,
-                        textAlign = MaterialTheme.typography.bodyLarge.textAlign,
-                        textDirection = MaterialTheme.typography.bodyLarge.textDirection,
-                    ),
-                )
+                if (signInViewModel.state.isLoading) {
+                    CircularProgressIndicator()
+                } else {
+                    Text(
+                        text = stringResource(R.string.sign_in),
+                        style = MaterialTheme.typography.bodyLarge.copy(
+                            color = MaterialTheme.colorScheme.primary,
+                            fontFamily = FontFamily(Font(R.font.inknut_antiqua_semi_bold)),
+                            fontWeight = MaterialTheme.typography.bodyLarge.fontWeight,
+                            lineHeight = MaterialTheme.typography.bodyLarge.lineHeight,
+                            fontSize = MaterialTheme.typography.bodyLarge.fontSize,
+                            letterSpacing = MaterialTheme.typography.bodyLarge.letterSpacing,
+                            platformStyle = MaterialTheme.typography.bodyLarge.platformStyle,
+                            textAlign = MaterialTheme.typography.bodyLarge.textAlign,
+                            textDirection = MaterialTheme.typography.bodyLarge.textDirection,
+                        )
+                    )
+                }
             }
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -332,7 +338,7 @@ private fun SignInForm(
                     .fillMaxWidth(),
             ) {
                 Text(
-                    text = "Create an account",
+                    text = stringResource(R.string.create_an_account),
                     style = MaterialTheme.typography.bodySmall.copy(
                         fontFamily = FontFamily(Font(R.font.inknut_antiqua_light))
                     )
@@ -433,4 +439,39 @@ private fun SignInWithGoogle(
             )
         }
     }
+}
+
+@Composable
+fun ValidatedEmailTextField(
+    email: String,
+    updateState: (String) -> Unit,
+    validatorHasErrors: Boolean
+) {
+    var focusManager = LocalFocusManager.current
+
+    OutlinedTextField(
+        modifier = Modifier
+            .fillMaxWidth(),
+        value = email,
+        onValueChange = updateState,
+        isError = validatorHasErrors,
+        supportingText = {
+            if (validatorHasErrors) {
+                Text(
+                    text = "Incorrect email format."
+                )
+            }
+        },
+        keyboardActions = KeyboardActions(
+            onNext = {
+                focusManager.moveFocus(FocusDirection.Down)
+            }
+        ),
+        shape = RoundedCornerShape(16.dp),
+        singleLine = true,
+        keyboardOptions = KeyboardOptions(
+            imeAction = ImeAction.Next,
+            keyboardType = KeyboardType.Email
+        ),
+    )
 }

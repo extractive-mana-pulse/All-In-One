@@ -3,7 +3,6 @@ package com.example.allinone.auth.domain.use_case
 import android.util.Patterns
 import com.example.allinone.auth.domain.model.ValidationResult
 
-
 class ValidateEmail {
 
     fun execute(email: String): ValidationResult {

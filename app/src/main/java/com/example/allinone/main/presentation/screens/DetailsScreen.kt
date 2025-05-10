@@ -359,7 +359,9 @@ private fun DetailsItem(course: CourseDetails) {
                     },
                     dialogTitle = stringResource(R.string.warning),
                     dialogText = stringResource(R.string.dialog_txt),
-                    icon = Icons.Default.Info
+                    icon = Icons.Default.Info,
+                    confirmText = stringResource(R.string.confirm),
+                    dismissText = stringResource(R.string.dismiss)
                 )
             }
         }
