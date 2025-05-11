@@ -3,8 +3,8 @@ package com.example.allinone.settings.autoNight.presentation.vm
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.allinone.settings.autoNight.domain.model.Twilight
 import com.example.allinone.settings.autoNight.data.remote.repositoryImpl.AutoNightModePreference
+import com.example.allinone.settings.autoNight.domain.model.Twilight
 import com.example.allinone.settings.autoNight.domain.repository.TwilightRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -16,25 +16,31 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+// function of this view model is to get the twilight data from the repository
+// and update the _twilight state with the new data.
+// also this view model selects an auto night mode from the repository
+// so the name of this should be kinda: AutoNightModeSelector or smth like that
+// also we've to take twilight from this view model and move it to separate view model
+
 @HiltViewModel
-class ThemeViewModel @Inject constructor(
+class AutoNightViewModel @Inject constructor(
     private val repository: TwilightRepository,
     private val autoNightModeRepository: AutoNightModePreference
 ) : ViewModel() {
 
+    private val _twilight = MutableStateFlow(Twilight())
+    val twilight = _twilight.asStateFlow()
+
     private val _selectedMode = MutableStateFlow("disabled")
     val selectedMode = _selectedMode
         .onStart {
-            selectMode()
+            observeSelectedMode()
         }
         .stateIn(
             viewModelScope,
             started = SharingStarted.WhileSubscribed(5000L),
             initialValue = "disabled"
         )
-
-    private val _twilight = MutableStateFlow(Twilight())
-    val twilight = _twilight.asStateFlow()
 
     fun getTwilight(latitude: Double, longitude: Double) {
         viewModelScope.launch {
@@ -47,7 +53,7 @@ class ThemeViewModel @Inject constructor(
         }
     }
 
-    private fun selectMode() {
+    private fun observeSelectedMode() {
         viewModelScope.launch {
             autoNightModeRepository.selectedModeFlow.collectLatest { mode ->
                 _selectedMode.value = mode
@@ -55,7 +61,7 @@ class ThemeViewModel @Inject constructor(
         }
     }
 
-    fun selectItem(mode: String) {
+    fun selectMode(mode: String) {
         viewModelScope.launch {
             autoNightModeRepository.saveSelectedMode(mode)
         }

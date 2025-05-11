@@ -51,9 +51,10 @@ import com.example.allinone.R
 import com.example.allinone.core.extension.toastMessage
 import com.example.allinone.settings.autoNight.domain.model.Twilight
 import com.example.allinone.settings.autoNight.presentation.util.DialPicker
+import com.example.allinone.settings.autoNight.presentation.vm.AutoNightViewModel
 import com.example.allinone.settings.autoNight.presentation.vm.LocationRefreshState
 import com.example.allinone.settings.autoNight.presentation.vm.LocationViewModel
-import com.example.allinone.settings.autoNight.presentation.vm.ThemeViewModel
+import com.example.allinone.settings.autoNight.presentation.vm.ScheduledModeViewModel
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import java.text.SimpleDateFormat
@@ -66,11 +67,12 @@ fun ScheduledModeScreen(
     navController: NavHostController = rememberNavController(),
     isDarkTheme: Boolean,
     onThemeChanged: (Boolean) -> Unit,
-    fusedLocationClient: FusedLocationProviderClient
+    fusedLocationClient: FusedLocationProviderClient,
+    scheduleToggleState: Boolean,
 ) {
     val context = LocalContext.current
     var checked by rememberSaveable { mutableStateOf(false) }
-    val viewModel: ThemeViewModel = hiltViewModel()
+    val viewModel: AutoNightViewModel = hiltViewModel()
 
     var latitude by remember { mutableDoubleStateOf(0.0) }
     var longitude by remember { mutableDoubleStateOf(0.0) }
@@ -78,6 +80,7 @@ fun ScheduledModeScreen(
 
     val state by viewModel.twilight.collectAsStateWithLifecycle()
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
+    val scheduledModeViewModel: ScheduledModeViewModel = hiltViewModel()
 
     LaunchedEffect(Unit) {
         if (ActivityCompat.checkSelfPermission(
@@ -171,16 +174,21 @@ fun ScheduledModeScreen(
                     )
                 )
                 Switch(
-                    checked = checked,
+                    checked = scheduleToggleState,
                     onCheckedChange = { status ->
                         checked = status
+                        scheduledModeViewModel.toggleScheduledMode(status)
                     },
                 )
             }
             HorizontalDivider()
-            when (checked) {
+            when (scheduleToggleState) {
                 true -> {
-                    SwitchOnMode(state)
+                    SwitchOnMode(
+                        state = state,
+                        isDarkTheme = isDarkTheme,
+                        onThemeChanged = onThemeChanged
+                    )
                 }
                 false -> {
                     SwitchOffMode()
@@ -310,7 +318,9 @@ private fun SwitchOffMode() {
 
 @Composable
 private fun SwitchOnMode(
-    state: Twilight
+    state: Twilight,
+    isDarkTheme: Boolean,
+    onThemeChanged: (Boolean) -> Unit,
 ) {
     val context = LocalContext.current
     val fusedLocationClient = remember { LocationServices.getFusedLocationProviderClient(context) }
@@ -323,6 +333,10 @@ private fun SwitchOnMode(
             context = context,
             fusedLocationClient = fusedLocationClient
         )
+    }
+
+    LaunchedEffect(Unit) {
+        //
     }
 
     LaunchedEffect(refreshState) {

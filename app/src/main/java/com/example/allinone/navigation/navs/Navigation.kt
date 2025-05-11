@@ -32,7 +32,8 @@ fun NavigationGraph(
     onThemeChanged: (Boolean) -> Unit,
     fusedLocationClient: FusedLocationProviderClient,
     context: Context,
-    authenticationManager: AuthenticationManager
+    authenticationManager: AuthenticationManager,
+    scheduleToggleState: Boolean
 ) {
     val topBarState = rememberSaveable { mutableStateOf(true) }
     val bottomBarState = rememberSaveable { mutableStateOf(true) }
@@ -76,6 +77,7 @@ fun NavigationGraph(
                     onThemeChanged = onThemeChanged,
                     fusedLocationClient = fusedLocationClient,
                     readingMode = isReadingMode,
+                    scheduleToggleState = scheduleToggleState
                 )
                 // later implement auth & onBoarding graphs
             }

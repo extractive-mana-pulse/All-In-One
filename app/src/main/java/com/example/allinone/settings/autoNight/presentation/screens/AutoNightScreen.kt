@@ -39,7 +39,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.allinone.R
 import com.example.allinone.core.extension.isInDarkMode
 import com.example.allinone.navigation.screen.SettingsScreens
-import com.example.allinone.settings.autoNight.presentation.vm.ThemeViewModel
+import com.example.allinone.settings.autoNight.presentation.vm.AutoNightViewModel
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -50,7 +50,7 @@ fun AutoNightModeScreen(
 ) {
     val scope = rememberCoroutineScope()
     val context = LocalContext.current
-    val viewModel: ThemeViewModel = hiltViewModel()
+    val viewModel: AutoNightViewModel = hiltViewModel()
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
     val selectedMode by viewModel.selectedMode.collectAsStateWithLifecycle()
 
@@ -99,7 +99,7 @@ fun AutoNightModeScreen(
                     content = mode,
                     isSelected = selectedMode == mode,
                     onClick = {
-                        viewModel.selectItem(mode)
+                        viewModel.selectMode(mode)
                         when (mode) {
                             // Disabled mode: theme always light
                             context.getString(R.string.disabled) -> onThemeChanged(false)
@@ -109,7 +109,7 @@ fun AutoNightModeScreen(
                                 navController.navigate(SettingsScreens.ScheduledMode.route)
                             }
 
-                            // Adaptive mode: brightness-based theme switching
+                            /** Adaptive mode: brightness-based theme switching */
                             context.getString(R.string.adaptive) -> {
                                 navController.navigate(SettingsScreens.AdaptiveMode.route)
                             }

@@ -24,7 +24,8 @@ internal fun NavGraphBuilder.settingsNavigation(
     isDarkTheme: Boolean,
     readingMode: Boolean,
     onThemeChanged: (Boolean) -> Unit,
-    fusedLocationClient: FusedLocationProviderClient
+    fusedLocationClient: FusedLocationProviderClient,
+    scheduleToggleState: Boolean
 ) {
     navigation(
         startDestination = SettingsScreens.Settings.route,
@@ -61,7 +62,8 @@ internal fun NavGraphBuilder.settingsNavigation(
                 navController = navController,
                 isDarkTheme = isDarkTheme,
                 onThemeChanged = onThemeChanged,
-                fusedLocationClient = fusedLocationClient
+                fusedLocationClient = fusedLocationClient,
+                scheduleToggleState = scheduleToggleState
             )
         }
         composable(SettingsScreens.Temperature.route) {

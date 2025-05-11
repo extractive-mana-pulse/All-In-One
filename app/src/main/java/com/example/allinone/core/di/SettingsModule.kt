@@ -2,6 +2,7 @@ package com.example.allinone.core.di
 
 import android.content.Context
 import com.example.allinone.core.preferences.ReadingModePreferences
+import com.example.allinone.core.preferences.ScheduledMode
 import com.example.allinone.core.preferences.ThemePreferences
 import com.example.allinone.settings.autoNight.data.remote.repositoryImpl.AutoNightModePreference
 import com.example.allinone.settings.autoNight.data.remote.repositoryImpl.LocationRepositoryImpl
@@ -20,7 +21,7 @@ object SettingsModule {
 
     @Provides
     @Singleton
-    fun provideAutoNightModeRepository(
+    fun provideAutoNightMode(
         @ApplicationContext context: Context
     ): AutoNightModePreference = AutoNightModePreference(context)
 
@@ -32,15 +33,21 @@ object SettingsModule {
 
     @Provides
     @Singleton
-    fun provideThemeRepository(
+    fun provideTheme(
         @ApplicationContext context: Context
     ): ThemePreferences = ThemePreferences(context)
 
     @Provides
     @Singleton
-    fun provideReadingModeRepository(
+    fun provideReadingMode(
         @ApplicationContext context: Context
     ): ReadingModePreferences = ReadingModePreferences(context)
+
+    @Provides
+    @Singleton
+    fun provideScheduledMode(
+        @ApplicationContext context: Context
+    ): ScheduledMode = ScheduledMode(context)
 
     @Provides
     @Singleton

@@ -7,9 +7,7 @@ import android.os.BatteryManager
 
 fun Context.getBatteryPercentage(): Float? {
 
-    val batteryStatus: Intent? = IntentFilter(Intent.ACTION_BATTERY_CHANGED).let { ifilter ->
-        registerReceiver(null, ifilter)
-    }
+    val batteryStatus: Intent? = registerReceiver(null, IntentFilter(Intent.ACTION_BATTERY_CHANGED))
 
     return batteryStatus?.let { intent ->
         val level: Int = intent.getIntExtra(BatteryManager.EXTRA_LEVEL, -1)
@@ -20,9 +18,7 @@ fun Context.getBatteryPercentage(): Float? {
 
 fun Context.getBatteryStatus(): Int? {
 
-    val batteryStatus: Intent? = IntentFilter(Intent.ACTION_BATTERY_CHANGED).let { ifilter ->
-        registerReceiver(null, ifilter)
-    }
+    val batteryStatus: Intent? = registerReceiver(null, IntentFilter(Intent.ACTION_BATTERY_CHANGED))
 
     return batteryStatus?.getIntExtra(BatteryManager.EXTRA_STATUS, -1)
 }

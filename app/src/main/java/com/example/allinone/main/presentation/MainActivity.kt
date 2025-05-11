@@ -16,6 +16,7 @@ import com.example.allinone.main.presentation.vm.MainViewModel
 import com.example.allinone.main.presentation.vm.TimerViewModel
 import com.example.allinone.navigation.navs.NavigationGraph
 import com.example.allinone.settings.autoNight.presentation.vm.DarkThemeViewModel
+import com.example.allinone.settings.autoNight.presentation.vm.ScheduledModeViewModel
 import com.example.allinone.settings.readingMode.presentation.vm.ReadingModeViewModel
 import com.example.allinone.ui.theme.AllInOneTheme
 import com.google.android.gms.location.FusedLocationProviderClient
@@ -42,10 +43,13 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             val timerViewModel: TimerViewModel by viewModels()
-            val darkThemeViewModel = hiltViewModel<DarkThemeViewModel>()
-            val readingModeViewModel = hiltViewModel<ReadingModeViewModel>()
+            val darkThemeViewModel : DarkThemeViewModel = hiltViewModel()
+            val readingModeViewModel : ReadingModeViewModel = hiltViewModel()
+            val scheduledModeViewModel : ScheduledModeViewModel = hiltViewModel()
             val isDarkTheme by darkThemeViewModel.isDarkTheme.collectAsStateWithLifecycle()
+            val isScheduledMode by scheduledModeViewModel.isScheduledMode.collectAsStateWithLifecycle()
             val isReadingTheme by readingModeViewModel.isReadingModeEnabled.collectAsStateWithLifecycle()
+
 
             AllInOneTheme(
                 darkTheme = isDarkTheme,
@@ -63,7 +67,8 @@ class MainActivity : ComponentActivity() {
                     },
                     fusedLocationClient = fusedLocationClient,
                     context = applicationContext,
-                    authenticationManager = authenticationManager
+                    authenticationManager = authenticationManager,
+                    scheduleToggleState = isScheduledMode
                 )
             }
         }
