@@ -7,7 +7,9 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.HelpOutline
@@ -30,6 +32,9 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
@@ -50,14 +55,16 @@ fun NavigationDrawer(
     navController: NavHostController = rememberNavController(),
     bottomBarState: MutableState<Boolean>,
     gesturesEnabledState: MutableState<Boolean>,
-    drawerState: DrawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
+    drawerState: DrawerState = rememberDrawerState(initialValue = DrawerValue.Closed),
+    onNavigateToPLCoding: () -> Unit
 ) {
     ModalNavigationDrawer(
         drawerContent = {
             ModalDrawerSheet {
                 NavigationDrawerContent(
                     navController = navController,
-                    drawerState = drawerState
+                    drawerState = drawerState,
+                    onNavigateToPLCoding = onNavigateToPLCoding
                 )
             }
         },
@@ -80,7 +87,8 @@ fun NavigationDrawer(
 @Composable
 private fun NavigationDrawerContent(
     navController: NavHostController = rememberNavController(),
-    drawerState: DrawerState
+    drawerState: DrawerState,
+    onNavigateToPLCoding: () -> Unit
 ) {
     val scope = rememberCoroutineScope()
     Box(
@@ -153,6 +161,26 @@ private fun NavigationDrawerContent(
                     )
                 },
                 onClick = {  }
+            )
+
+            NavigationDrawerItem(
+                label = {
+                    Text(
+                        text = "PL Coding"
+                    )
+                },
+                selected = false,
+                icon = {
+                    Icon(
+                        painter = painterResource(R.drawable.pl_coding_logo),
+                        contentDescription = stringResource(R.string.folder_icon),
+                        tint = Color.Unspecified,
+                        modifier = Modifier.size(24.dp).clip(CircleShape)
+                    )
+                },
+                onClick = {
+                    onNavigateToPLCoding()
+                }
             )
 
             HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))

@@ -1,0 +1,74 @@
+{
+  "git_commands": [
+    {
+      "id": 0,
+      "command": "git init",
+      "description": "Initialize a new Git repository."
+    },
+    {
+      "id": 1,
+      "command": "git clone <repository-url>",
+      "description": "Clone an existing repository from a remote server."
+    },
+    {
+      "id": 2,
+      "command": "git add <file>",
+      "description": "Stage changes to a file for the next commit."
+    },
+    {
+      "id": 3,
+      "command": "git commit -m \"commit message\"",
+      "description": "Commit staged changes with a descriptive message."
+    },
+    {
+      "id": 4,
+      "command": "git status",
+      "description": "Show the status of changes in the working directory."
+    },
+    {
+      "id": 5,
+      "command": "git push origin <branch>",
+      "description": "Push local changes to the remote repository on the specified branch."
+    },
+    {
+      "id": 6,
+      "command": "git pull",
+      "description": "Fetch and merge changes from the remote repository to the local branch."
+    },
+    {
+      "id": 7,
+      "command": "git branch",
+      "description": "List all branches in the repository."
+    },
+    {
+      "id": 8,
+      "command": "git checkout <branch>",
+      "description": "Switch to the specified branch."
+    },
+    {
+      "id": 9,
+      "command": "git merge <branch>",
+      "description": "Merge changes from the specified branch into the current branch."
+    },
+    {
+      "id": 10,
+      "command": "git log",
+      "description": "Show the commit history."
+    },
+    {
+      "id": 11,
+      "command": "git diff",
+      "description": "Show changes between the working directory and the index."
+    },
+    {
+      "id": 12,
+      "command": "git stash",
+      "description": "Save uncommitted changes temporarily."
+    },
+    {
+      "id": 13,
+      "command": "git remote -v",
+      "description": "Show the remote repositories associated with the local repository."
+    }
+  ]
+}

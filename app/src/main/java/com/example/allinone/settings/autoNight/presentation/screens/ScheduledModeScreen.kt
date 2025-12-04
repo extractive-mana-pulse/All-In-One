@@ -58,6 +58,8 @@ import com.example.allinone.settings.autoNight.presentation.vm.ScheduledModeView
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import java.text.SimpleDateFormat
+import java.time.LocalDateTime
+import java.time.LocalTime
 import java.util.Calendar
 import java.util.Locale
 
@@ -198,9 +200,11 @@ fun ScheduledModeScreen(
     }
 }
 
+// this mode is not implemented yet
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun SwitchOffMode() {
+
     val cal = Calendar.getInstance()
     var fromTime by remember { mutableStateOf("8:00 AM") }
     var toTime by remember { mutableStateOf("8:00 PM") }
@@ -247,7 +251,7 @@ private fun SwitchOffMode() {
         verticalAlignment = Alignment.CenterVertically
     ) {
         Text(
-            text = "From",
+            text = stringResource(R.string.from),
             style = MaterialTheme.typography.bodySmall.copy(
                 fontFamily = FontFamily(Font(R.font.inknut_antiqua_medium)),
                 fontSize = MaterialTheme.typography.bodySmall.fontSize,
@@ -281,14 +285,14 @@ private fun SwitchOffMode() {
             .fillMaxWidth()
             .padding(vertical = 8.dp)
             .clickable {
-                isFromSelected = false // Set to To time
+                isFromSelected = false // Set to time
                 showDialog = true
             },
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
         Text(
-            text = "To",
+            text = stringResource(R.string.to),
             style = MaterialTheme.typography.bodySmall.copy(
                 fontFamily = FontFamily(Font(R.font.inknut_antiqua_medium)),
                 fontSize = MaterialTheme.typography.bodySmall.fontSize,
@@ -335,8 +339,20 @@ private fun SwitchOnMode(
         )
     }
 
-    LaunchedEffect(Unit) {
-        //
+    val currentDateTime: LocalDateTime = LocalDateTime.now()
+    val currentLocalTime = currentDateTime.toLocalTime()
+
+    val sunriseString = state.results.sunrise
+    val sunsetString = state.results.sunset
+
+    if (sunriseString != null && sunsetString != null) {
+
+        val sunriseTime = LocalTime.parse(sunriseString)
+        val sunsetTime = LocalTime.parse(sunsetString)
+
+        // Determine if it's day or night
+        val isDayTime = currentLocalTime.isAfter(sunriseTime) && currentLocalTime.isBefore(sunsetTime)
+        if (isDayTime && isDarkTheme) onThemeChanged(false) else if (!isDayTime && !isDarkTheme) onThemeChanged(true)
     }
 
     LaunchedEffect(refreshState) {
@@ -348,14 +364,14 @@ private fun SwitchOnMode(
                 )
             }
 
-            LocationRefreshState.Loaded -> {
+            is LocationRefreshState.Loaded -> {
                 toastMessage(
                     context = context,
                     message = "Location updated"
                 )
             }
 
-            LocationRefreshState.Loading -> {
+            is LocationRefreshState.Loading -> {
                 toastMessage(
                     context = context,
                     message = "Updating location..."
@@ -379,7 +395,7 @@ private fun SwitchOnMode(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                text = "Update location",
+                text = stringResource(R.string.update_location),
                 style = MaterialTheme.typography.bodyMedium.copy(
                     fontFamily = FontFamily(Font(R.font.inknut_antiqua_medium)),
                     fontSize = MaterialTheme.typography.bodyMedium.fontSize,

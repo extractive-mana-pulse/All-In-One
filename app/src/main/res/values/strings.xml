@@ -139,4 +139,9 @@
     <string name="save_changes">Save Changes</string>
     <string name="full_name">Full name</string>
     <string name="from_profile_to_somewhere">Navigate up from profile screen</string>
+    <string name="update_location">Update location</string>
+    <string name="from">From</string>
+    <string name="to">To</string>
+    <string name="sign_up">Sign up</string>
+    <string name="about_pl_coding">"\"PL Coding\" refers to the IT education company run by Philipp Lackner, which focuses on practical and accessible Android development courses and mentorship. It includes the popular YouTube channel Philipp Lackner and paid offerings like the Mobile Dev Campus, which provides video courses, challenges, and a community for aspiring and current app developers. "</string>
 </resources>

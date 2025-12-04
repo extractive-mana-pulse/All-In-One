@@ -69,14 +69,13 @@ fun DetailsScreen(
 ) {
 
     val detailsViewModel : DetailsViewModel = hiltViewModel()
-    val courseDetails by detailsViewModel.courseDetails.collectAsStateWithLifecycle()
-
     val context = LocalContext.current
     val verticalScroll = rememberScrollState()
     val snackbarHostState = remember { SnackbarHostState() }
     val readingViewModel : ReadingModeViewModel = hiltViewModel()
     val timerValue by timerViewModel.timer.collectAsStateWithLifecycle()
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
+    val courseDetails by detailsViewModel.courseDetails.collectAsStateWithLifecycle()
 
     LaunchedEffect(key1 = true) { detailsViewModel.loadCourse(id) }
 

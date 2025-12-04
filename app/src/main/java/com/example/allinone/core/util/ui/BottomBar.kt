@@ -56,20 +56,6 @@ fun BottomNavigationBar(
             hasNews = false,
             route = HomeScreens.Home.route
         ),
-//        BottomNavigationItem(
-//            title = "Profile",
-//            selectedIcon = Icons.Filled.Person,
-//            unselectedIcon = Icons.Outlined.Person,
-//            hasNews = false,
-//            route = Screens.Profile.route
-//        ),
-//        BottomNavigationItem(
-//            title = "Settings",
-//            selectedIcon = Icons.Filled.Settings,
-//            unselectedIcon = Icons.Outlined.Settings,
-//            hasNews = false,
-//            route = Screens.Settings.route
-//        )
     )
 
     val navBackStackEntry by navController.currentBackStackEntryAsState()

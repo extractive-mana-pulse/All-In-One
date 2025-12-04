@@ -6,7 +6,6 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.shrinkHorizontally
 import androidx.compose.material3.DrawerState
-import androidx.compose.runtime.MutableState
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
@@ -24,7 +23,6 @@ import com.example.allinone.navigation.screen.HomeScreens
 internal fun NavGraphBuilder.mainNavigation(
     navController: NavHostController,
     context: Context,
-    topBarState: MutableState<Boolean>,
     drawerState: DrawerState,
     timerViewModel: TimerViewModel,
     authenticationManager: AuthenticationManager
@@ -40,7 +38,6 @@ internal fun NavGraphBuilder.mainNavigation(
         ) {
             HomeScreen(
                 navController = navController,
-                topBarState = topBarState,
                 drawerState = drawerState,
                 userCredentials = authenticationManager.getSignedInUser()
             )

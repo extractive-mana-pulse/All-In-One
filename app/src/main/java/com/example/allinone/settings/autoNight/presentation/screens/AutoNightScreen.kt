@@ -109,7 +109,7 @@ fun AutoNightModeScreen(
                                 navController.navigate(SettingsScreens.ScheduledMode.route)
                             }
 
-                            /** Adaptive mode: brightness-based theme switching */
+                            // Adaptive mode: brightness-based theme switching
                             context.getString(R.string.adaptive) -> {
                                 navController.navigate(SettingsScreens.AdaptiveMode.route)
                             }

@@ -24,42 +24,49 @@
     "id": 4,
     "title": "Craft Your Digital Art Gallery",
     "subtitle": "Transform your phone into a museum-quality exhibition space with this stunning art showcase app",
+    "description": "",
     "imageUrl": "https://developers.google.com/static/profile/badges/playlists/android/android-basics-compose-unit-2-pathway-3/badge.svg"
   },
   {
     "id": 5,
     "title": "Interactive Lemonade Experience",
     "subtitle": "From tree to glass: Create a delightful animated app that brings the joy of lemonade-making to life",
-    "imageUrl": "https://png.pngtree.com/element_our/20190601/ourmid/pngtree-lemon-icon-image_1347966.jpg"
+    "description": "",
+    "imageUrl": "https://static.vecteezy.com/system/resources/thumbnails/046/493/361/small/cartoon-lemon-fruit-bright-yellow-lemon-fruit-with-green-leaf-markings-fresh-icon-design-template-juice-concentrate-symbol-from-curved-lines-flat-illustration-on-background-vector.jpg"
   },
   {
     "id": 6,
     "title": "Productivity Powerhouse: Task Manager",
     "subtitle": "Build the task manager app you've always wanted with clean UI, animations, and zero clutter",
+    "description": "",
     "imageUrl": "https://cdn2.iconfinder.com/data/icons/greenline/512/check-512.png"
   },
   {
     "id": 7,
     "title": "Art Space: Mastering Compose Modifiers",
     "subtitle": "Discover the styling superpowers that will transform your basic layouts into professional designs",
+    "description": "",
     "imageUrl": "https://developers.google.com/static/profile/badges/playlists/android/android-basics-compose-unit-2-pathway-3/badge.svg"
   },
   {
     "id": 8,
     "title": "Professional Business Card Creator",
     "subtitle": "Design impressive digital business cards that stand out using advanced layout techniques and Material Design",
+    "description": "",
     "imageUrl": "https://user-images.githubusercontent.com/29678011/201169741-7f95aae5-4cf7-462c-8cbd-e4dc5b0b2346.svg"
   },
   {
     "id": 9,
     "title": "Coming Soon: Weather Forecast Pro",
     "subtitle": "Get early access to our most requested course on building a weather app with live data and animations",
+    "description": "",
     "imageUrl": "https://developers.google.com/static/profile/badges/playlists/android/android-basics-compose-unit-2-pathway-2/badge.svg"
   },
   {
     "id": 10,
     "title": "Woof",
     "subtitle": "Be the first to learn how to build the ultimate woof companion app with names and years of age of dogs.",
+    "description": "",
     "imageUrl": "https://static.vecteezy.com/system/resources/previews/016/461/327/non_2x/woof-text-in-a-speech-bubble-balloon-sticker-design-cartoon-comics-dog-bark-sound-effect-and-lettering-simple-flat-illustration-on-brown-background-vector.jpg"
   }
 ]

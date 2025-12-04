@@ -2,7 +2,7 @@
 <project version="4">
   <component name="CompilerConfiguration">
     <option name="PARALLEL_COMPILATION_OPTION" value="Disabled" />
-    <bytecodeTargetLevel>
+    <bytecodeTargetLevel target="21">
       <module name="leetcode" target="21" />
     </bytecodeTargetLevel>
   </component>

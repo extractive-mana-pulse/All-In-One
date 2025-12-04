@@ -20,7 +20,7 @@ android {
 
     defaultConfig {
         applicationId = "com.example.allinone"
-        minSdk = 24
+        minSdk = 26
         targetSdk = 35
         versionCode = 1
         versionName = "1.0"
@@ -99,18 +99,18 @@ dependencies {
     debugImplementation(libs.androidx.ui.test.manifest)
 
     // firebase
-    implementation(platform("com.google.firebase:firebase-bom:33.12.0"))
-    implementation("com.google.firebase:firebase-auth:23.2.0")
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.auth)
 
-    implementation("androidx.credentials:credentials:1.5.0")
-    implementation("androidx.credentials:credentials-play-services-auth:1.5.0")
-    implementation("com.google.android.libraries.identity.googleid:googleid:1.1.1")
+    implementation(libs.androidx.credentials)
+    implementation(libs.credentials.play.services.auth)
+    implementation(libs.googleid)
 
-    implementation ("com.google.firebase:firebase-storage")
-    implementation ("com.google.firebase:firebase-firestore-ktx:23.2.0")
+    implementation (libs.firebase.storage)
+    implementation (libs.firebase.firestore.ktx)
 
     // lottie files
-    implementation("com.airbnb.android:lottie-compose:6.5.2")
+    implementation(libs.lottie.compose)
 
     // type-safe navigation
     implementation(libs.navigation.compose)
@@ -122,7 +122,7 @@ dependencies {
     // room
     implementation (libs.androidx.room.ktx)
     implementation (libs.androidx.room.paging)
-    ksp("androidx.room:room-compiler:2.6.1")
+    ksp(libs.androidx.room.compiler)
 
     // paging
     implementation (libs.androidx.paging.runtime.ktx)
@@ -146,6 +146,7 @@ dependencies {
     implementation (libs.androidx.lifecycle.viewmodel.compose)
     implementation (libs.androidx.lifecycle.livedata.ktx)
 
+    // hilt
     implementation(libs.hilt.android)
     ksp(libs.hilt.android.compiler)
     ksp(libs.hilt.compiler)
@@ -159,20 +160,20 @@ dependencies {
     // animation
     implementation(libs.androidx.compose.animation)
 
-    // this gradle needed to implement Lazy Vertical Grid inside Lazy Column with right behavior
+    // this gradle needed to implement Lazy Vertical Grid inside Lazy Column with right behavior FlowLayout
     implementation (libs.accompanist.flowlayout)
 
     // splash screen
     implementation(libs.androidx.core.splashscreen)
 
     // app compat for language changer
-    implementation("androidx.appcompat:appcompat:1.7.0")
+    implementation(libs.androidx.appcompat)
 
     // data store
-    implementation("androidx.datastore:datastore-preferences:1.1.3")
+    implementation(libs.androidx.datastore.preferences)
 
     // location
-    implementation ("com.google.android.gms:play-services-location:21.3.0")
+    implementation (libs.play.services.location)
 
     // glance
     implementation (libs.androidx.glance.material3)

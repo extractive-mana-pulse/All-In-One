@@ -3,7 +3,9 @@ package com.example.allinone.core.di
 import android.content.Context
 import com.example.allinone.BuildConfig
 import com.example.allinone.main.data.remote.DetailsRepositoryImpl
+import com.example.allinone.main.data.remote.HomeRepositoryImpl
 import com.example.allinone.main.domain.repository.DetailsRepository
+import com.example.allinone.main.domain.repository.HomeRepository
 import com.example.allinone.settings.autoNight.data.remote.api.TwilightApi
 import com.example.allinone.settings.autoNight.data.remote.repositoryImpl.TwilightRepositoryImpl
 import com.example.allinone.settings.autoNight.domain.repository.TwilightRepository
@@ -50,4 +52,10 @@ object AppModule {
     fun provideDetailsRepository(
         @ApplicationContext context: Context
     ) : DetailsRepository = DetailsRepositoryImpl(context)
+
+    @Provides
+    @Singleton
+    fun provideHomeRepository(
+        @ApplicationContext context: Context
+    ) : HomeRepository = HomeRepositoryImpl(context)
 }

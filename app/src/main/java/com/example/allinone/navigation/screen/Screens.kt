@@ -61,6 +61,16 @@ sealed class Screens(val route: String) {
     @Serializable
     object Woof: Screens("woof")
 
+    @Serializable
+    object PLCoding: Screens("pl-coding") {
+
+        @Serializable
+        object MiniChallenges: Screens("mini_challenges")
+
+        @Serializable
+        object AppChallenges: Screens("app_challenges")
+    }
+
 }
 
 @Serializable

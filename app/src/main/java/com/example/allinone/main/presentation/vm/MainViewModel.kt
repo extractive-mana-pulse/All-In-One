@@ -20,4 +20,6 @@ class MainViewModel: ViewModel() {
             _isReady.value = true
         }
     }
+
+
 }
