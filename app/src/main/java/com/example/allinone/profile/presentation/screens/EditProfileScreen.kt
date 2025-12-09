@@ -21,13 +21,11 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Error
 import androidx.compose.material.icons.filled.PersonRemoveAlt1
-import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
@@ -38,7 +36,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -46,7 +43,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.Font
@@ -62,7 +58,9 @@ import androidx.navigation.compose.rememberNavController
 import coil3.compose.AsyncImage
 import com.example.allinone.R
 import com.example.allinone.auth.presentation.screens.ValidatedEmailTextField
-import com.example.allinone.core.util.ui.Loading
+import com.example.allinone.core.components.AppTopBar
+import com.example.allinone.core.components.Loading
+import com.example.allinone.core.components.PrimaryButton
 import com.example.allinone.profile.presentation.vm.EditProfileViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -70,11 +68,8 @@ import com.example.allinone.profile.presentation.vm.EditProfileViewModel
 fun EditProfileScreen(
     navController: NavHostController = rememberNavController(),
 ) {
-    val context = LocalContext.current
     val focusManager = LocalFocusManager.current
-
     val editProfileViewModel: EditProfileViewModel = hiltViewModel()
-
     val uiState by editProfileViewModel.uiState.collectAsStateWithLifecycle()
     val isLoading by editProfileViewModel.loading.collectAsStateWithLifecycle()
     val errorMessage by editProfileViewModel.errorMessage.collectAsStateWithLifecycle()
@@ -89,33 +84,17 @@ fun EditProfileScreen(
 
     Scaffold(
         topBar = {
-            TopAppBar(
-                title = {
-                    Text(
-                        text = stringResource(R.string.edit_profile),
-                        style = MaterialTheme.typography.titleLarge
-                    )
-                },
-                navigationIcon = {
-                    IconButton(
-                        onClick = {
-                            navController.navigateUp()
-                        }
-                    ) {
-                        Icon(
-                            Icons.AutoMirrored.Default.ArrowBack,
-                            contentDescription = "Navigate up from edit profile screen."
-                        )
-                    }
-                },
-                actions = {
+            AppTopBar(
+                title = stringResource(R.string.edit_profile),
+                onNavigationClick = { navController.navigateUp() },
+                onActionClick = {
                     IconButton(
                         onClick = {
                             editProfileViewModel.deleteProfilePicture()
                         }
                     ) {
                         Icon(
-                            Icons.Default.PersonRemoveAlt1,
+                            imageVector = Icons.Default.PersonRemoveAlt1,
                             contentDescription = null
                         )
                     }
@@ -151,7 +130,6 @@ fun EditProfileScreen(
                             contentAlignment = Alignment.Center
                         ) {
                             val imageUri = uiState.selectedImageUri
-                            val imageUrl = uiState.profilePictureUrl
 
                             if (imageUri != null) {
                                 AsyncImage(
@@ -253,7 +231,7 @@ fun EditProfileScreen(
 
                     Spacer(modifier = Modifier.height(16.dp))
 
-                    Button(
+                    PrimaryButton(
                         onClick = {
                             editProfileViewModel.saveChanges {
                                 navController.navigateUp()
@@ -314,7 +292,7 @@ fun FetchStatusError(viewModel: EditProfileViewModel) {
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            Button(onClick = { viewModel.fetchUserData() }) {
+            PrimaryButton(onClick = { viewModel.fetchUserData() }) {
                 Text("Try Again")
             }
         }

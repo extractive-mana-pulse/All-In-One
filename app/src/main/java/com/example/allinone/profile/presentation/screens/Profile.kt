@@ -13,7 +13,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.Logout
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Edit
@@ -26,7 +25,6 @@ import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -53,9 +51,10 @@ import com.airbnb.lottie.compose.rememberLottieComposition
 import com.example.allinone.R
 import com.example.allinone.auth.data.remote.impl.AuthenticationManager
 import com.example.allinone.auth.domain.model.UserCredentials
+import com.example.allinone.core.components.AppTopBar
+import com.example.allinone.core.components.CustomAlertDialog
+import com.example.allinone.core.components.Loading
 import com.example.allinone.core.extension.toastMessage
-import com.example.allinone.core.util.ui.CustomAlertDialog
-import com.example.allinone.core.util.ui.Loading
 import com.example.allinone.navigation.screen.AuthScreens
 import com.example.allinone.navigation.screen.ProfileScreens
 import com.example.allinone.profile.presentation.vm.EditProfileViewModel
@@ -91,20 +90,10 @@ fun ProfileScreen(
 
     Scaffold(
         topBar = {
-            TopAppBar(
-                title = { Text(text = "") },
-                navigationIcon = {
-                    IconButton(
-                        onClick = { navController.navigateUp() }
-                    ) {
-                        Icon(
-                            imageVector = Icons.AutoMirrored.Default.ArrowBack,
-                            contentDescription = stringResource(R.string.from_profile_to_somewhere)
-                        )
-                    }
-                },
-                actions = {
-
+            AppTopBar(
+                title = "",
+                onNavigationClick = { navController.navigateUp() },
+                onActionClick = {
                     IconButton(
                         onClick = {
                             openAlertDialog.value = true
@@ -115,7 +104,6 @@ fun ProfileScreen(
                             contentDescription = null
                         )
                     }
-
                     IconButton(
                         onClick = {
                             navController.navigate(ProfileScreens.EditProfile.route)
@@ -126,13 +114,11 @@ fun ProfileScreen(
                             contentDescription = null
                         )
                     }
-                },
-                modifier = Modifier.fillMaxWidth()
+                }
             )
         }
     )
     { paddingValues ->
-
         if (openAlertDialog.value) {
             CustomAlertDialog(
                 dialogTitle = stringResource(R.string.logout),

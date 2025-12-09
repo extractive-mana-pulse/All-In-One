@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.MaterialTheme
@@ -32,6 +31,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.allinone.R
+import com.example.allinone.core.components.PrimaryButton
 import com.example.allinone.core.extension.toastMessage
 
 @Composable
@@ -107,7 +107,7 @@ private fun ForgotPasswordForm(
                 Spacer(modifier = Modifier.height(16.dp))
             }
 
-            Button(
+            PrimaryButton(
                 onClick = {
                     // handle logic of code when email sent successfully, show toast message,
                     // then recompose screen with new UI elements in it.

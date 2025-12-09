@@ -13,7 +13,6 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.allinone.auth.data.remote.impl.AuthenticationManager
 import com.example.allinone.main.presentation.vm.MainViewModel
-import com.example.allinone.main.presentation.vm.TimerViewModel
 import com.example.allinone.navigation.navs.NavigationGraph
 import com.example.allinone.settings.autoNight.domain.model.Twilight
 import com.example.allinone.settings.autoNight.presentation.vm.AutoNightViewModel
@@ -46,7 +45,6 @@ class MainActivity : ComponentActivity() {
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
 
         setContent {
-            val timerViewModel: TimerViewModel by viewModels()
             val darkThemeViewModel : DarkThemeViewModel = hiltViewModel()
             val autoNightModeViewModel: AutoNightViewModel = hiltViewModel()
             val readingModeViewModel : ReadingModeViewModel = hiltViewModel()
@@ -65,7 +63,6 @@ class MainActivity : ComponentActivity() {
                 NavigationGraph(
                     navController = navController,
                     isDarkTheme = isDarkTheme,
-                    timerViewModel = timerViewModel,
                     isReadingMode = isReadingTheme,
                     onThemeChanged = { newDarkTheme ->
                         darkThemeViewModel.toggleDarkTheme(newDarkTheme)

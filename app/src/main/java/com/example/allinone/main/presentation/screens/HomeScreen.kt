@@ -101,7 +101,6 @@ fun HomeScreen(
     drawerState: DrawerState,
     userCredentials: UserCredentials?
 ) {
-    val context = LocalContext.current
     val homeViewModel: HomeViewModel = hiltViewModel()
     val timerViewModel: TimerViewModel = hiltViewModel()
     val readingViewModel: ReadingModeViewModel = hiltViewModel()
@@ -115,11 +114,11 @@ fun HomeScreen(
     var active by remember { mutableStateOf(false) }
     var rowVisible by remember { mutableStateOf(false) }
     val snackbarHostState = remember { SnackbarHostState() }
-    var searchHistory = remember { mutableStateListOf<String>() }
+    val searchHistory = remember { mutableStateListOf<String>() }
 
     LaunchedEffect(readingMode) {
         if (readingMode)
-            timerViewModel.startTimer()
+//            timerViewModel.startTimer()
         else
             rowVisible = false
     }

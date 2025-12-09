@@ -18,7 +18,6 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
-import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
@@ -62,6 +61,7 @@ import com.example.allinone.auth.presentation.sealed.AuthResponse
 import com.example.allinone.auth.presentation.sealed.RegistrationFormEvent
 import com.example.allinone.auth.presentation.sealed.ValidationEvent
 import com.example.allinone.auth.presentation.vm.SignInViewModel
+import com.example.allinone.core.components.PrimaryButton
 import com.example.allinone.core.extension.toastMessage
 import com.example.allinone.navigation.screen.AuthScreens
 import com.example.allinone.navigation.screen.HomeScreens
@@ -292,7 +292,7 @@ private fun SignInForm(
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            Button(
+            PrimaryButton(
                 onClick = {
                     signInViewModel.onEvent(
                         context = context,
@@ -303,7 +303,7 @@ private fun SignInForm(
                     .fillMaxWidth()
                     .height(56.dp)
                     .padding(horizontal = 16.dp),
-                shape = RoundedCornerShape(24.dp),
+                shape = RoundedCornerShape(28.dp),
                 colors = ButtonDefaults.buttonColors(
                     containerColor = MaterialTheme.colorScheme.surfaceContainerLow
                 )
@@ -363,7 +363,7 @@ private fun SignInWithGoogle(
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
 
-    Button(
+    PrimaryButton(
         onClick = {
             scope.launch {
                 authenticationManager.signInWithGoogle()

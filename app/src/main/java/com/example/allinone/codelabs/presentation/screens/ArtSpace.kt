@@ -14,16 +14,10 @@ import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
@@ -44,6 +38,8 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.allinone.R
+import com.example.allinone.core.components.AppTopBar
+import com.example.allinone.core.components.PrimaryButton
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Preview(showBackground = true, showSystemUi = true)
@@ -52,24 +48,12 @@ fun ArtSpace(
     navController: NavHostController = rememberNavController()
 ) {
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
+
     Scaffold(
         topBar = {
-            TopAppBar(
-                title = {
-                    Text(text = "Art Space")
-                },
-                navigationIcon = {
-                     IconButton(
-                         onClick = {
-                             navController.navigateUp()
-                         })
-                     {
-                         Icon(
-                             imageVector = Icons.AutoMirrored.Default.ArrowBack,
-                             contentDescription = null
-                         )
-                     }
-                },
+            AppTopBar(
+                title = "Art Space",
+                onNavigationClick = { navController.navigateUp() },
                 scrollBehavior = scrollBehavior
             )
         }
@@ -198,7 +182,7 @@ fun PointerButtons(currentIndex: MutableState<Int>, imageCount: Int) {
         horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.Bottom,
     ) {
-        Button(
+        PrimaryButton(
             onClick = {
                 if (currentIndex.value > 0) {
                     currentIndex.value -= 1
@@ -208,7 +192,7 @@ fun PointerButtons(currentIndex: MutableState<Int>, imageCount: Int) {
         ) {
             Text(text = "Previous")
         }
-        Button(
+        PrimaryButton(
             onClick = {
                 if (currentIndex.value < imageCount - 1) {
                     currentIndex.value += 1

@@ -1,4 +1,4 @@
-package com.example.allinone.core.util.ui
+package com.example.allinone.core.components
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column

@@ -19,9 +19,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.allinone.auth.data.remote.impl.AuthenticationManager
-import com.example.allinone.core.util.ui.NavigationDrawer
-import com.example.allinone.core.util.ui.VisibilityOfUI
-import com.example.allinone.main.presentation.vm.TimerViewModel
+import com.example.allinone.core.components.NavigationDrawer
+import com.example.allinone.core.components.VisibilityOfUI
 import com.example.allinone.navigation.graph.Graph
 import com.example.allinone.navigation.screen.Screens
 import com.example.allinone.plcoding.PLCodingScreen
@@ -34,7 +33,6 @@ fun NavigationGraph(
     navController: NavHostController = rememberNavController(),
     isDarkTheme: Boolean,
     isReadingMode: Boolean,
-    timerViewModel: TimerViewModel,
     onThemeChanged: (Boolean) -> Unit,
     fusedLocationClient: FusedLocationProviderClient,
     context: Context,
@@ -73,7 +71,6 @@ fun NavigationGraph(
                 mainNavigation(
                     navController = navController,
                     drawerState = drawerState,
-                    timerViewModel = timerViewModel,
                     context = context,
                     authenticationManager = authenticationManager
                 )

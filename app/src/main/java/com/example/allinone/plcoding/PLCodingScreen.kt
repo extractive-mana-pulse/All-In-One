@@ -7,20 +7,15 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -32,6 +27,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.example.allinone.R
+import com.example.allinone.core.components.AppTopBar
+import com.example.allinone.core.components.PrimaryButton
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -42,26 +39,10 @@ fun PLCodingScreen(
 ) {
     Scaffold(
         topBar = {
-            TopAppBar(
-                title = {
-                    Text(
-                        text = "PL Coding",
-                        style = MaterialTheme.typography.titleLarge,
-                        fontWeight = FontWeight.Bold
-                    )
-                },
-                navigationIcon = {
-                    IconButton(
-                        onClick = {
-                            onNavigateUpFromPlCodingScreen()
-                        }
-                    ) {
-                        Icon(
-                            Icons.AutoMirrored.Default.ArrowBack,
-                            contentDescription = "Navigate back"
-                        )
-                    }
-                }
+
+            AppTopBar(
+                title = "PL Coding",
+                onNavigationClick = { onNavigateUpFromPlCodingScreen() }
             )
         }
     ) { innerPadding ->
@@ -108,51 +89,61 @@ fun PLCodingScreen(
                     )
                     HorizontalDivider(color = MaterialTheme.colorScheme.surface, thickness = 1.5.dp)
 
-                    NavigationButton(
-                        text = "Mini Challenges",
-                        onClick = onNavigateToMiniChallenges
-                    )
+                    PrimaryButton(
+                        modifier = Modifier.fillMaxWidth(),
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = Color.Transparent,
+                            contentColor = MaterialTheme.colorScheme.onSurfaceVariant
+                        ),
+                        onClick = onNavigateToMiniChallenges,
+                        // contentPadding = ButtonDefaults.TextButtonContentPadding
+                    ) {
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.spacedBy(8.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Icon(
+                                imageVector = ImageVector.vectorResource(R.drawable.problem_ic),
+                                contentDescription = null
+                            )
+                            Text(
+                                text = "Mini Challenges",
+                                style = MaterialTheme.typography.bodyLarge,
+                                fontWeight = FontWeight.Medium
+                            )
+                        }
+                    }
 
                     HorizontalDivider(color = MaterialTheme.colorScheme.surface, thickness = 1.5.dp)
 
-                    NavigationButton(
-                        text = "App Challenges",
-                        onClick = onNavigateToAppChallenges
-                    )
+                    PrimaryButton(
+                        modifier = Modifier.fillMaxWidth(),
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = Color.Transparent,
+                            contentColor = MaterialTheme.colorScheme.onSurfaceVariant
+                        ),
+                        onClick = onNavigateToAppChallenges,
+                        // contentPadding = ButtonDefaults.TextButtonContentPadding
+                    ) {
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.spacedBy(8.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Icon(
+                                imageVector = ImageVector.vectorResource(R.drawable.problem_ic),
+                                contentDescription = null
+                            )
+                            Text(
+                                text = "App Challenges",
+                                style = MaterialTheme.typography.bodyLarge,
+                                fontWeight = FontWeight.Medium
+                            )
+                        }
+                    }
                 }
             }
-        }
-    }
-}
-
-@Composable
-private fun NavigationButton(
-    text: String,
-    onClick: () -> Unit,
-) {
-    Button(
-        modifier = Modifier.fillMaxWidth(),
-        colors = ButtonDefaults.buttonColors(
-            containerColor = Color.Transparent,
-            contentColor = MaterialTheme.colorScheme.onSurfaceVariant
-        ),
-        onClick = onClick,
-        contentPadding = ButtonDefaults.TextButtonContentPadding
-    ) {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Icon(
-                imageVector = ImageVector.vectorResource(R.drawable.problem_ic),
-                contentDescription = null
-            )
-            Text(
-                text = text,
-                style = MaterialTheme.typography.bodyLarge,
-                fontWeight = FontWeight.Medium
-            )
         }
     }
 }

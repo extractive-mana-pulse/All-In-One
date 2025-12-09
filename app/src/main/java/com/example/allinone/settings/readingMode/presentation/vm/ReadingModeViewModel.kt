@@ -24,7 +24,7 @@ class ReadingModeViewModel @Inject constructor(
         }
         .stateIn(
             viewModelScope,
-            started = SharingStarted.Companion.WhileSubscribed(5000L),
+            started = SharingStarted.WhileSubscribed(5000L),
             initialValue = false
         )
 
