@@ -11,9 +11,9 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 internal fun PrimaryButton(
-    onClick: () -> Unit,
-    enabled: Boolean = false,
     modifier: Modifier = Modifier,
+    onClick: () -> Unit,
+    enabled: Boolean = true,
     colors : ButtonColors = ButtonDefaults.buttonColors(),
     shape: RoundedCornerShape = RoundedCornerShape(0.dp),
     contentOfTheButton: @Composable () -> Unit = {}

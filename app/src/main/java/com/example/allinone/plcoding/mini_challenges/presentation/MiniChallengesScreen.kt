@@ -17,7 +17,8 @@ import com.example.allinone.plcoding.mini_challenges.presentation.components.Mon
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun MiniChallengesScreen(
-    onNavigateUpFromMiniChallengesScreen: () -> Unit = {}
+    onNavigateUpFromMiniChallengesScreen: () -> Unit = {},
+    navigateToChallengeByString: (String) -> Unit = {}
 ) {
     Scaffold(
         topBar = {
@@ -32,12 +33,10 @@ internal fun MiniChallengesScreen(
                 .fillMaxSize()
                 .padding(innerPadding)
         ) {
-            items(months) {
+            items(months) { month ->
                 MonthsCard(
-                    miniChallengeMonthDTO = it,
-                    onChallengeClick = {
-                        println("Hello world")
-                    }
+                    miniChallengeMonthDTO = month,
+                    onChallengeClick = { id -> navigateToChallengeByString(id) }
                 )
             }
         }

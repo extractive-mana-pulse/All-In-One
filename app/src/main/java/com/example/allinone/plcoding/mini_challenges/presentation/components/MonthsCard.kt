@@ -28,6 +28,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.example.allinone.plcoding.mini_challenges.domain.model.MiniChallengeMonthDTO
+import com.example.allinone.plcoding.mini_challenges.domain.model.getChallengesForMonth
 
 @Composable
 internal fun MonthsCard(
@@ -35,6 +36,10 @@ internal fun MonthsCard(
     onChallengeClick: (String) -> Unit
 ) {
     var isExpanded by remember { mutableStateOf(false) }
+
+    val challenges = remember(miniChallengeMonthDTO.month) {
+        getChallengesForMonth(miniChallengeMonthDTO.month)
+    }
 
     Card(
         modifier = Modifier
@@ -89,37 +94,15 @@ internal fun MonthsCard(
                 ) {
                     HorizontalDivider()
 
-                    // List of 5 challenges
-                    ChallengeItem(
-                        challengeNumber = 1,
-                        challengeTitle = "Challenge Title 1",
-                        onClick = { onChallengeClick("challenge_1") }
-                    )
-
-                    ChallengeItem(
-                        challengeNumber = 2,
-                        challengeTitle = "Challenge Title 2",
-                        onClick = { onChallengeClick("challenge_2") }
-                    )
-
-                    ChallengeItem(
-                        challengeNumber = 3,
-                        challengeTitle = "Challenge Title 3",
-                        onClick = { onChallengeClick("challenge_3") }
-                    )
-
-                    ChallengeItem(
-                        challengeNumber = 4,
-                        challengeTitle = "Challenge Title 4",
-                        onClick = { onChallengeClick("challenge_4") }
-                    )
-
-                    ChallengeItem(
-                        challengeNumber = 5,
-                        challengeTitle = "Challenge Title 5",
-                        onClick = { onChallengeClick("challenge_5") },
-                        isLast = true
-                    )
+                    // List of challenges based on month
+                    challenges.forEachIndexed { index, challenge ->
+                        ChallengeItem(
+                            challengeNumber = index + 1,
+                            challengeTitle = challenge.title,
+                            onClick = { onChallengeClick(challenge.id) },
+                            isLast = index == challenges.lastIndex
+                        )
+                    }
                 }
             }
         }
@@ -147,8 +130,7 @@ private fun ChallengeItem(
             Text(
                 text = "$challengeNumber.",
                 style = MaterialTheme.typography.bodyLarge,
-                fontWeight = FontWeight.SemiBold,
-                color = MaterialTheme.colorScheme.primary
+
             )
 
             Text(

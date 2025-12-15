@@ -4,7 +4,6 @@ data class MiniChallengeMonthDTO(
     val month: String,
     val topic: String? = ""
 )
-
 val months = listOf(
     MiniChallengeMonthDTO("February"),
     MiniChallengeMonthDTO("March","Space"),
@@ -16,5 +15,5 @@ val months = listOf(
     MiniChallengeMonthDTO("September", "Designing the Festival"),
     MiniChallengeMonthDTO("October", "Android Halloween Lab"),
     MiniChallengeMonthDTO("November", "Black Friday Madness"),
-    MiniChallengeMonthDTO("December", ""),
+    MiniChallengeMonthDTO("December", "Winter Wonder Series"),
 )

@@ -139,16 +139,7 @@ fun SignInScreen(
 
                 Text(
                     text = stringResource(R.string.sign_in),
-                    style = MaterialTheme.typography.headlineLarge.copy(
-                        fontFamily = FontFamily(Font(R.font.inknut_antiqua_semi_bold)),
-                        fontSize = MaterialTheme.typography.headlineLarge.fontSize,
-                        fontWeight = MaterialTheme.typography.headlineLarge.fontWeight,
-                        letterSpacing = MaterialTheme.typography.headlineLarge.letterSpacing,
-                        lineHeight = MaterialTheme.typography.headlineLarge.lineHeight,
-                        platformStyle = MaterialTheme.typography.headlineLarge.platformStyle,
-                        textAlign = MaterialTheme.typography.headlineLarge.textAlign,
-                        textDirection = MaterialTheme.typography.headlineLarge.textDirection,
-                    ),
+                    style = MaterialTheme.typography.headlineLarge.copy(),
                 )
 
                 Spacer(modifier = Modifier.height(48.dp))

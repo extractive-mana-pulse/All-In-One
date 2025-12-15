@@ -181,4 +181,7 @@ dependencies {
 
     // work manager + coroutine
     implementation(libs.androidx.work.runtime.ktx)
+
+    // material 3 expressive
+    implementation("androidx.compose.material3:material3-android:1.4.0-alpha14")
 }

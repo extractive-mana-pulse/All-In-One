@@ -65,8 +65,22 @@ sealed class Screens(val route: String) {
     object PLCoding: Screens("pl-coding") {
 
         @Serializable
-        object MiniChallenges: Screens("mini_challenges")
+        object MiniChallenges: Screens("mini_challenges") {
 
+            @Serializable
+            object December: Screens("december_mini_challenge") {
+
+                @Serializable
+                object WinterGreetingEditor: Screens("winter_greeting_editor")
+
+            }
+            @Serializable
+            object July: Screens("july_mini_challenge"){
+
+                @Serializable
+                object CollapsibleChatThread: Screens("collapsible_chat_thread")
+            }
+        }
         @Serializable
         object AppChallenges: Screens("app_challenges")
     }
