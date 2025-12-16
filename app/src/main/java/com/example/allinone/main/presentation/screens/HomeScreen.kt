@@ -11,7 +11,7 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
-import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -26,7 +26,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -101,7 +100,6 @@ fun HomeScreen(
     drawerState: DrawerState,
     userCredentials: UserCredentials?
 ) {
-    val context = LocalContext.current
     val homeViewModel: HomeViewModel = hiltViewModel()
     val timerViewModel: TimerViewModel = hiltViewModel()
     val readingViewModel: ReadingModeViewModel = hiltViewModel()
@@ -115,11 +113,11 @@ fun HomeScreen(
     var active by remember { mutableStateOf(false) }
     var rowVisible by remember { mutableStateOf(false) }
     val snackbarHostState = remember { SnackbarHostState() }
-    var searchHistory = remember { mutableStateListOf<String>() }
+    val searchHistory = remember { mutableStateListOf<String>() }
 
     LaunchedEffect(readingMode) {
         if (readingMode)
-            timerViewModel.startTimer()
+//            timerViewModel.startTimer()
         else
             rowVisible = false
     }
@@ -326,7 +324,8 @@ fun HomeScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding)
-                .padding(horizontal = 16.dp),
+                .padding(horizontal = 16.dp)
+                ,
         ) {
             if (rowVisible) {
                 item {
@@ -401,20 +400,29 @@ fun HomeScreen(
                         textAlign = MaterialTheme.typography.bodyLarge.textAlign,
                         textDirection = MaterialTheme.typography.bodyLarge.textDirection,
                     ),
-                    modifier = Modifier.padding(vertical = 8.dp)
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(MaterialTheme.colorScheme.surface)
+                        .padding(vertical = 8.dp)
                 )
             }
 
             // course list
-            course?.let { courseList ->
-                items(
-                    courseList,
-                    key = { it.id }
-                ) { courseItem ->
-                    CourseListItem(
-                        navController = navController,
-                        course = courseItem
-                    )
+            item {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clip(RoundedCornerShape(24.dp))
+                        .background(MaterialTheme.colorScheme.surfaceVariant)
+                        .padding(vertical = 8.dp)
+                ) {
+                    course?.forEach { courseItem ->
+                        CourseListItem(
+                            navController = navController,
+                            course = courseItem,
+                            isLastItem = courseItem == (course as List<Any?>).lastOrNull()
+                        )
+                    }
                 }
             }
 
@@ -457,87 +465,82 @@ fun HomeScreen(
 }
 
 @Composable
-fun CourseListItem(
+private fun CourseListItem(
+    modifier: Modifier = Modifier,
     navController: NavHostController = rememberNavController(),
     course: Course,
+    isLastItem: Boolean = false
 ) {
     val context = LocalContext.current
     if (course.title.isNullOrEmpty() && course.subtitle.isNullOrEmpty()) return
 
-    Row(
-        modifier = Modifier
+    Column(
+        modifier = modifier
             .fillMaxWidth()
-            .clickable {
-                when (course.title == "In maintenance" && course.subtitle == "In maintenance") {
-                    true -> toastMessage(
-                        context = context,
-                        message = "This page is not available now."
-                    )
-                    else -> navController.navigate(
-                        HomeScreens.DetailsScreen(
-                            id = course.id
-                        )
-                    )
-                }
-            }
-            .padding(vertical = 16.dp),
-        verticalAlignment = Alignment.CenterVertically
     ) {
-        if (course.imageUrl != null) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+
+                .clickable {
+                    when (course.title == "In maintenance" && course.subtitle == "In maintenance") {
+                        true -> toastMessage(
+                            context = context,
+                            message = "This page is not available now."
+                        )
+                        else -> navController.navigate(
+                            HomeScreens.DetailsScreen(
+                                id = course.id
+                            )
+                        )
+                    }
+                }
+                .padding(horizontal = 8.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
             AsyncImage(
-                model = course.imageUrl,
+                model = course.imageUrl ?: painterResource(R.drawable.compose_logo),
                 contentDescription = null,
                 modifier = Modifier
                     .size(60.dp)
                     .clip(CircleShape)
             )
-        } else {
-            Image(
-                painter = painterResource(R.drawable.compose_logo),
-                contentDescription = null,
-                modifier = Modifier
-                    .size(60.dp)
-                    .clip(CircleShape)
-            )
+
+            Spacer(modifier = Modifier.width(16.dp))
+
+            // title and subtitle column
+            Column {
+                Text(
+                    text = course.title ?: "",
+                    style = MaterialTheme.typography.labelMedium.copy(
+                        fontFamily = FontFamily(Font(R.font.inknut_antiqua_bold)),
+                        fontSize = MaterialTheme.typography.labelMedium.fontSize,
+                        fontWeight = MaterialTheme.typography.labelMedium.fontWeight,
+                        letterSpacing = MaterialTheme.typography.labelMedium.letterSpacing,
+                        lineHeight = MaterialTheme.typography.labelMedium.lineHeight,
+                        platformStyle = MaterialTheme.typography.labelMedium.platformStyle,
+                        textAlign = MaterialTheme.typography.labelMedium.textAlign,
+                        textDirection = MaterialTheme.typography.labelMedium.textDirection,
+                    ),
+                )
+                Text(
+                    text = course.subtitle ?: "",
+                    style = MaterialTheme.typography.labelSmall.copy(
+                        fontFamily = FontFamily(Font(R.font.inknut_antiqua_light)),
+                        fontSize = MaterialTheme.typography.labelSmall.fontSize,
+                        fontWeight = MaterialTheme.typography.labelSmall.fontWeight,
+                        letterSpacing = MaterialTheme.typography.labelSmall.letterSpacing,
+                    )
+                )
+            }
         }
-
-        Spacer(modifier = Modifier.width(16.dp))
-
-//      title and subtitle column
-        Column {
-            Text(
-                text = course.title ?: "",
-                style = MaterialTheme.typography.bodyMedium.copy(
-                    fontFamily = FontFamily(Font(R.font.inknut_antiqua_bold)),
-                    fontSize = MaterialTheme.typography.bodyMedium.fontSize,
-                    fontWeight = MaterialTheme.typography.bodyMedium.fontWeight,
-                    letterSpacing = MaterialTheme.typography.bodyMedium.letterSpacing,
-                    lineHeight = MaterialTheme.typography.bodyMedium.lineHeight,
-                    platformStyle = MaterialTheme.typography.bodyMedium.platformStyle,
-                    textAlign = MaterialTheme.typography.bodyMedium.textAlign,
-                    textDirection = MaterialTheme.typography.bodyMedium.textDirection,
-                ),
-            )
-            Text(
-                text = course.subtitle ?: "",
-                style = MaterialTheme.typography.bodySmall.copy(
-                    fontFamily = FontFamily(Font(R.font.inknut_antiqua_light)),
-                    fontSize = MaterialTheme.typography.bodySmall.fontSize,
-                    fontWeight = MaterialTheme.typography.bodySmall.fontWeight,
-                    letterSpacing = MaterialTheme.typography.bodySmall.letterSpacing,
-                    lineHeight = MaterialTheme.typography.bodySmall.lineHeight,
-                    platformStyle = MaterialTheme.typography.bodySmall.platformStyle,
-                    textAlign = MaterialTheme.typography.bodySmall.textAlign,
-                    textDirection = MaterialTheme.typography.bodySmall.textDirection,
-                ),
-                maxLines = 2,
-                overflow = TextOverflow.Ellipsis
+        if (!isLastItem) {
+            HorizontalDivider(
+                color = MaterialTheme.colorScheme.surface
             )
         }
     }
-    HorizontalDivider()
 }
-
 @Composable
 fun ItemCard(
     navController : NavHostController = rememberNavController(),

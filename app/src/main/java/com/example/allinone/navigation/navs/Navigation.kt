@@ -15,17 +15,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.allinone.auth.data.remote.impl.AuthenticationManager
-import com.example.allinone.core.util.ui.NavigationDrawer
-import com.example.allinone.core.util.ui.VisibilityOfUI
-import com.example.allinone.main.presentation.vm.TimerViewModel
+import com.example.allinone.core.components.NavigationDrawer
+import com.example.allinone.core.components.VisibilityOfUI
 import com.example.allinone.navigation.graph.Graph
 import com.example.allinone.navigation.screen.Screens
-import com.example.allinone.plcoding.PLCodingScreen
-import com.example.allinone.plcoding.mini_challenges.presentation.MiniChallengesScreen
 import com.google.android.gms.location.FusedLocationProviderClient
 import kotlinx.coroutines.launch
 
@@ -34,7 +30,6 @@ fun NavigationGraph(
     navController: NavHostController = rememberNavController(),
     isDarkTheme: Boolean,
     isReadingMode: Boolean,
-    timerViewModel: TimerViewModel,
     onThemeChanged: (Boolean) -> Unit,
     fusedLocationClient: FusedLocationProviderClient,
     context: Context,
@@ -73,7 +68,6 @@ fun NavigationGraph(
                 mainNavigation(
                     navController = navController,
                     drawerState = drawerState,
-                    timerViewModel = timerViewModel,
                     context = context,
                     authenticationManager = authenticationManager
                 )
@@ -86,26 +80,7 @@ fun NavigationGraph(
                     scheduleToggleState = scheduleToggleState
                 )
                 // later implement auth & onBoarding graphs
-                composable(Screens.PLCoding.route) {
-                    PLCodingScreen(
-                        onNavigateUpFromPlCodingScreen = {
-                            navController.navigateUp()
-                        },
-                        onNavigateToMiniChallenges = {
-                            navController.navigate(Screens.PLCoding.MiniChallenges.route)
-                        },
-                        onNavigateToAppChallenges = {
-                            navController.navigate(Screens.PLCoding.AppChallenges.route)
-                        }
-                    )
-                }
-                composable(Screens.PLCoding.MiniChallenges.route) {
-                    MiniChallengesScreen(
-                        onNavigateUpFromMiniChallengesScreen = {
-                            navController.navigateUp()
-                        }
-                    )
-                }
+                plCodingNavigation(navController)
             }
         },
         navController = navController,

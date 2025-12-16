@@ -18,7 +18,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Inventory
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
-import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -57,6 +56,7 @@ import com.example.allinone.R
 import com.example.allinone.auth.presentation.sealed.SignUpEvent
 import com.example.allinone.auth.presentation.sealed.ValidationEvent
 import com.example.allinone.auth.presentation.vm.SignUpViewModel
+import com.example.allinone.core.components.PrimaryButton
 import com.example.allinone.core.extension.toastMessage
 import com.example.allinone.navigation.screen.AuthScreens
 
@@ -254,7 +254,7 @@ private fun SignUpFrom(
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            Button(
+            PrimaryButton(
                 onClick = {
                     signUpViewModel.onSignUpEvents(
                         context = context,

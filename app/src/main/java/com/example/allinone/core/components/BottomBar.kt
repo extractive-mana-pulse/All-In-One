@@ -1,4 +1,4 @@
-package com.example.allinone.core.util.ui
+package com.example.allinone.core.components
 
 import android.annotation.SuppressLint
 import androidx.compose.animation.AnimatedVisibility

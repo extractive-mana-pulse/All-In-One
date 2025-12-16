@@ -9,15 +9,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -30,6 +24,8 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.allinone.R
+import com.example.allinone.core.components.AppTopBar
+import com.example.allinone.core.components.PrimaryButton
 import com.example.allinone.navigation.screen.Screens
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -42,22 +38,9 @@ fun ComposeArticleScreen(
 
     Scaffold(
         topBar = {
-            TopAppBar(
-                title = {
-                    Text(text = "Jetpack Compose tutorial")
-                },
-                navigationIcon = {
-                    IconButton(
-                        onClick = {
-                            navController.navigateUp()
-                        }
-                    ) {
-                        Icon(
-                            imageVector = Icons.AutoMirrored.Default.ArrowBack,
-                            contentDescription = "Localized description"
-                        )
-                    }
-                },
+            AppTopBar(
+                title = "Jetpack Compose Tutorial",
+                onNavigationClick = { navController.navigateUp() },
             )
         },
     ) { paddingValues ->
@@ -71,7 +54,7 @@ fun ComposeArticleScreen(
         ) {
             Image(
                 painter = painterResource(R.drawable.launcher),
-                contentDescription = "Image",
+                contentDescription = null,
                 modifier = Modifier
             )
 
@@ -100,14 +83,16 @@ fun ComposeArticleScreen(
                 fontSize = 16.sp,
                 textAlign = TextAlign.Justify
             )
-            Button(
+            PrimaryButton(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(16.dp, 0.dp, 16.dp, 16.dp)
                     .size(56.dp),
-                onClick = { navController.navigate(Screens.TaskManagerScreen.route) }
+                onClick = { navController.navigate(Screens.TaskManagerScreen.route) },
             ) {
-                Text(text = "Click me!")
+                Text(
+                    text = "Click me!",
+                )
             }
         }
     }

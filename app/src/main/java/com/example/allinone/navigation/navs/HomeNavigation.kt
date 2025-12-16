@@ -12,11 +12,10 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import androidx.navigation.toRoute
 import com.example.allinone.auth.data.remote.impl.AuthenticationManager
-import com.example.allinone.main.presentation.screens.DetailsScreen
+import com.example.allinone.main.presentation.details.DetailsRoot
 import com.example.allinone.main.presentation.screens.HelpAndFeedbackScreen
 import com.example.allinone.main.presentation.screens.HomeScreen
 import com.example.allinone.main.presentation.screens.SectionScreen
-import com.example.allinone.main.presentation.vm.TimerViewModel
 import com.example.allinone.navigation.graph.Graph
 import com.example.allinone.navigation.screen.HomeScreens
 
@@ -24,7 +23,6 @@ internal fun NavGraphBuilder.mainNavigation(
     navController: NavHostController,
     context: Context,
     drawerState: DrawerState,
-    timerViewModel: TimerViewModel,
     authenticationManager: AuthenticationManager
 ) {
     navigation(
@@ -49,10 +47,14 @@ internal fun NavGraphBuilder.mainNavigation(
         }
         composable<HomeScreens.DetailsScreen> {
             val argument = it.toRoute<HomeScreens.DetailsScreen>()
-            DetailsScreen(
-                navController = navController,
+            DetailsRoot(
                 id = argument.id,
-                timerViewModel = timerViewModel
+                navigateToCodeLabWithRoute = { route ->
+                    navController.navigate(route)
+                },
+                onNavigateUp = {
+                    navController.navigateUp()
+                }
             )
         }
         composable<HomeScreens.SectionScreen> {
