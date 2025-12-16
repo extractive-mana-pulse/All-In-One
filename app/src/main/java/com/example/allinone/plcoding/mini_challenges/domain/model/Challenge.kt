@@ -14,34 +14,6 @@ fun getChallengesForMonth(month: String): List<Challenge> {
             Challenge("holiday_cashback_activation", "Holiday Cashback Activation"),
             Challenge("winter_greeting_editor", "Winter Greeting Editor")
         )
-        "november" -> listOf(
-            Challenge("thanksgiving_countdown", "Thanksgiving Countdown"),
-            Challenge("gratitude_journal", "Gratitude Journal"),
-            Challenge("autumn_color_picker", "Autumn Color Picker"),
-            Challenge("harvest_calculator", "Harvest Calculator"),
-            Challenge("fall_recipe_randomizer", "Fall Recipe Randomizer")
-        )
-        "october" -> listOf(
-            Challenge("halloween_costume_generator", "Halloween Costume Generator"),
-            Challenge("pumpkin_carving_designer", "Pumpkin Carving Designer"),
-            Challenge("spooky_sound_mixer", "Spooky Sound Mixer"),
-            Challenge("candy_tracker", "Candy Tracker"),
-            Challenge("haunted_house_planner", "Haunted House Planner")
-        )
-        "september" -> listOf(
-            Challenge("back_to_school_organizer", "Back to School Organizer"),
-            Challenge("study_schedule_builder", "Study Schedule Builder"),
-            Challenge("homework_tracker", "Homework Timer"),
-            Challenge("class_note_taker", "Class Note Taker"),
-            Challenge("subject_grade_calculator", "Subject Grade Calculator")
-        )
-        "august" -> listOf(
-            Challenge("summer_vacation_planner", "Summer Vacation Planner"),
-            Challenge("beach_packing_checklist", "Beach Packing Checklist"),
-            Challenge("travel_expense_tracker", "Travel Expense Tracker"),
-            Challenge("photo_memory_organizer", "Photo Memory Organizer"),
-            Challenge("weather_forecast_widget", "Weather Forecast Widget")
-        )
         "july" -> listOf(
             Challenge("challenge_1", "Challenge 1"),
             Challenge("challenge_2", "Challenge 2"),
