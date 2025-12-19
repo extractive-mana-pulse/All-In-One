@@ -31,7 +31,7 @@
         android:localeConfig="@xml/local_config"
         tools:targetApi="33">
         <activity
-            android:name=".main.presentation.MainActivity"
+            android:name=".MainActivity"
             android:exported="true"
             android:theme="@style/Theme.AllInOne.Splash">
             <intent-filter>

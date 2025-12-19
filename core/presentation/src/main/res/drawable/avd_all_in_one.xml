@@ -1,0 +1,141 @@
+<animated-vector
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aapt="http://schemas.android.com/aapt">
+    <aapt:attr name="android:drawable">
+        <vector
+            android:name="vector"
+            android:width="288dp"
+            android:height="288dp"
+            android:viewportWidth="288"
+            android:viewportHeight="288">
+            <group
+                android:name="group"
+                android:pivotX="144"
+                android:pivotY="144"
+                android:scaleX="0"
+                android:scaleY="0">
+                <path
+                    android:name="codelabs_yellow_piece"
+                    android:pathData="M 176.061 114.049 C 179.795 112.689 183.522 111.31 187.264 109.972 C 190.816 108.701 194.327 111.051 194.442 114.744 C 194.508 116.88 193.2 118.948 191.15 119.71 C 184.427 122.209 177.698 124.691 170.948 127.114 C 168.859 127.864 166.934 127.325 165.431 125.701 C 163.903 124.051 163.67 122.102 164.458 120.016 C 165.214 118.456 166.484 117.545 168.098 116.98 C 170.766 116.044 173.408 115.03 176.061 114.049 Z"
+                    android:fillColor="#fabc05"
+                    android:strokeWidth="1"/>
+                <path
+                    android:name="codelabs_green_piece"
+                    android:pathData="M 178.8 113.064 C 175.754 110.511 172.697 107.972 169.667 105.4 C 166.79 102.96 167.07 98.744 170.211 96.798 C 172.027 95.673 174.473 95.771 176.158 97.166 C 181.683 101.739 187.197 106.325 192.67 110.96 C 194.364 112.394 194.86 114.33 194.205 116.444 C 193.54 118.591 191.969 119.768 189.769 120.129 C 188.039 120.254 186.616 119.61 185.319 118.495 C 183.174 116.652 180.976 114.871 178.8 113.064 Z"
+                    android:fillColor="#109d58"
+                    android:strokeWidth="1"/>
+                <path
+                    android:name="codelabs_red_piece"
+                    android:pathData="M 148.172 106.315 C 145.785 107.173 143.396 108.028 141.01 108.889 C 139.614 109.394 138.228 109.925 136.828 110.416 C 134.007 111.405 131.097 110.033 130.078 107.251 C 129.105 104.596 130.448 101.607 133.176 100.591 C 139.846 98.107 146.527 95.652 153.223 93.239 C 155.277 92.499 157.193 92.97 158.7 94.542 C 160.291 96.202 160.561 98.195 159.766 100.339 C 159.419 100.831 159.158 101.433 158.705 101.79 C 157.967 102.369 157.149 102.905 156.282 103.252 C 153.6 104.325 150.879 105.301 148.172 106.315 Z"
+                    android:fillColor="#e94436"
+                    android:strokeWidth="1"/>
+                <path
+                    android:name="codelabs_blue_piece"
+                    android:pathData="M 145.44 107.268 C 147.377 108.906 149.311 110.548 151.25 112.183 C 152.385 113.14 153.538 114.075 154.663 115.042 C 156.93 116.991 157.197 120.196 155.298 122.47 C 153.485 124.64 150.225 124.972 147.981 123.117 C 142.495 118.583 137.028 114.024 131.59 109.431 C 129.923 108.023 129.372 106.128 129.98 104.037 C 130.622 101.829 132.214 100.599 134.468 100.215 C 135.067 100.27 135.719 100.194 136.254 100.409 C 137.125 100.759 137.998 101.199 138.732 101.776 C 141.003 103.562 143.209 105.431 145.44 107.268 Z"
+                    android:fillColor="#4385f3"
+                    android:strokeWidth="1"/>
+                <group
+                    android:name="github_animation"
+                    android:pivotX="144"
+                    android:pivotY="144"
+                    android:scaleX="0"
+                    android:scaleY="0">
+                    <path
+                        android:name="github_logo"
+                        android:pathData="M 124.298 78 C 106.242 78 91.646 93.01 91.646 111.58 C 91.646 126.424 100.998 138.989 113.973 143.437 C 115.595 143.771 116.189 142.714 116.189 141.825 C 116.189 141.046 116.135 138.378 116.135 135.598 C 107.052 137.6 105.161 131.595 105.161 131.595 C 103.701 127.703 101.538 126.703 101.538 126.703 C 98.565 124.646 101.755 124.646 101.755 124.646 C 105.053 124.868 106.783 128.092 106.783 128.092 C 109.702 133.207 114.405 131.762 116.297 130.872 C 116.567 128.704 117.433 127.203 118.352 126.369 C 111.107 125.591 103.485 122.7 103.485 109.801 C 103.485 106.132 104.782 103.129 106.836 100.795 C 106.512 99.961 105.377 96.513 107.161 91.899 C 107.161 91.899 109.918 91.009 116.135 95.346 C 118.796 94.611 121.541 94.237 124.298 94.234 C 127.055 94.234 129.866 94.623 132.461 95.346 C 138.678 91.009 141.435 91.899 141.435 91.899 C 143.22 96.513 142.084 99.961 141.759 100.795 C 143.868 103.129 145.111 106.132 145.111 109.801 C 145.111 122.7 137.489 125.535 130.191 126.369 C 131.38 127.425 132.407 129.426 132.407 132.596 C 132.407 137.099 132.353 140.713 132.353 141.824 C 132.353 142.714 132.948 143.771 134.57 143.437 C 147.544 138.989 156.897 126.424 156.897 111.58 C 156.95 93.01 142.3 78 124.298 78 Z"
+                        android:fillColor="#000000"
+                        android:strokeWidth="1"
+                        android:fillType="evenOdd"/>
+                </group>
+            </group>
+            <group
+                android:name="folder_animation"
+                android:pivotX="144"
+                android:pivotY="144">
+                <path
+                    android:name="folder"
+                    android:pathData="M 99.833 187.167 C 96.831 187.167 94.261 186.098 92.123 183.96 C 89.986 181.822 88.917 179.252 88.917 176.25 L 88.917 110.75 C 88.917 107.748 89.986 105.178 92.123 103.04 C 94.261 100.902 96.831 99.833 99.833 99.833 L 132.583 99.833 L 143.5 110.75 L 187.167 110.75 C 190.169 110.75 192.739 111.819 194.877 113.957 C 197.014 116.095 198.083 118.665 198.083 121.667 L 198.083 176.25 C 198.083 179.252 197.014 181.822 194.877 183.96 C 192.739 186.098 190.169 187.167 187.167 187.167 L 99.833 187.167 Z"
+                    android:fillColor="#4285f4"
+                    android:strokeWidth="1"/>
+            </group>
+        </vector>
+    </aapt:attr>
+    <target android:name="group">
+        <aapt:attr name="android:animation">
+            <set>
+                <objectAnimator
+                    android:propertyName="scaleX"
+                    android:startOffset="1142"
+                    android:duration="858"
+                    android:valueFrom="0"
+                    android:valueTo="0.85"
+                    android:valueType="floatType"
+                    android:interpolator="@android:interpolator/fast_out_slow_in"/>
+                <objectAnimator
+                    android:propertyName="scaleY"
+                    android:startOffset="1142"
+                    android:duration="858"
+                    android:valueFrom="0"
+                    android:valueTo="0.85"
+                    android:valueType="floatType"
+                    android:interpolator="@android:interpolator/fast_out_slow_in"/>
+            </set>
+        </aapt:attr>
+    </target>
+    <target android:name="folder_animation">
+        <aapt:attr name="android:animation">
+            <set>
+                <objectAnimator
+                    android:propertyName="scaleX"
+                    android:startOffset="200"
+                    android:duration="1300"
+                    android:valueFrom="1.85"
+                    android:valueTo="0.85"
+                    android:valueType="floatType"
+                    android:interpolator="@android:interpolator/fast_out_slow_in"/>
+                <objectAnimator
+                    android:propertyName="scaleY"
+                    android:startOffset="200"
+                    android:duration="1300"
+                    android:valueFrom="1.85"
+                    android:valueTo="0.85"
+                    android:valueType="floatType"
+                    android:interpolator="@android:interpolator/fast_out_slow_in"/>
+            </set>
+        </aapt:attr>
+    </target>
+    <target android:name="folder">
+        <aapt:attr name="android:animation">
+            <objectAnimator
+                android:propertyName="fillAlpha"
+                android:startOffset="200"
+                android:duration="500"
+                android:valueFrom="0"
+                android:valueTo="1"
+                android:valueType="floatType"
+                android:interpolator="@android:anim/linear_interpolator"/>
+        </aapt:attr>
+    </target>
+    <target android:name="github_animation">
+        <aapt:attr name="android:animation">
+            <set>
+                <objectAnimator
+                    android:propertyName="scaleX"
+                    android:startOffset="1358"
+                    android:duration="642"
+                    android:valueFrom="0"
+                    android:valueTo="1"
+                    android:valueType="floatType"
+                    android:interpolator="@android:interpolator/fast_out_slow_in"/>
+                <objectAnimator
+                    android:propertyName="scaleY"
+                    android:startOffset="1358"
+                    android:duration="642"
+                    android:valueFrom="0"
+                    android:valueTo="1"
+                    android:valueType="floatType"
+                    android:interpolator="@android:interpolator/fast_out_slow_in"/>
+            </set>
+        </aapt:attr>
+    </target>
+</animated-vector>

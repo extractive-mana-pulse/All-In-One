@@ -18,17 +18,12 @@
     <string name="search_bar_clear_icon">Очистить поиск</string>
     <string name="search_history_empty">Нет истории поиска</string>
     <string name="search_bar_history_icon">Значок истории</string>
-    <string name="user_avatar">Аватар пользователя</string>
     <string name="from_lemonade_to_somewhere">перейти вверх со страницы лимонада</string>
     <string name="tip_time">Время чаевых</string>
     <string name="from_tip_calculator_to_somewhere">Перейдите вверх с экрана калькулятора чаевых</string>
     <string name="disabled">Отключено</string>
-    <string name="disabled_desc">Отключить автоматический ночной режим</string>
     <string name="scheduled">Запланировано</string>
-    <string name="scheduled_desc">Расписание автоматического ночного режима</string>
     <string name="adaptive">Адаптивный</string>
-    <string name="adaptive_desc">Адаптивный автоматический ночной режим</string>
-    <string name="default_desc">Системный автоматический ночной режим по умолчанию.</string>
     <string name="default_mode">Системные настройки по умолчанию</string>
     <string name="second_text">Jetpack Compose — это современный набор инструментов для создания собственного пользовательского интерфейса Android. Compose упрощает и ускоряет разработку пользовательского интерфейса на Android с меньшим количеством кода, мощными инструментами и интуитивно понятными API Kotlin.</string>
     <string name="third_text">В этом руководстве вы создадите простой компонент пользовательского интерфейса с декларативными функциями. Вы вызываете функции Compose, чтобы указать, какие элементы вам нужны, а компилятор Compose сделает все остальное. Compose построен вокруг функций Composable. Эти функции позволяют вам программно определять пользовательский интерфейс вашего приложения, поскольку они позволяют вам описывать, как он должен выглядеть, и предоставлять зависимости данных, а не сосредотачиваться на процессе построения пользовательского интерфейса, например, инициализации элемента и его последующем присоединении к родительскому элементу. Чтобы создать функцию Composable, вы добавляете аннотацию @Composable к имени функции.</string>
@@ -59,12 +54,10 @@
     <string name="adaptive_mode_to_somewhere">Navigate up from Adaptive Mode screen</string>
     <string name="refresh_icon">Refresh current brightness icon</string>
     <string name="sign_in">Sign in</string>
-    <string name="sign_out">Sign out</string>
     <string name="edit_profile">Edit Profile</string>
     <string name="main_content">Main content</string>
     <string name="settings_and_help">Settings and Help</string>
     <string name="take_codelab_btn_text">Start the code lab</string>
-    <string name="details_screen_to_somewhere">Navigate up from details screen</string>
     <string name="follow">Follow</string>
     <string name="dog_name_1">Koda</string>
     <string name="dog_name_2">Lola</string>
@@ -86,7 +79,6 @@
     <string name="dog_description_9">Sleeping in dangerous places</string>
     <string name="about">About:</string>
     <string name="years_old">%d years old</string>
-    <string name="expand_button_content_description">See more or less information about a dog.</string>
     <string name="confirm">Confirm</string>
     <string name="dismiss">Dismiss</string>
     <string name="warning">Warning</string>
@@ -119,7 +111,6 @@
     <string name="email">Email</string>
     <string name="save_changes">Save Changes</string>
     <string name="full_name">Full name</string>
-    <string name="from_profile_to_somewhere">Navigate up from profile screen</string>
     <string name="update_location">Update location</string>
     <string name="from">From</string>
     <string name="to">To</string>

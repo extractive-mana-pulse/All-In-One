@@ -59,11 +59,11 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.allinone.R
-import com.example.allinone.core.helper.LanguageChangeHelper
+import com.example.allinone.core.helper.LanguageManager
 import com.example.allinone.navigation.screen.SettingsScreens
 import com.example.allinone.settings.readingMode.presentation.vm.ReadingModeViewModel
 
-val languageChangeHelper by lazy { LanguageChangeHelper() }
+val languageManager by lazy { LanguageManager() }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -423,7 +423,7 @@ private val languageMapping = mapOf(
 @Composable
 fun RadioButtonSingleSelection() {
     val context = LocalContext.current
-    val currentLanguageCode = languageChangeHelper.getLanguageCode(context)
+    val currentLanguageCode = languageManager.getLanguageCode(context)
 
     val initialLanguage = languageMapping.entries.find { it.value == currentLanguageCode }?.key ?: "English"
 
@@ -440,7 +440,7 @@ fun RadioButtonSingleSelection() {
                         onClick = {
                             selectedOption = language
                             val languageCode = languageMapping[language] ?: "en"
-                            languageChangeHelper.changeLanguage(context, languageCode)
+                            languageManager.changeLanguage(context, languageCode)
                             val intent =
                                 context.packageManager.getLaunchIntentForPackage(context.packageName)
                             intent?.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)

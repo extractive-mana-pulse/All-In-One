@@ -18,17 +18,12 @@
     <string name="search_bar_clear_icon">Qidiruvni tozalash</string>
     <string name="search_history_empty">Qidiruv tarixi yo\'q</string>
     <string name="search_bar_history_icon">Tarix belgisi</string>
-    <string name="user_avatar">Foydalanuvchi rasmi</string>
     <string name="from_lemonade_to_somewhere">limonad sahifasidan orqaga o\'tish</string>
     <string name="tip_time">Hadiya vaqti</string>
     <string name="from_tip_calculator_to_somewhere">Hadiya kalkulyatori ekranidan yuqoriga oʻting</string>
     <string name="disabled">O\'chirilgan</string>
-    <string name="disabled_desc">Avtomatik tungi rejimni o\'chiring</string>
     <string name="scheduled">Rejalashtirilgan</string>
-    <string name="scheduled_desc">Avtomatik tungi rejimni rejalashtirish</string>
     <string name="adaptive">Moslashuvchan</string>
-    <string name="adaptive_desc">Moslashuvchan avtomatik tungi rejim</string>
-    <string name="default_desc">Tizimning standart avtomatik tungi rejimi.</string>
     <string name="default_mode">Tizim standarti</string>
     <string name="fourth_title">Ustunni tuzish mumkin</string>
     <string name="fourth_description">Farzandlarini vertikal ketma-ketlikda joylashtiradigan tuzilma.</string>
@@ -59,12 +54,10 @@
     <string name="adaptive_mode_to_somewhere">Navigate up from Adaptive Mode screen</string>
     <string name="refresh_icon">Refresh current brightness icon</string>
     <string name="sign_in">Sign in</string>
-    <string name="sign_out">Sign out</string>
     <string name="edit_profile">Edit Profile</string>
     <string name="main_content">Main content</string>
     <string name="settings_and_help">Settings and Help</string>
     <string name="take_codelab_btn_text">Start the code lab</string>
-    <string name="details_screen_to_somewhere">Navigate up from details screen</string>
     <string name="follow">Follow</string>
     <string name="dog_name_1">Koda</string>
     <string name="dog_name_2">Lola</string>
@@ -86,7 +79,6 @@
     <string name="dog_description_9">Sleeping in dangerous places</string>
     <string name="about">About:</string>
     <string name="years_old">%d years old</string>
-    <string name="expand_button_content_description">See more or less information about a dog.</string>
     <string name="confirm">Confirm</string>
     <string name="dismiss">Dismiss</string>
     <string name="warning">Warning</string>
@@ -119,7 +111,6 @@
     <string name="email">Email</string>
     <string name="save_changes">Save Changes</string>
     <string name="full_name">Full name</string>
-    <string name="from_profile_to_somewhere">Navigate up from profile screen</string>
     <string name="update_location">Update location</string>
     <string name="from">From</string>
     <string name="to">To</string>
