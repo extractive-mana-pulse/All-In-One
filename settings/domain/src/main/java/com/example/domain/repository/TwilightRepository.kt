@@ -1,6 +1,6 @@
 package com.example.domain.repository
 
-import com.example.allinone.settings.autoNight.domain.model.Twilight
+import com.example.domain.model.Twilight
 
 interface TwilightRepository {
 

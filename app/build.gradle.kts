@@ -1,5 +1,5 @@
 plugins {
-    alias(libs.plugins.android.application)
+    alias(libs.plugins.allinone.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.kotlin.serialization)
@@ -11,7 +11,7 @@ plugins {
 
 android {
     namespace = "com.example.allinone"
-    compileSdk = 35
+    compileSdk = 36
 
     room {
         schemaDirectory("$projectDir/schemas")
@@ -21,7 +21,7 @@ android {
     defaultConfig {
         applicationId = "com.example.allinone"
         minSdk = 26
-        targetSdk = 35
+        targetSdk = 36
         versionCode = 1
         versionName = "1.0"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
@@ -125,7 +125,6 @@ dependencies {
     implementation(libs.androidx.core.splashscreen)
 
     // icons extension
-    implementation(libs.androidx.material.icons.extended)
 
     // gson
     implementation (libs.gson)

@@ -1,7 +1,7 @@
 package com.example.domain.use_case
 
 import android.util.Patterns
-import com.example.allinone.auth.domain.model.ValidationResult
+import com.example.domain.model.ValidationResult
 
 class ValidateEmail {
 

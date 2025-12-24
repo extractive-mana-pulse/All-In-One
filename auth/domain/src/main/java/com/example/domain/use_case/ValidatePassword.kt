@@ -1,6 +1,6 @@
 package com.example.domain.use_case
 
-import com.example.allinone.auth.domain.model.ValidationResult
+import com.example.domain.model.ValidationResult
 
 class ValidatePassword {
 

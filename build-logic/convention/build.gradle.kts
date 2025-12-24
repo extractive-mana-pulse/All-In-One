@@ -2,35 +2,38 @@ plugins {
     `kotlin-dsl`
 }
 
-group = "com.allinone.buildlogic"
+group = "dev.allinone.build-logic"
+
+repositories {
+    google()
+    mavenCentral()
+    gradlePluginPortal()
+}
 
 dependencies {
-    compileOnly(libs.android.gradlePlugin)
-    compileOnly(libs.android.tools.common)
-    compileOnly(libs.kotlin.gradlePlugin)
-    compileOnly(libs.room.gradlePlugin)
+    implementation("com.android.tools.build:gradle:8.7.3")
+    implementation("com.android.tools:common:31.7.3")
+    implementation("org.jetbrains.kotlin:kotlin-gradle-plugin:2.1.10")
+    implementation("androidx.room:room-gradle-plugin:2.7.2")
 }
 
 gradlePlugin {
     plugins {
-        register("androidApplication") {
+        register("androidApp") {
             id = "allinone.android.application"
-            implementationClass = "id.AndroidAppConventionPlugin"
+            implementationClass = "AndroidAppConventionPlugin"
         }
-
-        register("androidLibrary") {
+        register("androidLib") {
             id = "allinone.android.library"
-            implementationClass = "id.AndroidLibConventionPlugin"
+            implementationClass = "AndroidLibConventionPlugin"
         }
-
-        register("androidLibraryCompose") {
+        register("androidLibCompose") {
             id = "allinone.android.library.compose"
-            implementationClass = "id.AndroidLibComposeConventionPlugin"
+            implementationClass = "AndroidLibComposeConventionPlugin"
         }
-
         register("jvmLibrary") {
             id = "allinone.jvm.library"
-            implementationClass = "id.JvmLibraryConventionPlugin"
+            implementationClass = "JvmLibraryConventionPlugin"
         }
     }
 }
