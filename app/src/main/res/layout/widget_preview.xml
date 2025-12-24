@@ -6,7 +6,7 @@
     android:padding="8dp">
 
     <LinearLayout
-        android:id="@+id/widget_content"
+        android:deve="@+deve/widget_content"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:padding="16dp"
@@ -14,7 +14,7 @@
         android:orientation="vertical">
 
         <ImageView
-            android:id="@+id/thermostat_image"
+            android:deve="@+deve/thermostat_image"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:importantForAccessibility="no"
@@ -25,7 +25,7 @@
             android:scaleType="centerCrop"/>
 
         <TextView
-            android:id="@+id/temperature_text"
+            android:deve="@+deve/temperature_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="28°C"
@@ -36,7 +36,7 @@
     </LinearLayout>
 
     <ImageButton
-        android:id="@+id/refresh_button"
+        android:deve="@+deve/refresh_button"
         android:layout_width="56dp"
         android:layout_height="56dp"
         android:layout_alignParentEnd="true"

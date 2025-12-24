@@ -1,5 +1,5 @@
 plugins {
-    alias(libs.plugins.android.application)
+    alias(libs.plugins.allinone.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.kotlin.serialization)
@@ -11,7 +11,7 @@ plugins {
 
 android {
     namespace = "com.example.allinone"
-    compileSdk = 35
+    compileSdk = 36
 
     room {
         schemaDirectory("$projectDir/schemas")
@@ -21,12 +21,10 @@ android {
     defaultConfig {
         applicationId = "com.example.allinone"
         minSdk = 26
-        targetSdk = 35
+        targetSdk = 36
         versionCode = 1
         versionName = "1.0"
-
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        buildConfigField("String", "BASE_URL", "\"https://api.sunrisesunset.io/\"")
     }
 
     buildTypes {
@@ -38,7 +36,7 @@ android {
              Basically optimize code and remove unused elements. */
             isShrinkResources = true
             isMinifyEnabled = true
-
+            buildConfigField("String", "BASE_URL", "\"https://api.sunrisesunset.io/\"")
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
@@ -119,11 +117,6 @@ dependencies {
     // bottom navigation
     implementation (libs.androidx.material)
 
-    // room
-    implementation (libs.androidx.room.ktx)
-    implementation (libs.androidx.room.paging)
-    ksp(libs.androidx.room.compiler)
-
     // paging
     implementation (libs.androidx.paging.runtime.ktx)
     implementation (libs.androidx.paging.compose)
@@ -132,15 +125,9 @@ dependencies {
     implementation(libs.androidx.core.splashscreen)
 
     // icons extension
-    implementation(libs.androidx.material.icons.extended)
 
     // gson
     implementation (libs.gson)
-
-    // retrofit
-    implementation (libs.retrofit)
-    implementation (libs.converter.gson)
-    implementation (libs.logging.interceptor)
 
     // mvvm
     implementation (libs.androidx.lifecycle.viewmodel.compose)
@@ -149,7 +136,6 @@ dependencies {
     // hilt
     implementation(libs.hilt.android)
     ksp(libs.hilt.android.compiler)
-    ksp(libs.hilt.compiler)
     implementation(libs.androidx.hilt.navigation.compose)
 
     // coil
@@ -183,5 +169,25 @@ dependencies {
     implementation(libs.androidx.work.runtime.ktx)
 
     // material 3 expressive
-    implementation("androidx.compose.material3:material3-android:1.4.0-alpha14")
+    implementation("androidx.compose.material3:material3-android:1.4.0")
+
+    // New modules for app_challenges
+    implementation(project(":pl_coding:app_challenges:data"))
+    implementation(project(":pl_coding:app_challenges:domain"))
+    implementation(project(":pl_coding:app_challenges:presentation"))
+
+    // New modules for mini_challenges
+    implementation(project(":pl_coding:mini_challenges:data"))
+    implementation(project(":pl_coding:mini_challenges:presentation"))
+
+    implementation(project(":settings:presentation"))
+    implementation(project(":settings:data"))
+
+    implementation(project(":auth:presentation"))
+    implementation(project(":auth:data"))
+
+    // retrofit
+    implementation (libs.retrofit)
+    implementation (libs.converter.gson)
+    implementation (libs.logging.interceptor)
 }
