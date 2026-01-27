@@ -4,7 +4,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 @Entity(tableName = "temperature_data")
-data class TemperatureData(
+data class TemperatureDataDTO(
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
     val temperature: Float,

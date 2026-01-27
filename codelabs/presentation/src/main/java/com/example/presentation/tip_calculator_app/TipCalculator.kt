@@ -28,7 +28,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.presentation.R
+import com.example.allinone.codelabs.presentation.R
 import com.example.presentation.tip_calculator_app.components.EditNumberField
 import com.example.presentation.tip_calculator_app.components.RoundTheTipRow
 
@@ -51,7 +51,7 @@ fun TipTimeLayout(
                     IconButton(onClick = onNavigateUp) {
                         Icon(
                             painter = painterResource(
-                                com.example.data.R.drawable.outline_arrow_back_24
+                                com.example.allinone.core.presentation.R.drawable.outline_arrow_back_24
                             ),
                             contentDescription = stringResource(
                                 R.string.from_tip_calculator_to_somewhere

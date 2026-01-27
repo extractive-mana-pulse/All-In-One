@@ -7,9 +7,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.outlined.Article
-import androidx.compose.material.icons.filled.Feedback
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -22,11 +19,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import com.example.allinone.core.components.AppTopBar
-import com.example.allinone.core.extension.toastMessage
+import com.example.allinone.core.presentation.R
+import com.example.presentation.components.AppTopBar
+import com.example.presentation.toastMessage
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -73,7 +72,7 @@ fun HelpAndFeedbackScreen(
 //                },
                 leadingContent = {
                     Icon(
-                        Icons.AutoMirrored.Outlined.Article,
+                        painter = painterResource(R.drawable.outline_article_24),
                         contentDescription = null,
                         modifier = Modifier
                             .size(48.dp)
@@ -91,7 +90,7 @@ fun HelpAndFeedbackScreen(
                 },
                 leadingContent = {
                     Icon(
-                        Icons.Default.Feedback,
+                        painter = painterResource(R.drawable.outline_feedback_24),
                         contentDescription = null,
                         modifier = Modifier
                             .size(48.dp)

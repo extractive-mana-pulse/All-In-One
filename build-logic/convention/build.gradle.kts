@@ -11,10 +11,11 @@ repositories {
 }
 
 dependencies {
-    implementation("com.android.tools.build:gradle:8.7.3")
-    implementation("com.android.tools:common:31.7.3")
-    implementation("org.jetbrains.kotlin:kotlin-gradle-plugin:2.1.10")
-    implementation("androidx.room:room-gradle-plugin:2.7.2")
+    compileOnly(libs.android.gradlePlugin)
+    compileOnly(libs.android.tools.common)
+    compileOnly(libs.kotlin.gradlePlugin)
+    compileOnly(libs.room.gradlePlugin)
+    compileOnly(libs.ksp.gradlePlugin)
 }
 
 gradlePlugin {

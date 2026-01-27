@@ -15,8 +15,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import com.example.allinone.core.presentation.R
 import com.example.presentation.editProfile.EditProfileViewModel
-import missing.namespace.R
 
 @Composable
 internal fun FetchStatusError(viewModel: EditProfileViewModel) {

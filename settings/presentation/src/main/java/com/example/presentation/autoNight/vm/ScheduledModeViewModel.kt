@@ -2,6 +2,7 @@ package com.example.presentation.autoNight.vm
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.domain.repository.ScheduleRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -13,7 +14,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ScheduledModeViewModel @Inject constructor(
-    private val scheduledModePreferences: ScheduledModeDataSource
+    private val scheduledModePreferences: ScheduleRepository
 ): ViewModel() {
 
     private val _isScheduledModeEnabled = MutableStateFlow(false)

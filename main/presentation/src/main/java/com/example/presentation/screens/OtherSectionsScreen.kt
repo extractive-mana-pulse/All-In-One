@@ -9,8 +9,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -28,6 +26,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -36,10 +35,10 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import com.example.allinone.R
-import com.example.allinone.main.domain.model.GithubCommands
-import com.example.allinone.main.domain.model.Sections
-import com.example.allinone.main.presentation.vm.HomeViewModel
+import com.example.allinone.core.presentation.R
+import com.example.domain.model.GithubCommands
+import com.example.domain.model.Sections
+import com.example.presentation.vm.HomeViewModel
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 
@@ -73,7 +72,7 @@ fun SectionScreen(
                         }
                     ) {
                         Icon(
-                            Icons.AutoMirrored.Default.ArrowBack,
+                            painter = painterResource(R.drawable.outline_arrow_back_24),
                             contentDescription = stringResource(R.string.from_other_sections_to_somewhere)
                         )
                     }
@@ -102,7 +101,7 @@ fun SectionScreen(
 }
 
 @Composable
-fun CommandItem(commands: GithubCommands) {
+private fun CommandItem(commands: GithubCommands) {
     Card(
         modifier = Modifier
             .fillMaxWidth()

@@ -1,20 +1,13 @@
 package com.example.domain.repository
 
-import android.content.Context
-import android.location.Location
-import com.google.android.gms.location.FusedLocationProviderClient
+import com.example.domain.model.LocationResult
+import kotlinx.coroutines.flow.Flow
 
 interface LocationRepository {
+    suspend fun getAddressFromLocation(
+        latitude: Double,
+        longitude: Double
+    ): Result<String>
 
-    fun getAddressFromLocation(
-        context: Context,
-        location: Location,
-        onAddressFetched: (String?) -> Unit
-    )
-
-    fun fetchLocationAndAddress(
-        context: Context,
-        fusedLocationClient: FusedLocationProviderClient,
-        onAddressFetched: (String?) -> Unit
-    )
+    suspend fun fetchCurrentLocationAddress(): Flow<LocationResult>
 }

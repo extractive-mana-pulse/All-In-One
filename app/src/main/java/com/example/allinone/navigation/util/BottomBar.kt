@@ -1,7 +1,6 @@
 package com.example.allinone.navigation.util
 
 import android.annotation.SuppressLint
-import android.net.http.SslCertificate
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.LinearOutSlowInEasing
 import androidx.compose.animation.core.tween
@@ -21,7 +20,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -30,8 +29,8 @@ import com.example.allinone.navigation.screen.HomeScreens
 
 data class BottomNavigationItem<T:Any>(
     val title: String,
-    val selectedIcon: ImageVector,
-    val unselectedIcon: ImageVector,
+    val selectedIcon: Painter? = null,
+    val unselectedIcon: Painter? = null,
     val hasNews: Boolean,
     val badgeCount: Int? = null,
     val route : T
@@ -49,10 +48,10 @@ fun BottomNavigationBar(
     val items = listOf(
         BottomNavigationItem(
             title = "Home",
-            selectedIcon = Icons.Filled.Home,
-            unselectedIcon = Icons.Outlined.Home,
+            selectedIcon = null/*painterResource(R.drawable.outline_home_24)*/,
+            unselectedIcon = null/*painterResource(R.drawable.baseline_home_24)*/,
             hasNews = false,
-            route = HomeScreens.Home.route
+            route = HomeScreens.Home
         ),
     )
 
@@ -60,7 +59,7 @@ fun BottomNavigationBar(
     val currentDestination = navBackStackEntry?.destination
 
     LaunchedEffect(currentDestination) {
-        val selectedIndex = items.indexOfFirst { it.route == currentDestination?.route }
+        val selectedIndex = items.indexOfFirst { it.route.toString() == currentDestination?.route }
         if (selectedIndex != -1) {
             selectedItemIndex = selectedIndex
         }
@@ -79,10 +78,10 @@ fun BottomNavigationBar(
                             selectedItemIndex = index
                             navController.navigate(item.route) {
                                 popUpTo(navController.graph.findStartDestination().id) {
-                                    SslCertificate.saveState = true
+//                                    SslCertificate.saveState = true
                                 }
                                 launchSingleTop = true
-                                SslCertificate.restoreState = true
+//                                SslCertificate.restoreState = true
                             }
                         },
                         label = { Text(text = item.title) },
@@ -97,10 +96,12 @@ fun BottomNavigationBar(
                                     }
                                 }
                             ) {
-                                Icon(
-                                    imageVector = if (selectedItemIndex == index) item.selectedIcon else item.unselectedIcon,
-                                    contentDescription = item.title
-                                )
+                                if (selectedItemIndex == index) item.selectedIcon else item.unselectedIcon?.let {
+                                    Icon(
+                                        painter = it,
+                                        contentDescription = item.title
+                                    )
+                                }
                             }
                         }
                     )

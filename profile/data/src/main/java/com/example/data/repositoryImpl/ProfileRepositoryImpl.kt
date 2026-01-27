@@ -1,8 +1,8 @@
-package com.example.allinone.profile.domain.repository
+package com.example.data.repositoryImpl
 
 import android.content.Context
 import android.net.Uri
-import com.example.allinone.profile.presentation.sealed.ProfileUploadState
+import com.example.presentation.convertImageUriToByteArray
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.UserProfileChangeRequest
 import com.google.firebase.ktx.Firebase

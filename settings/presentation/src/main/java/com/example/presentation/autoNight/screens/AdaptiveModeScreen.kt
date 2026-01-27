@@ -7,9 +7,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -30,6 +27,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
@@ -37,10 +35,10 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import com.example.allinone.R
-import com.example.allinone.core.extension.getBrightness
-import com.example.allinone.core.extension.toastMessage
-import com.example.allinone.settings.autoNight.presentation.vm.SliderViewModel
+import com.example.allinone.core.presentation.R
+import com.example.presentation.autoNight.vm.SliderViewModel
+import com.example.presentation.getBrightness
+import com.example.presentation.toastMessage
 import kotlin.math.roundToInt
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -96,7 +94,7 @@ fun AdaptiveModeScreen(
                         }
                     ) {
                         Icon(
-                            Icons.AutoMirrored.Default.ArrowBack,
+                            painter = painterResource(R.drawable.outline_arrow_back_24),
                             contentDescription = stringResource(R.string.adaptive_mode_to_somewhere)
                         )
                     }
@@ -111,7 +109,7 @@ fun AdaptiveModeScreen(
                             )
                     }) {
                         Icon(
-                            Icons.Default.Refresh,
+                            painter = painterResource(R.drawable.refresh_ic),
                             contentDescription = stringResource(R.string.refresh_icon)
                         )
                     }

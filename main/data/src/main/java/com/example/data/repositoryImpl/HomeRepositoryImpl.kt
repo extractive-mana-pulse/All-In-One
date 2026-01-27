@@ -2,10 +2,10 @@ package com.example.data.repositoryImpl
 
 import android.content.Context
 import android.util.Log
-import com.example.allinone.main.domain.model.Course
-import com.example.allinone.main.domain.model.GithubCommands
-import com.example.allinone.main.domain.model.Sections
-import com.example.allinone.main.domain.repository.HomeRepository
+import com.example.domain.model.Course
+import com.example.domain.model.GithubCommands
+import com.example.domain.model.Sections
+import com.example.domain.repository.HomeRepository
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 

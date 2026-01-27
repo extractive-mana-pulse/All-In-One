@@ -1,44 +1,29 @@
 package com.example.data.repositoryImpl
 
-import android.content.Context
 import com.example.data.TempDao
+import com.example.data.toTemperatureData
+import com.example.data.toTemperatureDataDTO
 import com.example.domain.TemperatureData
-import com.example.presentation.screens.DeviceTempWidget
-import dagger.hilt.EntryPoint
-import dagger.hilt.EntryPoints
-import dagger.hilt.InstallIn
-import dagger.hilt.android.qualifiers.ApplicationContext
-import dagger.hilt.components.SingletonComponent
+import com.example.domain.repository.GlanceWidgetRepository
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 class GlanceWidgetRepositoryImpl @Inject constructor(
-    @param:ApplicationContext private val appContext: Context,
     private val dao: TempDao,
-    ) {
+) : GlanceWidgetRepository {
 
-    @EntryPoint
-    @InstallIn(SingletonComponent::class)
-    interface GlanceWidgetRepositoryEntryPoint {
-        fun widgetRepository() : GlanceWidgetRepositoryImpl
-    }
-
-    companion object Companion {
-        fun get(applicationContext: Context): GlanceWidgetRepositoryImpl {
-
-            val widgetModelRepositoryEntryPoint : com.example.data.repositoryImpl.GlanceWidgetRepository.GlanceWidgetRepositoryEntryPoint =
-                EntryPoints.get(
-                    applicationContext,
-                    GlanceWidgetRepositoryEntryPoint::class.java
-                )
-            return widgetModelRepositoryEntryPoint.widgetRepository()
+    override fun getTemperature(): Flow<TemperatureData> {
+        return dao.getDeviceTemp().map { dto ->
+            dto?.toTemperatureData() ?: TemperatureData(temperature = 0f)
         }
     }
 
-    suspend fun tempInserted() = DeviceTempWidget().updateAll(appContext)
+    override suspend fun insertTemperature(temperatureData: TemperatureData) {
+        dao.insertDeviceTemp(temperatureData.toTemperatureDataDTO())
+    }
 
-    suspend fun tempDeleted() = DeviceTempWidget().updateAll(appContext)
-
-    fun getTemp() : Flow<TemperatureData> = dao.getDeviceTemp().distinctUntilChanged()
+    override suspend fun deleteTemperature(temperatureData: TemperatureData) {
+        dao.deleteDeviceTemp(temperatureData.toTemperatureDataDTO())
+    }
 }

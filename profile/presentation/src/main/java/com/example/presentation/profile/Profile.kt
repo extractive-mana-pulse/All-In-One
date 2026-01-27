@@ -39,46 +39,44 @@ import coil3.compose.AsyncImage
 import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.animateLottieCompositionAsState
 import com.airbnb.lottie.compose.rememberLottieComposition
-import com.example.allinone.auth.data.remote.impl.AuthenticationManager
-import com.example.allinone.auth.domain.model.UserCredentials
-import com.example.allinone.core.components.Loading
-import com.example.allinone.profile.presentation.vm.EditProfileViewModel
+import com.example.allinone.core.presentation.R
+import com.example.domain.UserCredentials
 import com.example.presentation.components.AppTopBar
-import com.example.presentation.components.BlogsTab
-import com.example.presentation.components.BookmarksTab
 import com.example.presentation.components.CustomAlertDialog
-import com.example.presentation.editProfile.FetchStatusError
-import com.google.firebase.Firebase
-import com.google.firebase.auth.auth
-import missing.namespace.R
+import com.example.presentation.components.FetchStatusError
+import com.example.presentation.components.Loading
+import com.example.presentation.editProfile.EditProfileViewModel
+import com.example.presentation.profile.components.BlogsTab
+import com.example.presentation.profile.components.BookmarksTab
 
+@Composable
+fun ProfileScreenRoot() {
+
+}
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProfileScreen(
     onNavigateToEditProfile: () -> Unit = {},
-    onNavigateToSignOut:(Boolean,signOut) -> Unit = {},
+    onNavigateToSignOut:() -> Unit = {},
     onNavigateUp: () -> Unit = {},
+    editProfileViewModel: EditProfileViewModel = hiltViewModel(),
     userCredentials: UserCredentials?
 ) {
-
     val context = LocalContext.current
-    val authenticationManager = AuthenticationManager(context)
-    val imageUrl = Firebase.auth.currentUser?.photoUrl
+//    val authenticationManager = AuthenticationManager(context)
+//    val imageUrl = Firebase.auth.currentUser?.photoUrl
     val tabTitles = listOf(
         "Blogs",
         "Bookmarks"
     )
     val selectedTabIndex = remember { mutableIntStateOf(0) }
-    val composition by rememberLottieComposition(
-        LottieCompositionSpec.RawRes(R.raw.empty_page)
-    )
+    val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.empty_page))
     var isPlaying by remember { mutableStateOf(true) }
     val progress by animateLottieCompositionAsState(
         composition,
         isPlaying = isPlaying
     )
     val openAlertDialog = remember { mutableStateOf(false) }
-    val editProfileViewModel: EditProfileViewModel = hiltViewModel()
     val fetchStatus by editProfileViewModel.fetchUserDataStatus.collectAsStateWithLifecycle()
 
     Scaffold(
@@ -120,10 +118,9 @@ fun ProfileScreen(
                 dialogText = stringResource(R.string.logout_desc),
                 onDismissRequest = { openAlertDialog.value = false },
                 onConfirmation = {
-                    onNavigateToSignOut(
-                        openAlertDialog.value = false,
-                        authenticationManager.signOut()
-                    )
+                    openAlertDialog.value = false
+//                    authenticationManager.signOut()
+                    onNavigateToSignOut()
                 },
                 icon = painterResource(R.drawable.outline_logout_24),
                 confirmText = stringResource(R.string.logout),

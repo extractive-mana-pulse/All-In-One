@@ -28,6 +28,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.allinone.codelabs.presentation.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Preview(showSystemUi = true, showBackground = true)
@@ -50,7 +51,7 @@ fun Lemonade(
                         onClick = { onNavigateUp() }
                     ) {
                         Icon(
-                            painter = painterResource(com.example.data.R.drawable.outline_arrow_back_24),
+                            painter = painterResource(com.example.allinone.core.presentation.R.drawable.outline_arrow_back_24),
                             contentDescription = stringResource(R.string.from_lemonade_to_somewhere)
                         )
                     }

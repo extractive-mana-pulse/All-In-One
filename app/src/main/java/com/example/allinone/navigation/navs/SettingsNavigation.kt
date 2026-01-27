@@ -9,14 +9,15 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import com.example.allinone.navigation.graph.Graph
+import com.example.allinone.navigation.screen.HomeScreens
 import com.example.allinone.navigation.screen.SettingsScreens
-import com.example.allinone.settings.autoNight.presentation.screens.AdaptiveModeScreen
-import com.example.allinone.settings.autoNight.presentation.screens.AutoNightModeScreen
-import com.example.allinone.settings.autoNight.presentation.screens.ScheduledModeScreen
-import com.example.allinone.settings.autoNight.presentation.screens.SettingScreen
-import com.example.allinone.settings.batterySafe.presentation.screens.BatterySavingScreen
-import com.example.allinone.settings.deviceTemp.presentation.screens.AllSensorsScreen
-import com.example.allinone.settings.deviceTemp.presentation.screens.DeviceTempScreen
+import com.example.presentation.autoNight.screens.AdaptiveModeScreen
+import com.example.presentation.autoNight.screens.AutoNightModeScreen
+import com.example.presentation.autoNight.screens.ScheduledModeScreen
+import com.example.presentation.autoNight.screens.SettingScreen
+import com.example.presentation.batterySafe.screens.BatterySavingScreen
+import com.example.presentation.deviceTemp.screens.AllSensorsScreen
+import com.example.presentation.deviceTemp.screens.DeviceTempScreen
 import com.google.android.gms.location.FusedLocationProviderClient
 
 internal fun NavGraphBuilder.settingsNavigation(
@@ -28,36 +29,55 @@ internal fun NavGraphBuilder.settingsNavigation(
     scheduleToggleState: Boolean
 ) {
     navigation(
-        startDestination = SettingsScreens.Settings.route,
+        startDestination = SettingsScreens.Settings::class.qualifiedName ?: "",
         route = Graph.SETTINGS
     ) {
-        composable(
-            SettingsScreens.Settings.route,
+        composable<SettingsScreens.Settings>(
             enterTransition = { expandHorizontally() + fadeIn() },
             exitTransition = { shrinkHorizontally() + fadeOut() }
         ) {
             SettingScreen(
-                navController = navController,
-                isReadingMode = readingMode
+                isReadingMode = readingMode,
+                onNavigateBack = {
+                    navController.navigateUp()
+                },
+                onNavigateToNight = {
+                    navController.navigate(SettingsScreens.Night)
+                },
+                onNavigateToPowerSavingMode = {
+                    navController.navigate(SettingsScreens.PowerSaving)
+                },
+                onNavigateToTemperature = {
+                    navController.navigate(SettingsScreens.Temperature)
+                }
             )
         }
-        composable(SettingsScreens.Night.route) {
+        composable<SettingsScreens.Night> {
             AutoNightModeScreen(
-                navController = navController,
-                onThemeChanged = onThemeChanged
+                onThemeChanged = onThemeChanged,
+                onNavigateToScheduleMode = {
+                    navController.navigate(SettingsScreens.ScheduledMode)
+                },
+                onNavigateToAdaptiveMode = {
+                    navController.navigate(SettingsScreens.AdaptiveMode)
+                }
             )
         }
-        composable(SettingsScreens.PowerSaving.route) {
-            BatterySavingScreen(navController = navController)
+        composable<SettingsScreens.PowerSaving> {
+            BatterySavingScreen(
+                onNavigateBack = {
+                    navController.navigateUp()
+                }
+            )
         }
-        composable(SettingsScreens.AdaptiveMode.route) {
+        composable<SettingsScreens.AdaptiveMode> {
             AdaptiveModeScreen(
                 navController = navController,
                 isDarkTheme = isDarkTheme,
                 onThemeChanged = onThemeChanged
             )
         }
-        composable(SettingsScreens.ScheduledMode.route) {
+        composable<SettingsScreens.ScheduledMode> {
             ScheduledModeScreen(
                 navController = navController,
                 isDarkTheme = isDarkTheme,
@@ -66,12 +86,20 @@ internal fun NavGraphBuilder.settingsNavigation(
                 scheduleToggleState = scheduleToggleState
             )
         }
-        composable(SettingsScreens.Temperature.route) {
+        composable<SettingsScreens.Temperature> {
             DeviceTempScreen(
-                navController = navController
+                onNavigateBack = {
+                    navController.navigateUp()
+                },
+                onNavigateToHelp = {
+                    navController.navigate(HomeScreens.Help)
+                },
+                onNavigateToAllSensors = {
+                    navController.navigate(SettingsScreens.AllSensors)
+                }
             )
         }
-        composable(SettingsScreens.AllSensors.route) {
+        composable<SettingsScreens.AllSensors> {
             AllSensorsScreen(
                 navController = navController
             )

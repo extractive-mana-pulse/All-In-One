@@ -5,7 +5,7 @@ import android.content.Intent
 import android.util.Log
 import androidx.glance.appwidget.GlanceAppWidget
 import androidx.glance.appwidget.GlanceAppWidgetReceiver
-import com.example.allinone.widget.presentation.screens.DeviceTempWidget
+import com.example.presentation.screens.DeviceTempWidget
 
 class TemperatureWidgetReceiver : GlanceAppWidgetReceiver() {
 

@@ -1,29 +1,36 @@
-package com.example.presentation.components
-
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
+import androidx.navigation.NavBackStackEntry
+import com.example.allinone.navigation.screen.CodeLabScreens
+import com.example.allinone.navigation.screen.HomeScreens
+import com.example.allinone.navigation.screen.ProfileScreens
+import com.example.allinone.navigation.screen.SettingsScreens
 
 @Composable
-fun VisibilityOfUI(
+internal fun VisibilityOfUI(
     gesturesEnabledState: MutableState<Boolean>,
     navBackStackEntry: NavBackStackEntry?,
     bottomBarState: MutableState<Boolean>,
     topBarState: MutableState<Boolean>,
 ) {
-    when (navBackStackEntry?.destination?.route) {
-        HomeScreens.Home.route -> {
+    val route = navBackStackEntry?.destination?.route
+
+    when (route) {
+        HomeScreens.Home::class.qualifiedName -> {
             bottomBarState.value = false
             topBarState.value = true
             gesturesEnabledState.value = true
         }
-        ProfileScreens.Profile.route,
-        SettingsScreens.Settings.route,
-        Screens.ComposeArticleScreen.route,
-        Screens.TipCalculator.route,
-        Screens.Quadrant.route,
-        Screens.ArtSpace.route,
-        Screens.Lemonade.route,
-        Screens.TaskManagerScreen.route -> {
+        in listOf(
+            ProfileScreens.Profile::class.qualifiedName,
+            SettingsScreens.Settings::class.qualifiedName,
+            CodeLabScreens.ComposeArticleScreen::class.qualifiedName,
+            CodeLabScreens.TipCalculator::class.qualifiedName,
+            CodeLabScreens.Quadrant::class.qualifiedName,
+            CodeLabScreens.ArtSpace::class.qualifiedName,
+            CodeLabScreens.Lemonade::class.qualifiedName,
+            CodeLabScreens.TaskManagerScreen::class.qualifiedName
+        ) -> {
             bottomBarState.value = false
             topBarState.value = false
             gesturesEnabledState.value = false

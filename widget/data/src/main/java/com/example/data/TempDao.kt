@@ -5,19 +5,17 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import com.example.allinone.settings.deviceTemp.domain.model.TemperatureData
 import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface TempDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertDeviceTemp(temperatureData: TemperatureData)
+    suspend fun insertDeviceTemp(temperatureDataDTO: TemperatureDataDTO)
 
-    @Query("SELECT * FROM temperature_data")
-    fun getDeviceTemp(): Flow<TemperatureData>
+    @Query("SELECT * FROM temperature_data ORDER BY timestamp DESC LIMIT 1")
+    fun getDeviceTemp(): Flow<TemperatureDataDTO?>
 
     @Delete
-    suspend fun deleteDeviceTemp(temperatureData: TemperatureData)
-
+    suspend fun deleteDeviceTemp(temperatureDataDTO: TemperatureDataDTO)
 }

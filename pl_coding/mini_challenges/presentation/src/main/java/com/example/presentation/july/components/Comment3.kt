@@ -1,4 +1,4 @@
-package com.example.collapsiblechatthread
+package com.example.presentation.july.components
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandVertically
@@ -43,8 +43,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.allinone.R
-import com.example.allinone.plcoding.mini_challenges.presentation.july.components.MessageHeader
+import com.example.allinone.pl_coding.mini_challenges.presentation.R
 
 @Composable
 fun Comment3(

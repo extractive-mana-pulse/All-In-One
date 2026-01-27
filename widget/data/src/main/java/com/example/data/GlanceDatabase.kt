@@ -2,9 +2,12 @@ package com.example.data
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
-import com.example.allinone.settings.deviceTemp.domain.model.TemperatureData
 
-@Database(entities = [TemperatureData::class], version = 1)
+@Database(
+    entities = [TemperatureDataDTO::class],
+    version = 1,
+    exportSchema = false
+)
 abstract class GlanceDatabase : RoomDatabase() {
 
     abstract fun tempDao(): TempDao

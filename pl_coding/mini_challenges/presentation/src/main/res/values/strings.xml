@@ -1,3 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Main Post -->
+    <string name="main_post_subreddit" translatable="false"> • 1 day ago</string>
+    <string name="main_post_username" translatable="false">DreamSyntaxHiker</string>
+    <string name="main_post_title" translatable="false">"I Tried to Build a Language-Learning App. It Didn\'t Go as Planned."</string>
+    <string name="main_post_category" translatable="false">/Product Reflection</string>
+    <string name="main_post_body" translatable="false">I spent 9 months building what I thought would be a simple app to help people learn new languages through short conversations. I poured my evenings and weekends into it, but the launch was… underwhelming.\n\nHere\'s what I learned about feature creep, marketing missteps, and chasing perfection instead of feedback.</string>
+
+    <!-- Comment 1 -->
+    <string name="comment1_username" translatable="false">ByteBuddy88</string>
+    <string name="comment1_badge" translatable="false">Top 1% Commenter</string>
+    <string name="comment1_body" translatable="false">Can relate. I thought adding 3 extra modes would help my music app. Users just wanted a clean player.</string>
+
+    <!-- Replies to Comment 1 -->
+    <string name="comment1_reply1_username" translatable="false">CodeNamedQuiet</string>
+    <string name="comment1_reply1_body" translatable="false">Same here. I kept piling on features thinking I was being helpful. Turns out, complexity just pushed users away.</string>
+
+    <string name="comment1_reply2_username" translatable="false">InfiniteCoffeeStream</string>
+    <string name="comment1_reply2_body" translatable="false">A minimal core product &gt; overloaded app.</string>
+
+    <string name="comment1_reply3_username" translatable="false">APITestDummy</string>
+    <string name="comment1_reply3_body" translatable="false">I added offline support, 5 themes, and full emoji search. No one cared. Just wanted smooth onboarding.</string>
+
+    <string name="comment1_reply4_username" translatable="false">RetroUXFlare</string>
+    <string name="comment1_reply4_body" translatable="false">Too many features = too many bugs = bad reviews. Learned that the hard way.</string>
+
+    <!-- Comment 2 -->
+    <string name="comment2_username" translatable="false">MemoStacker</string>
+    <string name="comment2_badge" translatable="false">Top 1% Poster</string>
+    <string name="comment2_body" translatable="false">This is a timely post. I’m in month 4 of building a journaling app. Biggest takeaway so far: don’t underestimate the effort to onboard first-time users.\n\nI had people open the app, stare blankly, and close it.\n\n- UI needs to guide the user, not just look good\n- First use experience is everything\n- Every extra step kills conversion</string>
+
+    <!-- Comment 3 -->
+    <string name="comment3_username" translatable="false">CLIOverlord</string>
+    <string name="comment3_body" translatable="false" tools:ignore="StringEscaping">My failed app taught me more than my CS degree. There\'s no syllabus for building something strangers actually want.</string>
+
+    <!-- Replies to Comment 3 -->
+    <string name="comment3_reply1_username" translatable="false">DebugDruid</string>
+    <string name="comment3_reply1_body" translatable="false">Truth. The gap between “this is useful to me” and “this is useful to others” is massive.</string>
+
+    <string name="comment3_reply2_username" translatable="false">SilentLambda</string>
+    <string name="comment3_reply2_body" translatable="false" tools:ignore="StringEscaping">You don\'t learn product-market fit in school. You learn it after shipping something no one wants.</string>
+    <string name="reply" translatable="false">Reply</string>
 </resources>

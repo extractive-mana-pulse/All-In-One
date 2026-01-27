@@ -26,8 +26,9 @@ import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import com.example.allinone.core.components.AppTopBar
-import com.example.allinone.core.components.PrimaryButton
+import com.example.allinone.core.presentation.R
+import com.example.presentation.components.AppTopBar
+import com.example.presentation.components.PrimaryButton
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -38,7 +39,6 @@ fun PLCodingScreen(
 ) {
     Scaffold(
         topBar = {
-
             AppTopBar(
                 title = "PL Coding",
                 onNavigationClick = { onNavigateUpFromPlCodingScreen() }

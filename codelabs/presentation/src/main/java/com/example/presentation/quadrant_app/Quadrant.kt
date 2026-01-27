@@ -8,7 +8,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.PreviewLightDark
-import com.example.presentation.R
+import com.example.allinone.codelabs.presentation.R
 import com.example.presentation.quadrant_app.components.ComposableInfoCard
 
 @PreviewLightDark

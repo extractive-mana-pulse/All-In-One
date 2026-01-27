@@ -1,4 +1,4 @@
-package com.example.collapsiblechatthread
+package com.example.presentation.july.components
 
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
@@ -14,11 +14,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.allinone.R
+import com.example.allinone.pl_coding.mini_challenges.presentation.R
 
-// TODO: Nothing. ALL DONE!
 @Composable
-fun ReplyIconAndText() {
+internal fun ReplyIconAndText() {
     Row(
         modifier = Modifier.padding(start = 4.dp),
         verticalAlignment = Alignment.CenterVertically

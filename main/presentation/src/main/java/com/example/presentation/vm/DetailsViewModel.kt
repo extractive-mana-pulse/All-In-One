@@ -2,8 +2,8 @@ package com.example.presentation.vm
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.allinone.main.domain.model.CourseDetails
-import com.example.allinone.main.domain.repository.DetailsRepository
+import com.example.domain.model.CourseDetails
+import com.example.domain.repository.DetailsRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

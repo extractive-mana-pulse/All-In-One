@@ -16,6 +16,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.allinone.codelabs.presentation.R
 import com.example.presentation.components.AppTopBar
 
 @OptIn(ExperimentalMaterial3Api::class)

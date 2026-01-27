@@ -3,57 +3,32 @@ package com.example.allinone.navigation.screen
 import kotlinx.serialization.Serializable
 
 @Serializable
-sealed class CodeLabScreens(val route: String) {
+sealed interface CodeLabScreens {
 
     @Serializable
-    object ComposeArticleScreen : CodeLabScreens("compose_article")
+    object ComposeArticleScreen : CodeLabScreens
 
     @Serializable
-    object TaskManagerScreen : CodeLabScreens("task_manager")
+    object TaskManagerScreen : CodeLabScreens
 
     @Serializable
-    object Quadrant : CodeLabScreens("quadrant")
+    object Quadrant : CodeLabScreens
 
     @Serializable
-    object TipCalculator : CodeLabScreens("tip_calculator")
+    object TipCalculator : CodeLabScreens
 
     @Serializable
-    object Lemonade : CodeLabScreens("lemonade")
+    object Lemonade : CodeLabScreens
 
     @Serializable
-    object ArtSpace : CodeLabScreens("art_space")
+    object ArtSpace : CodeLabScreens
 
     @Serializable
-    object BusinessCard : CodeLabScreens("business_card")
+    object BusinessCard : CodeLabScreens
 
     @Serializable
-    object DiceRoller : CodeLabScreens("dice_roller")
+    object DiceRoller : CodeLabScreens
 
     @Serializable
-    object Woof: CodeLabScreens("woof")
-
-    @Serializable
-    object PLCoding: CodeLabScreens("pl-coding") {
-
-        @Serializable
-        object MiniChallenges: CodeLabScreens("mini_challenges") {
-
-            @Serializable
-            object December: CodeLabScreens("december_mini_challenge") {
-
-                @Serializable
-                object WinterGreetingEditor: CodeLabScreens("winter_greeting_editor")
-
-            }
-            @Serializable
-            object July: CodeLabScreens("july_mini_challenge"){
-
-                @Serializable
-                object CollapsibleChatThread: CodeLabScreens("collapsible_chat_thread")
-            }
-        }
-        @Serializable
-        object AppChallenges: CodeLabScreens("app_challenges")
-    }
-
+    object Woof : CodeLabScreens
 }

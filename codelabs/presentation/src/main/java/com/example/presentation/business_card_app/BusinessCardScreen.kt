@@ -20,7 +20,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.presentation.R
+import com.example.allinone.codelabs.presentation.R
 import com.example.presentation.business_card_app.components.CredentialsItem
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -77,17 +77,17 @@ fun BusinessCard(
 
             // item 1
             CredentialsItem(
-                icon = painterResource(com.example.data.R.drawable.outline_contact_phone_24),
+                icon = painterResource(com.example.allinone.core.presentation.R.drawable.outline_contact_phone_24),
                 content = "+ 11 (123) 444 555 66"
             )
             // item 2
             CredentialsItem(
-                icon = painterResource(com.example.data.R.drawable.outline_share_24),
+                icon = painterResource(com.example.allinone.core.presentation.R.drawable.outline_share_24),
                 content = "@AndroidDev"
             )
             // item 3
             CredentialsItem(
-                icon = painterResource(com.example.data.R.drawable.outline_mail_24),
+                icon = painterResource(com.example.allinone.core.presentation.R.drawable.outline_mail_24),
                 content = "jen.doe@android.com"
             )
         }

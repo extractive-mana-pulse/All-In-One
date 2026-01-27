@@ -1,4 +1,4 @@
-package com.example.presentation.components
+package com.example.allinone.navigation
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -35,8 +35,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
-import com.example.data.BuildConfig
-import com.example.data.R
+import androidx.navigation.NavHostController
+import com.example.allinone.BuildConfig
+import com.example.allinone.core.presentation.R
+import com.example.allinone.navigation.util.BottomNavigationBar
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
@@ -47,7 +49,10 @@ fun NavigationDrawer(
     bottomBarState: MutableState<Boolean>,
     gesturesEnabledState: MutableState<Boolean>,
     drawerState: DrawerState = rememberDrawerState(initialValue = DrawerValue.Closed),
-    onNavigateToPLCoding: () -> Unit
+    onNavigateToPLCoding: () -> Unit,
+    onNavigateToSettings: () -> Unit = {},
+    onNavigateToHome: () -> Unit = {},
+    navController: NavHostController
 ) {
     ModalNavigationDrawer(
         drawerContent = {
@@ -63,10 +68,10 @@ fun NavigationDrawer(
     ) {
         Scaffold(
             bottomBar = {
-//                BottomNavigationBar(
-//                    bottomBarState = bottomBarState,
-//                    navController = navController
-//                )
+                BottomNavigationBar(
+                    bottomBarState = bottomBarState,
+                    navController = navController
+                )
             },
         ) { innerPadding ->
             content(innerPadding)
@@ -77,7 +82,9 @@ fun NavigationDrawer(
 @Composable
 private fun NavigationDrawerContent(
     drawerState: DrawerState,
-    onNavigateToPLCoding: () -> Unit
+    onNavigateToPLCoding: () -> Unit,
+    onNavigateToSettings: () -> Unit = {},
+    onNavigateToHome: () -> Unit = {}
 ) {
     val scope = rememberCoroutineScope()
     Box(

@@ -3,7 +3,6 @@ package com.example.presentation.autoNight.screens
 import android.Manifest.permission.ACCESS_FINE_LOCATION
 import android.content.pm.PackageManager
 import android.location.Location
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -12,8 +11,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -23,7 +20,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
-import androidx.compose.material3.TimePickerState
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -37,31 +33,23 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.Dialog
 import androidx.core.app.ActivityCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import com.example.allinone.R
-import com.example.allinone.core.extension.toastMessage
-import com.example.allinone.settings.autoNight.domain.model.Twilight
-import com.example.allinone.settings.autoNight.presentation.util.DialPicker
-import com.example.allinone.settings.autoNight.presentation.vm.AutoNightViewModel
-import com.example.allinone.settings.autoNight.presentation.vm.LocationRefreshState
-import com.example.allinone.settings.autoNight.presentation.vm.LocationViewModel
-import com.example.allinone.settings.autoNight.presentation.vm.ScheduledModeViewModel
+import com.example.allinone.core.presentation.R
+import com.example.presentation.autoNight.components.SwitchOffMode
+import com.example.presentation.autoNight.components.SwitchOnMode
+import com.example.presentation.autoNight.vm.AutoNightViewModel
+import com.example.presentation.autoNight.vm.ScheduledModeViewModel
+import com.example.presentation.toastMessage
 import com.google.android.gms.location.FusedLocationProviderClient
-import com.google.android.gms.location.LocationServices
-import java.text.SimpleDateFormat
-import java.time.LocalDateTime
-import java.time.LocalTime
-import java.util.Calendar
-import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -83,6 +71,8 @@ fun ScheduledModeScreen(
     val state by viewModel.twilight.collectAsStateWithLifecycle()
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
     val scheduledModeViewModel: ScheduledModeViewModel = hiltViewModel()
+
+    val locationPermissionRequired = stringResource(R.string.location_permission_required)
 
     LaunchedEffect(Unit) {
         if (ActivityCompat.checkSelfPermission(
@@ -106,7 +96,7 @@ fun ScheduledModeScreen(
         } else {
             toastMessage(
                 context = context,
-                message = context.getString(R.string.location_permission_required)
+                message = locationPermissionRequired
             )
         }
     }
@@ -140,7 +130,7 @@ fun ScheduledModeScreen(
                 navigationIcon = {
                     IconButton(onClick = { navController.navigateUp() }) {
                         Icon(
-                            Icons.AutoMirrored.Default.ArrowBack,
+                            painter = painterResource(R.drawable.outline_arrow_back_24),
                             contentDescription = "Navigate up from scheduled mode"
                         )
                     }
@@ -184,287 +174,13 @@ fun ScheduledModeScreen(
                 )
             }
             HorizontalDivider()
-            when (scheduleToggleState) {
-                true -> {
-                    SwitchOnMode(
-                        state = state,
-                        isDarkTheme = isDarkTheme,
-                        onThemeChanged = onThemeChanged
-                    )
-                }
-                false -> {
-                    SwitchOffMode()
-                }
-            }
+            if (scheduleToggleState) {
+                SwitchOnMode(
+                    state = state,
+                    isDarkTheme = isDarkTheme,
+                    onThemeChanged = onThemeChanged
+                )
+            } else SwitchOffMode()
         }
-    }
-}
-
-// this mode is not implemented yet
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-private fun SwitchOffMode() {
-
-    val cal = Calendar.getInstance()
-    var fromTime by remember { mutableStateOf("8:00 AM") }
-    var toTime by remember { mutableStateOf("8:00 PM") }
-    var showDialog by remember { mutableStateOf(false) }
-    var selectedTime: TimePickerState? by remember { mutableStateOf(null) }
-    var selectedTimeTo: TimePickerState? by remember { mutableStateOf(null) }
-    var isFromSelected by remember { mutableStateOf(true) } // Track which time is being selected
-    val formatter = remember { SimpleDateFormat("hh:mm a", Locale.getDefault()) }
-
-    if (showDialog) {
-        Dialog(onDismissRequest = { showDialog = false }) {
-            DialPicker(
-                onConfirm = { time ->
-                    if (isFromSelected) {
-                        selectedTime = time
-                        fromTime = formatter.format(cal.apply {
-                            set(Calendar.HOUR_OF_DAY, time.hour)
-                            set(Calendar.MINUTE, time.minute)
-                        }.time)
-                    } else {
-                        selectedTimeTo = time
-                        toTime = formatter.format(cal.apply {
-                            set(Calendar.HOUR_OF_DAY, time.hour)
-                            set(Calendar.MINUTE, time.minute)
-                        }.time)
-                    }
-                    showDialog = false
-                },
-                onDismiss = { showDialog = false },
-                showDialog = showDialog
-            )
-        }
-    }
-
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 8.dp)
-            .clickable {
-                isFromSelected = true
-                showDialog = true
-            },
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Text(
-            text = stringResource(R.string.from),
-            style = MaterialTheme.typography.bodySmall.copy(
-                fontFamily = FontFamily(Font(R.font.inknut_antiqua_medium)),
-                fontSize = MaterialTheme.typography.bodySmall.fontSize,
-                fontWeight = MaterialTheme.typography.bodySmall.fontWeight,
-                letterSpacing = MaterialTheme.typography.bodySmall.letterSpacing,
-                lineHeight = MaterialTheme.typography.bodySmall.lineHeight,
-                platformStyle = MaterialTheme.typography.bodySmall.platformStyle,
-                textAlign = MaterialTheme.typography.bodySmall.textAlign,
-                textDirection = MaterialTheme.typography.bodySmall.textDirection,
-            )
-        )
-        Text(
-            text = fromTime,
-            style = MaterialTheme.typography.bodySmall.copy(
-                fontFamily = FontFamily(Font(R.font.inknut_antiqua_medium)),
-                fontSize = MaterialTheme.typography.bodySmall.fontSize,
-                fontWeight = MaterialTheme.typography.bodySmall.fontWeight,
-                letterSpacing = MaterialTheme.typography.bodySmall.letterSpacing,
-                lineHeight = MaterialTheme.typography.bodySmall.lineHeight,
-                platformStyle = MaterialTheme.typography.bodySmall.platformStyle,
-                textAlign = MaterialTheme.typography.bodySmall.textAlign,
-                textDirection = MaterialTheme.typography.bodySmall.textDirection,
-            )
-        )
-    }
-
-    HorizontalDivider()
-
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 8.dp)
-            .clickable {
-                isFromSelected = false // Set to time
-                showDialog = true
-            },
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Text(
-            text = stringResource(R.string.to),
-            style = MaterialTheme.typography.bodySmall.copy(
-                fontFamily = FontFamily(Font(R.font.inknut_antiqua_medium)),
-                fontSize = MaterialTheme.typography.bodySmall.fontSize,
-                fontWeight = MaterialTheme.typography.bodySmall.fontWeight,
-                letterSpacing = MaterialTheme.typography.bodySmall.letterSpacing,
-                lineHeight = MaterialTheme.typography.bodySmall.lineHeight,
-                platformStyle = MaterialTheme.typography.bodySmall.platformStyle,
-                textAlign = MaterialTheme.typography.bodySmall.textAlign,
-                textDirection = MaterialTheme.typography.bodySmall.textDirection,
-            )
-        )
-        Text(
-            text = toTime,
-            style = MaterialTheme.typography.bodySmall.copy(
-                fontFamily = FontFamily(Font(R.font.inknut_antiqua_medium)),
-                fontSize = MaterialTheme.typography.bodySmall.fontSize,
-                fontWeight = MaterialTheme.typography.bodySmall.fontWeight,
-                letterSpacing = MaterialTheme.typography.bodySmall.letterSpacing,
-                lineHeight = MaterialTheme.typography.bodySmall.lineHeight,
-                platformStyle = MaterialTheme.typography.bodySmall.platformStyle,
-                textAlign = MaterialTheme.typography.bodySmall.textAlign,
-                textDirection = MaterialTheme.typography.bodySmall.textDirection,
-            )
-        )
-    }
-}
-
-@Composable
-private fun SwitchOnMode(
-    state: Twilight,
-    isDarkTheme: Boolean,
-    onThemeChanged: (Boolean) -> Unit,
-) {
-    val context = LocalContext.current
-    val fusedLocationClient = remember { LocationServices.getFusedLocationProviderClient(context) }
-    val locationViewModel: LocationViewModel = hiltViewModel()
-    val address by locationViewModel.location
-    val refreshState by locationViewModel.refreshedState.collectAsStateWithLifecycle()
-
-    LaunchedEffect(key1 = true) {
-        locationViewModel.getLocation(
-            context = context,
-            fusedLocationClient = fusedLocationClient
-        )
-    }
-
-    val currentDateTime: LocalDateTime = LocalDateTime.now()
-    val currentLocalTime = currentDateTime.toLocalTime()
-
-    val sunriseString = state.results.sunrise
-    val sunsetString = state.results.sunset
-
-    if (sunriseString != null && sunsetString != null) {
-
-        val sunriseTime = LocalTime.parse(sunriseString)
-        val sunsetTime = LocalTime.parse(sunsetString)
-
-        // Determine if it's day or night
-        val isDayTime = currentLocalTime.isAfter(sunriseTime) && currentLocalTime.isBefore(sunsetTime)
-        if (isDayTime && isDarkTheme) onThemeChanged(false) else if (!isDayTime && !isDarkTheme) onThemeChanged(true)
-    }
-
-    LaunchedEffect(refreshState) {
-        when (refreshState) {
-            is LocationRefreshState.Error -> {
-                toastMessage(
-                    context = context,
-                    message = (refreshState as LocationRefreshState.Error).message
-                )
-            }
-
-            is LocationRefreshState.Loaded -> {
-                toastMessage(
-                    context = context,
-                    message = "Location updated"
-                )
-            }
-
-            is LocationRefreshState.Loading -> {
-                toastMessage(
-                    context = context,
-                    message = "Updating location..."
-                )
-            }
-        }
-    }
-
-    Column {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .clickable {
-                    locationViewModel.refreshLocation(
-                        context = context,
-                        fusedLocationClient = fusedLocationClient
-                    )
-                }
-                .padding(vertical = 8.dp),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text(
-                text = stringResource(R.string.update_location),
-                style = MaterialTheme.typography.bodyMedium.copy(
-                    fontFamily = FontFamily(Font(R.font.inknut_antiqua_medium)),
-                    fontSize = MaterialTheme.typography.bodyMedium.fontSize,
-                    fontWeight = MaterialTheme.typography.bodyMedium.fontWeight,
-                    letterSpacing = MaterialTheme.typography.bodyMedium.letterSpacing,
-                    lineHeight = MaterialTheme.typography.bodyMedium.lineHeight,
-                    platformStyle = MaterialTheme.typography.bodyMedium.platformStyle,
-                    textAlign = MaterialTheme.typography.bodyMedium.textAlign,
-                    textDirection = MaterialTheme.typography.bodyMedium.textDirection,
-                )
-            )
-
-            Text(
-                text = address,
-                style = MaterialTheme.typography.bodyMedium.copy(
-                    fontFamily = FontFamily(Font(R.font.inknut_antiqua_medium)),
-                    fontSize = MaterialTheme.typography.bodyMedium.fontSize,
-                    fontWeight = MaterialTheme.typography.bodyMedium.fontWeight,
-                    letterSpacing = MaterialTheme.typography.bodyMedium.letterSpacing,
-                    lineHeight = MaterialTheme.typography.bodyMedium.lineHeight,
-                    platformStyle = MaterialTheme.typography.bodyMedium.platformStyle,
-                    textAlign = MaterialTheme.typography.bodyMedium.textAlign,
-                    textDirection = MaterialTheme.typography.bodyMedium.textDirection,
-                    color = MaterialTheme.colorScheme.primary
-                )
-            )
-        }
-        Text(
-            text = stringResource(R.string.scheduled_switch_on_info_about_location),
-            modifier = Modifier.padding(vertical = 8.dp),
-            style = MaterialTheme.typography.bodyMedium.copy(
-                fontFamily = FontFamily(Font(R.font.inknut_antiqua_medium)),
-                fontSize = MaterialTheme.typography.bodyMedium.fontSize,
-                fontWeight = MaterialTheme.typography.bodyMedium.fontWeight,
-                letterSpacing = MaterialTheme.typography.bodyMedium.letterSpacing,
-                lineHeight = MaterialTheme.typography.bodyMedium.lineHeight,
-                platformStyle = MaterialTheme.typography.bodyMedium.platformStyle,
-                textAlign = MaterialTheme.typography.bodyMedium.textAlign,
-                textDirection = MaterialTheme.typography.bodyMedium.textDirection,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
-            )
-        )
-        Text(
-            text = "Sunrise: ${state.results.sunrise ?: "N/A"}",
-            style = MaterialTheme.typography.bodySmall.copy(
-                fontFamily = FontFamily(Font(R.font.inknut_antiqua_medium)),
-                fontSize = MaterialTheme.typography.bodySmall.fontSize,
-                fontWeight = MaterialTheme.typography.bodySmall.fontWeight,
-                letterSpacing = MaterialTheme.typography.bodySmall.letterSpacing,
-                lineHeight = MaterialTheme.typography.bodySmall.lineHeight,
-                platformStyle = MaterialTheme.typography.bodySmall.platformStyle,
-                textAlign = MaterialTheme.typography.bodySmall.textAlign,
-                textDirection = MaterialTheme.typography.bodySmall.textDirection,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
-            )
-        )
-        Text(
-            text = "Sunset: ${state.results.sunset ?: "N/A"}",
-            style = MaterialTheme.typography.bodySmall.copy(
-                fontFamily = FontFamily(Font(R.font.inknut_antiqua_medium)),
-                fontSize = MaterialTheme.typography.bodySmall.fontSize,
-                fontWeight = MaterialTheme.typography.bodySmall.fontWeight,
-                letterSpacing = MaterialTheme.typography.bodySmall.letterSpacing,
-                lineHeight = MaterialTheme.typography.bodySmall.lineHeight,
-                platformStyle = MaterialTheme.typography.bodySmall.platformStyle,
-                textAlign = MaterialTheme.typography.bodySmall.textAlign,
-                textDirection = MaterialTheme.typography.bodySmall.textDirection,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
-            )
-        )
     }
 }

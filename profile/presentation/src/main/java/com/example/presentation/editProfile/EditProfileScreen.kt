@@ -6,10 +6,8 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -20,15 +18,6 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AccountCircle
-import androidx.compose.material.icons.filled.Check
-import androidx.compose.material.icons.filled.Edit
-import androidx.compose.material.icons.filled.Error
-import androidx.compose.material.icons.filled.PersonRemoveAlt1
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -44,6 +33,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
@@ -56,12 +46,13 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import coil3.compose.AsyncImage
-import com.example.allinone.R
-import com.example.allinone.auth.presentation.screens.ValidatedEmailTextField
-import com.example.allinone.core.components.AppTopBar
-import com.example.allinone.core.components.Loading
-import com.example.allinone.core.components.PrimaryButton
-import com.example.allinone.profile.presentation.vm.EditProfileViewModel
+import com.example.allinone.core.presentation.R
+import com.example.presentation.components.AppTopBar
+import com.example.presentation.components.FetchStatusError
+import com.example.presentation.components.Loading
+import com.example.presentation.components.PrimaryButton
+import com.example.presentation.components.ValidatedEmailTextField
+import com.example.presentation.editProfile.components.MessageCard
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -71,9 +62,8 @@ fun EditProfileScreen(
     val focusManager = LocalFocusManager.current
     val editProfileViewModel: EditProfileViewModel = hiltViewModel()
     val uiState by editProfileViewModel.uiState.collectAsStateWithLifecycle()
-    val isLoading by editProfileViewModel.loading.collectAsStateWithLifecycle()
-    val errorMessage by editProfileViewModel.errorMessage.collectAsStateWithLifecycle()
-    val successMessage by editProfileViewModel.successMessage.collectAsStateWithLifecycle()
+    val profileResponse by editProfileViewModel.profileResponse.collectAsStateWithLifecycle()
+    val isLoading = editProfileViewModel.isLoading
     val fetchStatus by editProfileViewModel.fetchUserDataStatus.collectAsStateWithLifecycle()
 
     val imagePickerLauncher = rememberLauncherForActivityResult(
@@ -94,7 +84,7 @@ fun EditProfileScreen(
                         }
                     ) {
                         Icon(
-                            imageVector = Icons.Default.PersonRemoveAlt1,
+                            painter = painterResource(R.drawable.outline_person_add_24),
                             contentDescription = null
                         )
                     }
@@ -129,7 +119,7 @@ fun EditProfileScreen(
                                 .clickable { imagePickerLauncher.launch("image/*") },
                             contentAlignment = Alignment.Center
                         ) {
-                            val imageUri = uiState.selectedImageUri
+                            val imageUri = uiState.selectedImageUri ?: uiState.profilePictureUrl
 
                             if (imageUri != null) {
                                 AsyncImage(
@@ -140,7 +130,7 @@ fun EditProfileScreen(
                                 )
                             } else {
                                 Icon(
-                                    imageVector = Icons.Default.AccountCircle,
+                                    painter = painterResource(R.drawable.outline_account_circle_24),
                                     contentDescription = null,
                                 )
                             }
@@ -154,8 +144,8 @@ fun EditProfileScreen(
                                     .padding(8.dp)
                             ) {
                                 Icon(
-                                    imageVector = Icons.Default.Edit,
-                                    contentDescription = "Change photo",
+                                    painter = painterResource(R.drawable.outline_edit_24),
+                                    contentDescription = null,
                                     tint = MaterialTheme.colorScheme.onPrimary,
                                     modifier = Modifier.size(20.dp)
                                 )
@@ -213,20 +203,23 @@ fun EditProfileScreen(
                             )
                         }
                     }
-                    errorMessage?.let {
-                        MessageCard(
-                            message = it,
-                            isError = true,
-                            onDismiss = { editProfileViewModel.clearMessages() }
-                        )
-                    }
-
-                    successMessage?.let {
-                        MessageCard(
-                            message = it,
-                            isError = false,
-                            onDismiss = { editProfileViewModel.clearMessages() }
-                        )
+                    
+                    when (val response = profileResponse) {
+                        is ProfileResponse.Error -> {
+                            MessageCard(
+                                message = response.message,
+                                isError = true,
+                                onDismiss = { editProfileViewModel.clearProfileResponse() }
+                            )
+                        }
+                        is ProfileResponse.Success -> {
+                            MessageCard(
+                                message = "Profile updated successfully",
+                                isError = false,
+                                onDismiss = { editProfileViewModel.clearProfileResponse() }
+                            )
+                        }
+                        else -> {}
                     }
 
                     Spacer(modifier = Modifier.height(16.dp))
@@ -244,7 +237,7 @@ fun EditProfileScreen(
                         enabled = !isLoading
                     ) {
                         if (isLoading) {
-                            CircularProgressIndicator()
+                            Loading()
                         } else {
                             Text(
                                 text = stringResource(R.string.save_changes),
@@ -261,89 +254,6 @@ fun EditProfileScreen(
                         }
                     }
                 }
-            }
-        }
-    }
-}
-
-@Composable
-fun FetchStatusError(viewModel: EditProfileViewModel) {
-    Box(
-        modifier = Modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center
-    ) {
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
-        ) {
-            Icon(
-                imageVector = Icons.Default.Error,
-                contentDescription = null,
-                tint = MaterialTheme.colorScheme.error,
-                modifier = Modifier.size(48.dp)
-            )
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            Text(
-                text = "Failed to load profile data",
-                color = MaterialTheme.colorScheme.error
-            )
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            PrimaryButton(onClick = { viewModel.fetchUserData() }) {
-                Text("Try Again")
-            }
-        }
-    }
-}
-
-@Composable
-fun MessageCard(
-    message: String,
-    isError: Boolean,
-    onDismiss: () -> Unit
-) {
-    val backgroundColor = if (isError) {
-        MaterialTheme.colorScheme.errorContainer
-    } else {
-        MaterialTheme.colorScheme.primaryContainer
-    }
-    
-    val contentColor = if (isError) {
-        MaterialTheme.colorScheme.onErrorContainer
-    } else {
-        MaterialTheme.colorScheme.onPrimaryContainer
-    }
-    
-    Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 8.dp),
-        colors = CardDefaults.cardColors(
-            containerColor = backgroundColor
-        )
-    ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text(
-                text = message,
-                color = contentColor,
-                modifier = Modifier.weight(1f)
-            )
-            
-            IconButton(onClick = onDismiss) {
-                Icon(
-                    imageVector = Icons.Default.Check,
-                    contentDescription = "Dismiss",
-                    tint = contentColor
-                )
             }
         }
     }

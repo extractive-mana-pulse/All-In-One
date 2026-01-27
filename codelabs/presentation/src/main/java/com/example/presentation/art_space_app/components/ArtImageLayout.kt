@@ -19,7 +19,7 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import com.example.presentation.R
+import com.example.allinone.codelabs.presentation.R
 
 @Composable
 internal fun ArtImageLayout() {

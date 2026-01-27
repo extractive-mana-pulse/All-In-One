@@ -28,12 +28,14 @@ import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
-import com.example.data.R
+import com.example.allinone.core.presentation.R
 import com.example.presentation.components.PrimaryButton
 import com.example.presentation.toastMessage
 
 @Composable
-fun ForgotPasswordScreen() {
+fun ForgotPasswordScreen(
+
+) {
 
     Scaffold { innerPadding ->
         Box(

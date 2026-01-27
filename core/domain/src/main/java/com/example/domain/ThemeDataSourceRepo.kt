@@ -1,4 +1,11 @@
 package com.example.domain
 
-class ThemeDataSourceRepo {
+import kotlinx.coroutines.flow.Flow
+
+interface ThemeDataSourceRepo {
+
+    val isDarkTheme: Flow<Boolean>
+
+    suspend fun saveThemePreference(isDarkTheme: Boolean)
+
 }

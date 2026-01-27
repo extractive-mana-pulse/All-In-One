@@ -8,8 +8,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -30,17 +28,16 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
-import com.example.allinone.R
-import com.example.allinone.core.extension.getBatteryPercentage
+import com.example.allinone.core.presentation.R
 import com.example.presentation.batterySafe.vm.BatterySliderViewModel
+import com.example.presentation.extension.getBatteryPercentage
 
 // implement logic of battery icon. when battery level is 20% corresponding icon when 50% corresponding icon and so on.
 // also implement logic when power saving mode is active these actions.
@@ -52,7 +49,7 @@ import com.example.presentation.batterySafe.vm.BatterySliderViewModel
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BatterySavingScreen(
-    navController: NavHostController = rememberNavController()
+    onNavigateBack: () -> Unit
 ) {
     val context = LocalContext.current
     val viewModel: BatterySliderViewModel = hiltViewModel()
@@ -96,11 +93,11 @@ fun BatterySavingScreen(
                 navigationIcon = {
                     IconButton(
                         onClick = {
-                            navController.navigateUp()
+                            onNavigateBack()
                         }
                     ) {
                         Icon(
-                            Icons.AutoMirrored.Default.ArrowBack,
+                            painter = painterResource(R.drawable.outline_arrow_back_24),
                             contentDescription = stringResource(R.string.from_power_saving_to_somewhere)
                         )
                     }

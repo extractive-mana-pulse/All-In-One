@@ -17,14 +17,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.example.allinone.main.presentation.details.components.DetailsItem
-import com.example.allinone.main.presentation.details.components.DetailsNotFound
-import com.example.allinone.main.presentation.details.components.DetailsScreenTopBar
-import com.example.allinone.main.presentation.vm.DetailsViewModel
+import com.example.presentation.details.components.DetailsItem
+import com.example.presentation.details.components.DetailsScreenTopBar
+import com.example.presentation.vm.DetailsViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DetailsScreen(
+internal fun DetailsScreen(
     id: Int,
     onNavigateUp: () -> Unit = {},
     shouldShowReadingModeSnackbar: Boolean,
@@ -39,9 +38,7 @@ fun DetailsScreen(
     LaunchedEffect(key1 = true) { detailsViewModel.loadCourse(id) }
 
     LaunchedEffect(courseDetails) {
-        if (courseDetails != null) {
-            onAction(DetailScreenAction.OnCourseLoaded(id))
-        }
+        onAction(DetailScreenAction.OnCourseLoaded(id))
     }
 
     LaunchedEffect(shouldShowReadingModeSnackbar) {
@@ -62,33 +59,29 @@ fun DetailsScreen(
         }
     }
 
-    courseDetails?.let {
+    courseDetails?.let { courseDetails ->
         DetailsScreenTopBar(
-            courseDetails = it,
+            courseDetails = courseDetails,
             snackbarHostState = snackbarHostState,
             onNavigateUp = { onNavigateUp() },
             onNavigateAway = { onAction(DetailScreenAction.OnNavigateAway) },
-            onNavigateByRoute = { route ->
-                navigateToCodeLab(route)
-            }
-        ) { innerPadding ->
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(innerPadding)
-                    .verticalScroll(state = verticalScroll)
-                    .padding(horizontal = 16.dp)
-            ) {
-                when (courseDetails) {
-                    null -> {
-                        DetailsNotFound()
-                    }
-
-                    else -> {
-                        DetailsItem(course = courseDetails!!)
+            onPreviewClick = { courseTitle ->
+                navigateToCodeLab(courseTitle ?: "")
+            },
+            content = {
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .verticalScroll(state = verticalScroll)
+                        .padding(horizontal = 16.dp)
+                ) {
+                    when (courseDetails) {
+                        else -> {
+                            DetailsItem(course = courseDetails)
+                        }
                     }
                 }
             }
-        }
+        )
     }
 }
