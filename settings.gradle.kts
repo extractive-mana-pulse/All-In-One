@@ -21,9 +21,9 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "All In One"
+rootProject.name = "AllInOne"
+enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 include(":app")
-include(":leetcode")
 include(":auth:data")
 include(":auth:domain")
 include(":auth:presentation")
@@ -33,7 +33,6 @@ include(":settings:presentation")
 include(":core:presentation")
 include(":core:domain")
 include(":core:data")
-include(":blogs:presentation")
 include(":codelabs:presentation")
 include(":codelabs:domain")
 include(":codelabs:data")
@@ -53,3 +52,9 @@ include(":profile:presentation")
 include(":main:data")
 include(":main:domain")
 include(":main:presentation")
+include(":blogs:presentation")
+include(":blogs:domain")
+include(":blogs:data")
+include(":leetcode:data")
+include(":leetcode:domain")
+include(":leetcode:presentation")

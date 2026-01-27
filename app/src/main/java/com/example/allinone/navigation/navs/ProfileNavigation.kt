@@ -8,32 +8,39 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
-import com.example.allinone.auth.data.remote.impl.AuthenticationManager
 import com.example.allinone.navigation.graph.Graph
 import com.example.allinone.navigation.screen.ProfileScreens
-import com.example.allinone.profile.presentation.screens.EditProfileScreen
-import com.example.allinone.profile.presentation.screens.ProfileScreen
+import com.example.data.firebase.AuthenticationManager
+import com.example.presentation.editProfile.EditProfileScreen
+import com.example.presentation.profile.ProfileScreen
 
 internal fun NavGraphBuilder.profileNavigation(
     navController: NavHostController,
     authenticationManager: AuthenticationManager
 ) {
     navigation(
-        startDestination = ProfileScreens.Profile.route,
+        startDestination = ProfileScreens.Profile::class.qualifiedName ?: "",
         route = Graph.PROFILE
     ) {
-        composable(
-            ProfileScreens.Profile.route,
+        composable<ProfileScreens.Profile>(
             enterTransition = { expandHorizontally() + fadeIn() },
             exitTransition = { shrinkHorizontally() + fadeOut() }
         ) {
             ProfileScreen(
-                navController = navController,
-                userCredentials = authenticationManager.getSignedInUser()
+                userCredentials = authenticationManager.getSignedInUser(),
+                onNavigateUp = {
+                    navController.navigateUp()
+                },
+                onNavigateToEditProfile = {
+                    navController.navigate(ProfileScreens.EditProfile)
+                },
+                onNavigateToSignOut = {
+                    authenticationManager.signOut()
+                    navController.navigate(Graph.AUTH)
+                }
             )
         }
-        composable(
-            ProfileScreens.EditProfile.route,
+        composable<ProfileScreens.EditProfile>(
             enterTransition = { expandHorizontally() + fadeIn() },
             exitTransition = { shrinkHorizontally() + fadeOut() }
         ) {

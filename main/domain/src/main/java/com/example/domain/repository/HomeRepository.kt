@@ -1,8 +1,8 @@
 package com.example.domain.repository
 
-import com.example.allinone.main.domain.model.Course
-import com.example.allinone.main.domain.model.GithubCommands
-import com.example.allinone.main.domain.model.Sections
+import com.example.domain.model.Course
+import com.example.domain.model.GithubCommands
+import com.example.domain.model.Sections
 
 interface HomeRepository {
 

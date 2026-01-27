@@ -1,21 +1,22 @@
 package com.example.allinone.navigation.util
 
-import com.example.allinone.navigation.screen.Screens
+import com.example.allinone.navigation.screen.CodeLabScreens
 
 internal fun String.navigateByTitle(
-    onNavigate: (route: String, shouldStopTimer: Boolean) -> Unit,
+    onNavigate: (route: Any, shouldStopTimer: Boolean) -> Unit,
     onError: () -> Unit
 ) {
     when (this) {
-        "Compose article" -> onNavigate(Screens.ComposeArticleScreen.route, false)
-        "Quadrant" -> onNavigate(Screens.Quadrant.route, false)
-        "Tip Calculator" -> onNavigate(Screens.TipCalculator.route, false)
-        "Art Space App" -> onNavigate(Screens.ArtSpace.route, true)
-        "Lemonade" -> onNavigate(Screens.Lemonade.route, true)
-        "Task Manager" -> onNavigate(Screens.TaskManagerScreen.route, true)
-        "Art Space" -> onNavigate(Screens.ArtSpace.route, true)
-        "Business card" -> onNavigate(Screens.BusinessCard.route, false)
-        "Woof" -> onNavigate(Screens.Woof.route, false)
+        "Compose article" -> onNavigate(CodeLabScreens.ComposeArticleScreen, false)
+        "Quadrant" -> onNavigate(CodeLabScreens.Quadrant, false)
+        "Tip Calculator" -> onNavigate(CodeLabScreens.TipCalculator, false)
+        "Art Space App" -> onNavigate(CodeLabScreens.ArtSpace, true)
+        "Lemonade" -> onNavigate(CodeLabScreens.Lemonade, true)
+        "Task Manager" -> onNavigate(CodeLabScreens.TaskManagerScreen, true)
+        "Art Space" -> onNavigate(CodeLabScreens.ArtSpace, true)
+        "Business card" -> onNavigate(CodeLabScreens.BusinessCard, false)
+        "Dice Roller" -> onNavigate(CodeLabScreens.DiceRoller, false)
+        "Woof" -> onNavigate(CodeLabScreens.Woof, false)
         else -> onError()
     }
 }

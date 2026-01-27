@@ -1,8 +1,8 @@
 package com.example.data.remote.repositoryImpl
 
-import com.example.allinone.settings.autoNight.data.remote.api.TwilightApi
-import com.example.allinone.settings.autoNight.domain.model.Twilight
-import com.example.allinone.settings.autoNight.domain.repository.TwilightRepository
+import com.example.data.remote.api.TwilightApi
+import com.example.domain.model.Twilight
+import com.example.domain.repository.TwilightRepository
 
 class TwilightRepositoryImpl(private val api: TwilightApi): TwilightRepository {
 

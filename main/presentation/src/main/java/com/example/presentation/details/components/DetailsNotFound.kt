@@ -10,8 +10,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import com.example.allinone.R
-import com.example.allinone.core.components.PrimaryButton
+import com.example.allinone.core.presentation.R
+import com.example.presentation.components.PrimaryButton
 
 @Composable
 internal fun DetailsNotFound() {

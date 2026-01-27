@@ -2,8 +2,6 @@ package com.example.presentation.components
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -11,11 +9,12 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.tooling.preview.Preview
-import com.example.allinone.R
+import androidx.compose.ui.tooling.preview.PreviewLightDark
+import com.example.allinone.core.presentation.R
 
 @Composable
 fun CustomAlertDialog(
@@ -25,12 +24,12 @@ fun CustomAlertDialog(
     dialogText: String,
     confirmText: String,
     dismissText: String,
-    icon: ImageVector,
+    icon: Painter,
 ) {
     AlertDialog(
         icon = {
             Icon(
-                icon,
+                painter = icon,
                 contentDescription = null
             )
         },
@@ -108,13 +107,12 @@ fun CustomAlertDialog(
     )
 }
 
-@Preview(showBackground = true)
+@PreviewLightDark
 @Composable
-fun CustomAlertDialogPreview() {
+private fun CustomAlertDialogPreview() {
     Box(
         modifier = Modifier
             .fillMaxSize()
-
     ) {
         CustomAlertDialog(
             onDismissRequest = {},
@@ -122,7 +120,7 @@ fun CustomAlertDialogPreview() {
             dialogTitle = "Lorem Ipsum",
             dialogText = "Lorem Ipsum is simply dummy text of the printing and typesetting industry.\n" +
                     "Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. ",
-            icon = Icons.Default.Info, // Change to your desired icon,
+            icon = painterResource(R.drawable.outline_info_24), // Change to your desired icon,
             confirmText = "Confirm",
             dismissText = "Dismiss"
         )

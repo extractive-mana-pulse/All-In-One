@@ -44,12 +44,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.allinone.R
-import com.example.allinone.main.presentation.screens.HomeScreen
-import com.example.allinone.plcoding.mini_challenges.presentation.july.components.MessageHeader
-import com.example.collapsiblechatthread.Comment1
-import com.example.collapsiblechatthread.Comment2
-import com.example.collapsiblechatthread.Comment3
+import com.example.allinone.pl_coding.mini_challenges.presentation.R
+import com.example.presentation.july.components.Comment1
+import com.example.presentation.july.components.Comment2
+import com.example.presentation.july.components.Comment3
+import com.example.presentation.july.components.MessageHeader
 
 @Composable
 fun CollapsibleChatThreadRoot() {

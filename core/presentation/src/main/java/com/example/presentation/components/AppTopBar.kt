@@ -1,5 +1,3 @@
-@file:OptIn(ExperimentalMaterial3Api::class)
-
 package com.example.presentation.components
 
 import androidx.compose.foundation.layout.Row
@@ -12,9 +10,12 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.res.painterResource
+import com.example.allinone.core.presentation.R
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-internal fun AppTopBar(
+fun AppTopBar(
     title: String,
     onNavigationClick: () -> Unit,
     onActionClick: @Composable () -> Unit = {},
@@ -32,7 +33,7 @@ internal fun AppTopBar(
                 onClick = onNavigationClick
             ) {
                 Icon(
-                    imageVector = Icons.AutoMirrored.Default.ArrowBack,
+                    painter = painterResource(R.drawable.outline_arrow_back_24),
                     contentDescription = null
                 )
             }

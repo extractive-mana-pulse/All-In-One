@@ -9,9 +9,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.KeyboardArrowDown
-import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.HorizontalDivider
@@ -25,10 +22,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.example.allinone.plcoding.mini_challenges.domain.model.MiniChallengeMonthDTO
-import com.example.allinone.plcoding.mini_challenges.domain.model.getChallengesForMonth
+import com.example.allinone.pl_coding.mini_challenges.presentation.R
+import com.example.domain.model.MiniChallengeMonthDTO
+import com.example.domain.model.getChallengesForMonth
 
 @Composable
 internal fun MonthsCard(
@@ -69,7 +68,7 @@ internal fun MonthsCard(
                     )
                     if (miniChallengeMonthDTO.topic != null) {
                         Text(
-                            text = miniChallengeMonthDTO.topic,
+                            text = miniChallengeMonthDTO.topic ?: "",
                             style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
@@ -77,7 +76,8 @@ internal fun MonthsCard(
                 }
 
                 Icon(
-                    imageVector = if (isExpanded) Icons.Default.KeyboardArrowUp else Icons.Default.KeyboardArrowDown,
+                    painter = if (isExpanded) painterResource(R.drawable.outline_keyboard_arrow_up_24) else painterResource(
+                        R.drawable.outline_keyboard_arrow_down_24),
                     contentDescription = if (isExpanded) "Collapse" else "Expand",
                     tint = MaterialTheme.colorScheme.primary
                 )

@@ -4,9 +4,6 @@ package com.example.presentation.details.components
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Preview
-import androidx.compose.material.icons.outlined.BookmarkBorder
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -18,19 +15,20 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
-import com.example.allinone.core.components.AppTopBar
-import com.example.allinone.core.extension.toastMessage
-import com.example.allinone.main.domain.model.CourseDetails
-import com.example.allinone.navigation.util.navigateByTitle
+import androidx.compose.ui.res.painterResource
+import com.example.allinone.core.presentation.R
+import com.example.domain.model.CourseDetails
+import com.example.presentation.components.AppTopBar
+import com.example.presentation.toastMessage
 
 @Composable
 fun DetailsScreenTopBar(
     onNavigateUp: () -> Unit,
     onNavigateAway: () -> Unit,
-    onNavigateByRoute: (String) -> Unit,
     courseDetails: CourseDetails,
     snackbarHostState: SnackbarHostState,
     content: @Composable (PaddingValues) -> Unit,
+    onPreviewClick: (String?) -> Unit,
 ) {
     val context = LocalContext.current
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
@@ -49,22 +47,23 @@ fun DetailsScreenTopBar(
                 },
                 onActionClick = {
                     IconButton(
-                        onClick = {
-                            courseDetails.title?.navigateByTitle(
-                                onNavigate = { route, shouldStopTimer ->
-                                    if (shouldStopTimer) {
-                                        onNavigateAway()
-                                    }
-                                    onNavigateByRoute(route)
-                                },
-                                onError = {
-                                    toastMessage(context = context, message = "Preview not found.")
-                                }
-                            )
-                        }
+                        onClick = { onPreviewClick(courseDetails.title) }
+//                                onPreviewClick = { title ->
+//                            title.navigateByTitle(
+//                                onNavigate = { route, shouldStopTimer ->
+//                                    if (shouldStopTimer) {
+//                                        onNavigateAway()
+//                                    }
+//                                    onNavigateByRoute(route)
+//                                },
+//                                onError = {
+//                                    toastMessage(context = context, message = "Preview not found.")
+//                                }
+//                            )
+//                        }
                     ) {
                         Icon(
-                            Icons.Default.Preview,
+                            painter = painterResource(R.drawable.outline_preview_24),
                             contentDescription = null
                         )
                     }
@@ -77,7 +76,7 @@ fun DetailsScreenTopBar(
                         }
                     ) {
                         Icon(
-                            Icons.Outlined.BookmarkBorder,
+                            painter = painterResource(R.drawable.outline_bookmarks_24),
                             contentDescription = null
                         )
                     }

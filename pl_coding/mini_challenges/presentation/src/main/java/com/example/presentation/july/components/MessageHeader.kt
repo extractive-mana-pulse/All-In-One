@@ -19,7 +19,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.allinone.R
+import com.example.allinone.pl_coding.mini_challenges.presentation.R
 
 @Composable
 fun MessageHeader(

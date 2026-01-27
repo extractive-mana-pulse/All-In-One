@@ -2,10 +2,10 @@ package com.example.presentation.vm
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.allinone.main.domain.model.Course
-import com.example.allinone.main.domain.model.GithubCommands
-import com.example.allinone.main.domain.model.Sections
-import com.example.allinone.main.domain.repository.HomeRepository
+import com.example.domain.model.Course
+import com.example.domain.model.GithubCommands
+import com.example.domain.model.Sections
+import com.example.domain.repository.HomeRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted

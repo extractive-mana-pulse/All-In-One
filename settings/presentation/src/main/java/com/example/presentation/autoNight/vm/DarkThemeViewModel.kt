@@ -2,7 +2,7 @@ package com.example.presentation.autoNight.vm
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.allinone.core.preferences.ThemePreferences
+import com.example.domain.ThemeDataSourceRepo
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -13,7 +13,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class DarkThemeViewModel @Inject constructor(
-    private val themePreferences: ThemePreferences
+    private val themePreferences: ThemeDataSourceRepo
 ) : ViewModel() {
 
     private val _isDarkTheme = MutableStateFlow(false)

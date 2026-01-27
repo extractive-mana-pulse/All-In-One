@@ -1,5 +1,6 @@
 package com.example.allinone.navigation.navs
 
+import VisibilityOfUI
 import android.content.Context
 import androidx.compose.foundation.layout.calculateEndPadding
 import androidx.compose.foundation.layout.calculateStartPadding
@@ -17,11 +18,10 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.example.allinone.auth.data.remote.impl.AuthenticationManager
-import com.example.allinone.core.components.NavigationDrawer
-import com.example.allinone.core.components.VisibilityOfUI
+import com.example.allinone.navigation.NavigationDrawer
 import com.example.allinone.navigation.graph.Graph
-import com.example.allinone.navigation.screen.Screens
+import com.example.allinone.navigation.screen.PlCoding
+import com.example.data.firebase.AuthenticationManager
 import com.google.android.gms.location.FusedLocationProviderClient
 import kotlinx.coroutines.launch
 
@@ -88,7 +88,7 @@ fun NavigationGraph(
         gesturesEnabledState = gesturesEnabledState,
         drawerState = drawerState,
         onNavigateToPLCoding = {
-            navController.navigate(Screens.PLCoding.route)
+            navController.navigate(PlCoding)
             scope.launch {
                 if (drawerState.isClosed) {
                     drawerState.open()

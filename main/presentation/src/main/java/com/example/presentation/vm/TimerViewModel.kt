@@ -2,8 +2,8 @@ package com.example.presentation.vm
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.allinone.core.preferences.ReadingModePreferences
-import com.example.allinone.main.presentation.details.DetailScreenAction
+import com.example.domain.ReadingModePreferenceRepo
+import com.example.presentation.details.DetailScreenAction
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -14,7 +14,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class TimerViewModel @Inject constructor(
-    private val readingModePreferences: ReadingModePreferences
+    private val readingModePreferences: ReadingModePreferenceRepo
 ): ViewModel() {
 
     private val _timer = MutableStateFlow(0L)
@@ -32,7 +32,6 @@ class TimerViewModel @Inject constructor(
             is DetailScreenAction.OnCourseLoaded -> startTimer()
             DetailScreenAction.OnSnackbarShown -> _shouldShowReadingModeSnackbar.value = false
             is DetailScreenAction.OnSnackbarActionPerformed -> toggleReadingMode(action.enabled)
-            else -> Unit
         }
     }
 

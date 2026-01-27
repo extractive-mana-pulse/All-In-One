@@ -1,34 +1,36 @@
 package com.example.presentation.vm
 
+import android.content.Context
+import androidx.glance.appwidget.updateAll
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.allinone.settings.deviceTemp.domain.model.TemperatureData
-import com.example.allinone.widget.domain.repository.TempRepository
+import com.example.domain.TemperatureData
+import com.example.domain.repository.GlanceWidgetRepository
+import com.example.presentation.screens.DeviceTempWidget
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class TemperatureDataViewModel @Inject constructor(
-    private val tempRepository: TempRepository
+class TemperatureViewModel @Inject constructor(
+    @ApplicationContext private val context: Context,
+    private val repository: GlanceWidgetRepository
 ) : ViewModel() {
 
-    private val _tempData = MutableStateFlow(TemperatureData())
-    val tempData = _tempData.asStateFlow()
+    fun getTemp() = repository.getTemperature()
 
-    fun insertTemperature(sensorData: TemperatureData) {
+    fun insertTemperature(temperatureData: TemperatureData) {
         viewModelScope.launch {
-            tempRepository.uploadTemperatureData(sensorData)
+            repository.insertTemperature(temperatureData)
+            DeviceTempWidget().updateAll(context)
         }
     }
 
-    fun getTemperature() {
+    fun deleteTemperature(temperatureData: TemperatureData) {
         viewModelScope.launch {
-            tempRepository.getDeviceTemp().collect {
-                _tempData.value = it
-            }
+            repository.deleteTemperature(temperatureData)
+            DeviceTempWidget().updateAll(context)
         }
     }
 }

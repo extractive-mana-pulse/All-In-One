@@ -3,36 +3,36 @@ package com.example.allinone.navigation.navs
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
-import com.example.allinone.navigation.screen.Screens
-import com.example.allinone.plcoding.PLCodingScreen
-import com.example.allinone.plcoding.mini_challenges.presentation.MiniChallengesScreen
-import com.example.allinone.plcoding.mini_challenges.presentation.december.WinterGreetingEditorScreen
-import com.example.allinone.plcoding.mini_challenges.presentation.july.CollapsibleChatThreadRoot
+import com.example.allinone.navigation.screen.PlCoding
+import com.example.presentation.MiniChallengesScreen
+import com.example.presentation.PLCodingScreen
+import com.example.presentation.december.WinterGreetingEditorScreen
+import com.example.presentation.july.CollapsibleChatThreadRoot
 
 internal fun NavGraphBuilder.plCodingNavigation(navController: NavHostController) {
-    composable(Screens.PLCoding.route) {
+    composable<PlCoding.Home> {
         PLCodingScreen(
             onNavigateUpFromPlCodingScreen = {
                 navController.navigateUp()
             },
             onNavigateToMiniChallenges = {
-                navController.navigate(Screens.PLCoding.MiniChallenges.route)
+                navController.navigate(PlCoding.Home.MiniChallenges)
             },
             onNavigateToAppChallenges = {
-                navController.navigate(Screens.PLCoding.AppChallenges.route)
+                navController.navigate(PlCoding.Home.AppChallenges)
             }
         )
     }
-    composable(Screens.PLCoding.MiniChallenges.route) {
+    composable<PlCoding.Home.MiniChallenges> {
         MiniChallengesScreen(
             onNavigateUpFromMiniChallengesScreen = { navController.navigateUp() },
             navigateToChallengeByString = { id -> navController.navigate(id) }
         )
     }
-    composable(Screens.PLCoding.MiniChallenges.December.WinterGreetingEditor.route) {
+    composable<PlCoding.Home.MiniChallenges.December.WinterGreetingEditor> {
         WinterGreetingEditorScreen()
     }
-    composable(Screens.PLCoding.MiniChallenges.July.CollapsibleChatThread.route) {
+    composable<PlCoding.Home.MiniChallenges.July.CollapsibleChatThread> {
         CollapsibleChatThreadRoot()
     }
 }

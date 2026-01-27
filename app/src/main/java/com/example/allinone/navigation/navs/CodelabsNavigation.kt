@@ -9,21 +9,20 @@ import androidx.compose.animation.slideOutVertically
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
-import com.example.allinone.codelabs.presentation.screens.ArtSpace
-import com.example.allinone.codelabs.presentation.screens.BusinessCard
-import com.example.allinone.codelabs.presentation.screens.ComposeArticleScreen
-import com.example.allinone.codelabs.presentation.screens.ComposeQuadrant
-import com.example.allinone.codelabs.presentation.screens.Lemonade
-import com.example.allinone.codelabs.presentation.screens.TaskManager
-import com.example.allinone.codelabs.presentation.screens.TipTimeLayout
-import com.example.allinone.codelabs.presentation.screens.WoofApp
-import com.example.allinone.navigation.screen.Screens
+import com.example.allinone.navigation.screen.CodeLabScreens
+import com.example.presentation.ComposeArticleScreen
+import com.example.presentation.Lemonade
+import com.example.presentation.TaskManager
+import com.example.presentation.art_space_app.ArtSpace
+import com.example.presentation.business_card_app.BusinessCard
+import com.example.presentation.quadrant_app.ComposeQuadrant
+import com.example.presentation.tip_calculator_app.TipTimeLayout
+import com.example.presentation.woof_app.WoofApp
 
 fun NavGraphBuilder.codelabsNavigation(
     navController: NavHostController
 ) {
-    composable(
-        Screens.TipCalculator.route,
+    composable<CodeLabScreens.TipCalculator>(
         enterTransition = {
             slideInVertically(
                 initialOffsetY = { -80 },
@@ -53,10 +52,13 @@ fun NavGraphBuilder.codelabsNavigation(
             )
         }
     ) {
-        TipTimeLayout(navController = navController)
+        TipTimeLayout(
+            onNavigateUp = {
+                navController.navigateUp()
+            }
+        )
     }
-    composable(
-        Screens.Quadrant.route,
+    composable<CodeLabScreens.Quadrant>(
         enterTransition = {
             slideInVertically(
                 initialOffsetY = { -80 },
@@ -88,8 +90,7 @@ fun NavGraphBuilder.codelabsNavigation(
     ) {
         ComposeQuadrant()
     }
-    composable(
-        Screens.Lemonade.route,
+    composable<CodeLabScreens.Lemonade>(
         enterTransition = {
             slideInVertically(
                 initialOffsetY = { -80 },
@@ -119,10 +120,13 @@ fun NavGraphBuilder.codelabsNavigation(
             )
         }
     ) {
-        Lemonade(navController = navController)
+        Lemonade(
+            onNavigateUp = {
+                navController.navigateUp()
+            }
+        )
     }
-    composable(
-        Screens.ComposeArticleScreen.route,
+    composable<CodeLabScreens.ComposeArticleScreen>(
         enterTransition = {
             slideInVertically(
                 initialOffsetY = { -80 },
@@ -152,13 +156,23 @@ fun NavGraphBuilder.codelabsNavigation(
             )
         }
     ) {
-        ComposeArticleScreen(navController = navController)
+        ComposeArticleScreen(
+            onNavigateToTaskManager = {
+                navController.navigate(CodeLabScreens.TaskManagerScreen)
+            },
+            onNavigateUp = {
+                navController.navigateUp()
+            }
+        )
     }
-    composable(Screens.TaskManagerScreen.route) {
-        TaskManager(navController = navController)
+    composable<CodeLabScreens.TaskManagerScreen> {
+        TaskManager(
+            onNavigateUp = {
+                navController.navigateUp()
+            }
+        )
     }
-    composable(
-        Screens.ArtSpace.route,
+    composable<CodeLabScreens.ArtSpace>(
         enterTransition = {
             slideInVertically(
                 initialOffsetY = { -80 },
@@ -188,14 +202,18 @@ fun NavGraphBuilder.codelabsNavigation(
             )
         }
     ) {
-        ArtSpace(navController = navController)
+        ArtSpace(
+            onNavigateUp = {
+                navController.navigateUp()
+            }
+        )
     }
 
-    composable(Screens.BusinessCard.route) {
+    composable<CodeLabScreens.BusinessCard> {
         BusinessCard()
     }
 
-    composable(Screens.Woof.route) {
-        WoofApp(navController = navController)
+    composable<CodeLabScreens.Woof> {
+        WoofApp()
     }
 }

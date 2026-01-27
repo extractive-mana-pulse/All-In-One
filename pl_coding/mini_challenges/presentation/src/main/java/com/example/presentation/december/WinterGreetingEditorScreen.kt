@@ -20,22 +20,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.FormatBold
-import androidx.compose.material.icons.filled.FormatItalic
-import androidx.compose.material.icons.filled.FormatUnderlined
-import androidx.compose.material.icons.filled.KeyboardArrowDown
-import androidx.compose.material.icons.filled.KeyboardArrowUp
-import androidx.compose.material.icons.filled.Replay
-import androidx.compose.material.icons.filled.TextFormat
-import androidx.compose.material.icons.outlined.Share
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.FloatingToolbarDefaults
-import androidx.compose.material3.HorizontalFloatingToolbar
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -61,13 +51,15 @@ import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import androidx.core.view.WindowInsetsControllerCompat
-import com.example.allinone.R
-import com.example.allinone.ui.theme.bg
-import com.example.allinone.ui.theme.evergreenWish
-import com.example.allinone.ui.theme.frostyLight
-import com.example.allinone.ui.theme.goldenEveGradient
-import com.example.allinone.ui.theme.snowyNightGradient
-import com.example.allinone.ui.theme.text
+import androidx.xr.compose.material3.ExperimentalMaterial3XrApi
+import androidx.xr.compose.material3.HorizontalFloatingToolbar
+import com.example.allinone.pl_coding.mini_challenges.presentation.R
+import com.example.presentation.ui.themes.bg
+import com.example.presentation.ui.themes.evergreenWish
+import com.example.presentation.ui.themes.frostyLight
+import com.example.presentation.ui.themes.goldenEveGradient
+import com.example.presentation.ui.themes.snowyNightGradient
+import com.example.presentation.ui.themes.text
 
 @Composable
 fun WinterGreetingEditorScreen() {
@@ -272,8 +264,8 @@ private fun WinterGreetingThemeDropDownMenu(
                 )
 
                 Icon(
-                    imageVector = if (expanded) Icons.Default.KeyboardArrowUp
-                    else Icons.Default.KeyboardArrowDown,
+                    painter = if (expanded) painterResource(R.drawable.outline_keyboard_arrow_up_24)
+                    else painterResource(R.drawable.outline_keyboard_arrow_down_24),
                     contentDescription = null,
                     tint = text
                 )
@@ -305,13 +297,14 @@ private fun WinterGreetingThemeDropDownMenu(
             onClick = { /* TODO */ }
         ) {
             Icon(
-                imageVector = Icons.Outlined.Share,
+                painter = painterResource(R.drawable.outline_share_24),
                 contentDescription = null
             )
         }
     }
 }
 
+@OptIn(ExperimentalMaterial3XrApi::class)
 @PreviewLightDark
 @Composable
 private fun FloatingToolbar() {
@@ -324,18 +317,17 @@ private fun FloatingToolbar() {
 
         ) {
         listOf(
-            Icons.Default.FormatBold,
-            Icons.Default.FormatItalic,
-            Icons.Default.FormatUnderlined,
-            Icons.Default.TextFormat,
-            Icons.Default.Replay, // stands for reset.
+            painterResource(R.drawable.outline_format_bold_24),
+            painterResource(R.drawable.outline_format_italic_24),
+            painterResource(R.drawable.outline_format_underlined_24),
+            painterResource(R.drawable.outline_replay_24),
             // add 2 more icons here
         ).forEach { iconRes ->
             IconButton(
                 onClick = {}
             ) {
                 Icon(
-                    imageVector = iconRes,
+                    painter = iconRes,
                     contentDescription = null
                 )
             }
@@ -395,21 +387,21 @@ private fun FormattingToolbar(
     ) {
         IconButton(onClick = {}) {
             Icon(
-                imageVector = Icons.Default.FormatBold,
+                painter = painterResource(R.drawable.outline_format_bold_24),
                 contentDescription = null,
                 tint = text
             )
         }
         IconButton(onClick = {}) {
             Icon(
-                imageVector = Icons.Default.FormatItalic,
+                painter = painterResource(R.drawable.outline_format_italic_24),
                 contentDescription = null,
                 tint = text
             )
         }
         IconButton(onClick = {}) {
             Icon(
-                imageVector = Icons.Default.FormatUnderlined,
+                painter = painterResource(R.drawable.outline_format_underlined_24),
                 contentDescription = null,
                 tint = text
             )
@@ -435,8 +427,8 @@ private fun FormattingToolbar(
                         )
                 )
                 Icon(
-                    imageVector = if (expandedColorPicker) Icons.Default.KeyboardArrowUp
-                    else Icons.Default.KeyboardArrowDown,
+                    painter = if (expandedColorPicker) painterResource(R.drawable.outline_keyboard_arrow_up_24)
+                    else painterResource(R.drawable.outline_keyboard_arrow_down_24),
                     contentDescription = null,
                     tint = text,
                     modifier = Modifier.size(20.dp)
@@ -484,8 +476,8 @@ private fun FormattingToolbar(
                     style = MaterialTheme.typography.bodySmall.copy(color = text)
                 )
                 Icon(
-                    imageVector = if (expandedFontPicker) Icons.Default.KeyboardArrowUp
-                    else Icons.Default.KeyboardArrowDown,
+                    painter = if (expandedFontPicker) painterResource(R.drawable.outline_keyboard_arrow_up_24)
+                    else painterResource(R.drawable.outline_keyboard_arrow_down_24),
                     contentDescription = null,
                     tint = text,
                     modifier = Modifier.size(20.dp)
@@ -527,8 +519,8 @@ private fun FormattingToolbar(
                     style = MaterialTheme.typography.bodyMedium.copy(color = text)
                 )
                 Icon(
-                    imageVector = if (expandedTextSizePicker) Icons.Default.KeyboardArrowUp
-                    else Icons.Default.KeyboardArrowDown,
+                    painter = if (expandedTextSizePicker) painterResource(R.drawable.outline_keyboard_arrow_up_24)
+                    else painterResource(R.drawable.outline_keyboard_arrow_down_24),
                     contentDescription = null,
                     tint = text,
                     modifier = Modifier.size(20.dp)
@@ -558,9 +550,13 @@ private fun FormattingToolbar(
             }
         }
 
-        IconButton(onClick = {}) {
+        IconButton(
+            onClick = {
+
+            }
+        ) {
             Icon(
-                imageVector = Icons.Default.Replay,
+                painter = painterResource(R.drawable.outline_replay_24),
                 contentDescription = null,
                 tint = text
             )

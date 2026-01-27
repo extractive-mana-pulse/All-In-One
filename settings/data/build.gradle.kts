@@ -1,52 +1,40 @@
 plugins {
-    alias(libs.plugins.android.library)
-    alias(libs.plugins.kotlin.android)
-    id("com.google.devtools.ksp") version "2.1.0-1.0.29"
-    id ("dagger.hilt.android.plugin")
+    alias(libs.plugins.allinone.android.library)
+    alias(libs.plugins.ksp)
 }
 
 android {
-    namespace = "com.example.data"
-    compileSdk = 35
-
-    defaultConfig {
-        minSdk = 24
-
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        consumerProguardFiles("consumer-rules.pro")
-    }
-
+    namespace = "com.example.allinone.settings.data"
     buildTypes {
+        debug {
+            buildConfigField("String", "BASE_URL", "\"https://api.sunrisesunset.io/\"")
+        }
         release {
-            isMinifyEnabled = false
+            /* this 2 block of code, prepare application for release.
+             Basically optimize code and remove unused elements. */
+            buildConfigField("String", "BASE_URL", "\"https://api.sunrisesunset.io/\"")
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            signingConfig = signingConfigs.getByName("debug")
         }
     }
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
-    }
-    kotlinOptions {
-        jvmTarget = "11"
+    buildFeatures {
+        buildConfig = true
     }
 }
 
 dependencies {
-    implementation(libs.androidx.core.ktx)
-    implementation(libs.androidx.appcompat)
-    implementation(libs.material)
-    testImplementation(libs.junit)
-    androidTestImplementation(libs.androidx.junit)
-    androidTestImplementation(libs.androidx.espresso.core)
-    implementation(project(":settings:domain"))
+    with(projects) {
+        implementation(core.domain)
+        implementation(core.presentation)
+        implementation(settings.domain)
+    }
 
     // hilt
     implementation(libs.hilt.android)
     ksp(libs.hilt.android.compiler)
-    implementation(libs.androidx.hilt.navigation.compose)
 
     // retrofit
     implementation (libs.retrofit)
@@ -55,4 +43,10 @@ dependencies {
 
     // data store
     implementation(libs.androidx.datastore.preferences)
+
+    // location
+    implementation(libs.play.services.location)
+
+    // app compat
+    implementation(libs.androidx.appcompat)
 }

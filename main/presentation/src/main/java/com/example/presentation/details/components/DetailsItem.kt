@@ -9,8 +9,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -23,17 +21,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
 import coil3.compose.AsyncImage
-import com.example.allinone.R
-import com.example.allinone.core.components.CustomAlertDialog
-import com.example.allinone.core.components.PrimaryButton
-import com.example.allinone.core.extension.toastMessage
-import com.example.allinone.main.domain.model.CourseDetails
+import com.example.allinone.core.presentation.R
+import com.example.domain.model.CourseDetails
+import com.example.presentation.components.CustomAlertDialog
+import com.example.presentation.components.PrimaryButton
+import com.example.presentation.toastMessage
 
 @Composable
 internal fun DetailsItem(course: CourseDetails) {
@@ -116,7 +115,7 @@ internal fun DetailsItem(course: CourseDetails) {
             } else {
                 Intent(
                     Intent.ACTION_VIEW,
-                    course.web_url.toUri()
+                    course.web_url!!.toUri()
                 )
             }
 
@@ -149,7 +148,7 @@ internal fun DetailsItem(course: CourseDetails) {
                     },
                     dialogTitle = stringResource(R.string.warning),
                     dialogText = stringResource(R.string.dialog_txt),
-                    icon = Icons.Default.Info,
+                    icon = painterResource(R.drawable.outline_info_24),
                     confirmText = stringResource(R.string.confirm),
                     dismissText = stringResource(R.string.dismiss)
                 )

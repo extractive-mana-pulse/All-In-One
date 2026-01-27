@@ -11,13 +11,14 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import androidx.navigation.toRoute
-import com.example.allinone.auth.data.remote.impl.AuthenticationManager
-import com.example.allinone.main.presentation.details.DetailsRoot
-import com.example.allinone.main.presentation.screens.HelpAndFeedbackScreen
-import com.example.allinone.main.presentation.screens.HomeScreen
-import com.example.allinone.main.presentation.screens.SectionScreen
 import com.example.allinone.navigation.graph.Graph
 import com.example.allinone.navigation.screen.HomeScreens
+import com.example.allinone.navigation.screen.ProfileScreens
+import com.example.data.firebase.AuthenticationManager
+import com.example.presentation.details.DetailsRoot
+import com.example.presentation.screens.HelpAndFeedbackScreen
+import com.example.presentation.screens.HomeScreen
+import com.example.presentation.screens.SectionScreen
 
 internal fun NavGraphBuilder.mainNavigation(
     navController: NavHostController,
@@ -26,21 +27,28 @@ internal fun NavGraphBuilder.mainNavigation(
     authenticationManager: AuthenticationManager
 ) {
     navigation(
-        startDestination = HomeScreens.Home.route,
+        startDestination = HomeScreens.Home::class.qualifiedName ?: "",
         route = Graph.HOME
     ) {
-        composable(
-            HomeScreens.Home.route,
+        composable<HomeScreens.Home>(
             enterTransition = { expandHorizontally() + fadeIn() },
             exitTransition = { shrinkHorizontally() + fadeOut() }
         ) {
             HomeScreen(
-                navController = navController,
+                onNavigateToProfile = {
+                    navController.navigate(ProfileScreens.Profile)
+                },
+                onNavigateToSectionById = {
+                    navController.navigate(HomeScreens.SectionScreen(it))
+                },
+                onNavigateToDetailWithId = {
+                    navController.navigate(HomeScreens.DetailsScreen(it))
+                },
                 drawerState = drawerState,
                 userCredentials = authenticationManager.getSignedInUser()
             )
         }
-        composable(HomeScreens.Help.route) {
+        composable<HomeScreens.Help> {
             HelpAndFeedbackScreen(
                 navController = navController
             )

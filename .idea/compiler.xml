@@ -3,6 +3,36 @@
   <component name="CompilerConfiguration">
     <option name="PARALLEL_COMPILATION_OPTION" value="Disabled" />
     <bytecodeTargetLevel target="11">
+      <module name="All_In_One.app" target="21" />
+      <module name="All_In_One.auth.data" target="21" />
+      <module name="All_In_One.auth.domain" target="21" />
+      <module name="All_In_One.auth.presentation" target="21" />
+      <module name="All_In_One.blogs.presentation" target="21" />
+      <module name="All_In_One.codelabs.data" target="21" />
+      <module name="All_In_One.codelabs.domain" target="21" />
+      <module name="All_In_One.codelabs.presentation" target="21" />
+      <module name="All_In_One.core.data" target="21" />
+      <module name="All_In_One.core.domain" target="21" />
+      <module name="All_In_One.core.presentation" target="21" />
+      <module name="All_In_One.leetcode" target="21" />
+      <module name="All_In_One.main.data" target="21" />
+      <module name="All_In_One.main.domain" target="21" />
+      <module name="All_In_One.main.presentation" target="21" />
+      <module name="All_In_One.pl_coding.app_challenges.data" target="21" />
+      <module name="All_In_One.pl_coding.app_challenges.domain" target="21" />
+      <module name="All_In_One.pl_coding.app_challenges.presentation" target="21" />
+      <module name="All_In_One.pl_coding.mini_challenges.data" target="21" />
+      <module name="All_In_One.pl_coding.mini_challenges.presentation" target="21" />
+      <module name="All_In_One.pl_coding.presentation" target="21" />
+      <module name="All_In_One.profile.data" target="21" />
+      <module name="All_In_One.profile.domain" target="21" />
+      <module name="All_In_One.profile.presentation" target="21" />
+      <module name="All_In_One.settings.data" target="21" />
+      <module name="All_In_One.settings.domain" target="21" />
+      <module name="All_In_One.settings.presentation" target="21" />
+      <module name="All_In_One.widget.data" target="21" />
+      <module name="All_In_One.widget.domain" target="21" />
+      <module name="All_In_One.widget.presentation" target="21" />
       <module name="leetcode" target="21" />
     </bytecodeTargetLevel>
   </component>

@@ -9,14 +9,14 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import com.example.allinone.R
-import com.example.allinone.core.components.AppTopBar
-import com.example.allinone.plcoding.mini_challenges.domain.model.months
-import com.example.allinone.plcoding.mini_challenges.presentation.components.MonthsCard
+import com.example.allinone.core.presentation.R
+import com.example.domain.model.months
+import com.example.presentation.components.AppTopBar
+import com.example.presentation.components.MonthsCard
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-internal fun MiniChallengesScreen(
+fun MiniChallengesScreen(
     onNavigateUpFromMiniChallengesScreen: () -> Unit = {},
     navigateToChallengeByString: (String) -> Unit = {}
 ) {

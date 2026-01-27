@@ -32,10 +32,11 @@ import androidx.glance.layout.padding
 import androidx.glance.layout.size
 import androidx.glance.text.Text
 import androidx.glance.text.TextStyle
-import com.example.allinone.R
-import com.example.allinone.core.extension.toastMessage
-import com.example.allinone.settings.deviceTemp.domain.model.TemperatureData
-import com.example.allinone.widget.domain.repository.GlanceWidgetRepository
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.allinone.widget.presentation.R
+import com.example.domain.TemperatureData
+import com.example.presentation.toastMessage
+import com.example.presentation.vm.TemperatureViewModel
 import kotlinx.coroutines.flow.Flow
 
 class DeviceTempWidget : GlanceAppWidget() {
@@ -51,15 +52,14 @@ class DeviceTempWidget : GlanceAppWidget() {
     )
 
     override suspend fun provideGlance(context: Context, id: GlanceId) {
-        val repository = GlanceWidgetRepository.get(context)
-
         val currentSize = GlanceAppWidgetManager(context).getAppWidgetSizes(id).firstOrNull()
 
         provideContent {
             GlanceTheme {
+                val tempViewModel : TemperatureViewModel = viewModel()
                 WidgetContent(
                     context = context,
-                    tempData = repository.getTemp(),
+                    tempData = tempViewModel.getTemp(),
                     widgetSize = currentSize
                 )
             }
@@ -106,9 +106,9 @@ fun WidgetContent(
 //    val isLargeWidget = widgetSize?.let { it.width >= 250.dp && it.height >= 250.dp } == true
 
     val backgroundColor = when {
-        (data?.celsius ?: 0.0f) < 10 -> Color(37, 111, 255)
-        (data?.celsius ?: 0.0f) in 10.0..35.0 -> Color(0, 128, 0)
-        (data?.celsius ?: 0.0f) in 36.0..45.0 -> Color(255, 222, 33)
+        (data?.temperature ?: 0.0f) < 10 -> Color(37, 111, 255)
+        (data?.temperature ?: 0.0f) in 10.0..35.0 -> Color(0, 128, 0)
+        (data?.temperature ?: 0.0f) in 36.0..45.0 -> Color(255, 222, 33)
         else -> Color(139, 0, 0)
     }
 
@@ -123,7 +123,7 @@ fun WidgetContent(
         verticalAlignment = Alignment.CenterVertically
     ) {
         Image(
-            provider = ImageProvider(R.drawable.device_thermostat),
+            provider = ImageProvider(com.example.allinone.core.presentation.R.drawable.device_thermostat),
             contentDescription = null,
             modifier = GlanceModifier
                 .cornerRadius(24.dp)
@@ -132,7 +132,7 @@ fun WidgetContent(
                 .padding(if (isSmallWidget) 2.dp else 8.dp),
         )
         Text(
-            text = "${data?.celsius}°C",
+            text = "${data?.temperature}°C",
             style = TextStyle(
                 color = GlanceTheme.colors.onBackground,
                 fontSize = if (isSmallWidget) 16.sp else 24.sp
@@ -148,7 +148,7 @@ fun WidgetContent(
     ) {
 //      Need to find out the way when button is clicked update the information on the screen.
         SquareIconButton(
-            imageProvider = ImageProvider(R.drawable.refresh_ic),
+            imageProvider = ImageProvider(com.example.allinone.core.presentation.R.drawable.refresh_ic),
             contentDescription = null,
             onClick = {
                 toastMessage(

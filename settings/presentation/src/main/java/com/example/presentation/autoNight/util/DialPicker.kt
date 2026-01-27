@@ -29,7 +29,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
-import com.example.presentation.R
+import com.example.allinone.core.presentation.R
 import java.util.Calendar
 
 @OptIn(ExperimentalMaterial3Api::class)

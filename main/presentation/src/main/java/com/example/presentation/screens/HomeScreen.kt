@@ -28,13 +28,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.AccountCircle
-import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.filled.History
-import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material.icons.filled.Mic
 import androidx.compose.material3.Card
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -74,19 +67,15 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import coil3.compose.AsyncImage
-import com.example.allinone.R
-import com.example.allinone.auth.domain.model.UserCredentials
-import com.example.allinone.core.extension.toastMessage
-import com.example.allinone.main.domain.model.Course
-import com.example.allinone.main.domain.model.Sections
-import com.example.allinone.main.presentation.vm.HomeViewModel
-import com.example.allinone.main.presentation.vm.TimerViewModel
-import com.example.allinone.navigation.screen.HomeScreens
-import com.example.allinone.navigation.screen.ProfileScreens
-import com.example.allinone.settings.readingMode.presentation.vm.ReadingModeViewModel
+import com.example.allinone.core.presentation.R
+import com.example.domain.UserCredentials
+import com.example.domain.model.Course
+import com.example.domain.model.Sections
+import com.example.presentation.toastMessage
+import com.example.presentation.vm.HomeViewModel
+import com.example.presentation.vm.ReadingModeViewModel
+import com.example.presentation.vm.TimerViewModel
 import kotlinx.coroutines.launch
 import java.util.Locale
 
@@ -96,7 +85,9 @@ import java.util.Locale
 )
 @Composable
 fun HomeScreen(
-    navController: NavHostController = rememberNavController(),
+    onNavigateToProfile: () -> Unit = {},
+    onNavigateToDetailWithId: (Int) -> Unit = {},
+    onNavigateToSectionById: (Int) -> Unit = {},
     drawerState: DrawerState,
     userCredentials: UserCredentials?
 ) {
@@ -189,7 +180,7 @@ fun HomeScreen(
                                     }
                                 ) {
                                     Icon(
-                                        Icons.Default.Menu,
+                                        painter = painterResource(R.drawable.baseline_menu_24),
                                         contentDescription = stringResource(R.string.search_bar_menu_icon)
                                     )
                                 }
@@ -201,7 +192,7 @@ fun HomeScreen(
                                     }
                                 ) {
                                     Icon(
-                                        Icons.AutoMirrored.Default.ArrowBack,
+                                        painter = painterResource(R.drawable.outline_arrow_back_24),
                                         contentDescription = stringResource(R.string.search_bar_close_icon)
                                     )
                                 }
@@ -211,7 +202,7 @@ fun HomeScreen(
                             if (!active) {
                                 IconButton(
                                     onClick = {
-                                        navController.navigate(ProfileScreens.Profile.route)
+                                        onNavigateToProfile()
                                     }
                                 ) {
                                     if (userCredentials?.imageUrl != null) {
@@ -222,7 +213,7 @@ fun HomeScreen(
                                         )
                                     } else {
                                         Icon(
-                                            Icons.Default.AccountCircle,
+                                            painter = painterResource(R.drawable.outline_account_circle_24),
                                             contentDescription = stringResource(R.string.search_bar_profile_icon)
                                         )
                                     }
@@ -249,7 +240,7 @@ fun HomeScreen(
                                             speechRecognizerLauncher.launch(intent)
                                         }) {
                                             Icon(
-                                                Icons.Default.Mic,
+                                                painter = painterResource(R.drawable.outline_mic_24),
                                                 contentDescription = stringResource(R.string.search_bar_mic_icon)
                                             )
                                         }
@@ -260,7 +251,7 @@ fun HomeScreen(
                                             }
                                         ) {
                                             Icon(
-                                                imageVector = Icons.Default.Close,
+                                                painter = painterResource(R.drawable.outline_close_24),
                                                 contentDescription = stringResource(R.string.search_bar_clear_icon)
                                             )
                                         }
@@ -307,7 +298,7 @@ fun HomeScreen(
                             },
                             leadingContent = {
                                 Icon(
-                                    Icons.Default.History,
+                                    painter = painterResource(R.drawable.outline_history_24),
                                     contentDescription = stringResource(R.string.search_bar_history_icon)
                                 )
                             },
@@ -375,7 +366,7 @@ fun HomeScreen(
                                     }
                                 ) {
                                     Icon(
-                                        imageVector = Icons.Default.Close,
+                                        painter = painterResource(R.drawable.outline_close_24),
                                         contentDescription = null,
                                         tint = MaterialTheme.colorScheme.primary
                                     )
@@ -418,7 +409,7 @@ fun HomeScreen(
                 ) {
                     course?.forEach { courseItem ->
                         CourseListItem(
-                            navController = navController,
+                            onNavigateToDetailWithId = onNavigateToDetailWithId,
                             course = courseItem,
                             isLastItem = courseItem == (course as List<Any?>).lastOrNull()
                         )
@@ -454,7 +445,7 @@ fun HomeScreen(
                 ) {
                     section?.forEach { section ->
                         ItemCard(
-                            navController = navController,
+                            onNavigateToSectionById = onNavigateToSectionById,
                             sections = section
                         )
                     }
@@ -467,7 +458,7 @@ fun HomeScreen(
 @Composable
 private fun CourseListItem(
     modifier: Modifier = Modifier,
-    navController: NavHostController = rememberNavController(),
+    onNavigateToDetailWithId: (Int) -> Unit,
     course: Course,
     isLastItem: Boolean = false
 ) {
@@ -488,11 +479,7 @@ private fun CourseListItem(
                             context = context,
                             message = "This page is not available now."
                         )
-                        else -> navController.navigate(
-                            HomeScreens.DetailsScreen(
-                                id = course.id
-                            )
-                        )
+                        else -> onNavigateToDetailWithId(course.id)
                     }
                 }
                 .padding(horizontal = 8.dp),
@@ -543,18 +530,14 @@ private fun CourseListItem(
 }
 @Composable
 fun ItemCard(
-    navController : NavHostController = rememberNavController(),
+    onNavigateToSectionById: (Int) -> Unit = {},
     sections: Sections
 ) {
     Card(
         modifier = Modifier
             .size(120.dp)
             .clickable {
-                navController.navigate(
-                    HomeScreens.SectionScreen(
-                        id = sections.id ?: 0
-                    )
-                )
+                sections.id?.let { id -> onNavigateToSectionById(id) }
             },
     ) {
         Column(
