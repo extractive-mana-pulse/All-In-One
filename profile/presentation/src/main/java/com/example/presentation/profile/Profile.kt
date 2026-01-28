@@ -60,6 +60,7 @@ import com.example.presentation.components.CustomAlertDialog
 import com.example.presentation.profile.components.BlogsTab
 import com.example.presentation.profile.components.BookmarksTab
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProfileScreen(
     onNavigateToEditProfile: () -> Unit = {},
