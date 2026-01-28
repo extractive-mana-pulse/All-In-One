@@ -51,8 +51,8 @@ import com.example.presentation.components.AppTopBar
 import com.example.presentation.components.FetchStatusError
 import com.example.presentation.components.Loading
 import com.example.presentation.components.PrimaryButton
-import com.example.presentation.components.ValidatedEmailTextField
 import com.example.presentation.editProfile.components.MessageCard
+import com.example.presentation.editProfile.components.ValidatedEmailTextField
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

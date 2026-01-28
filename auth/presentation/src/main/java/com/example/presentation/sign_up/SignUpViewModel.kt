@@ -7,22 +7,15 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.domain.ValidateEmail
-import com.example.domain.model.AuthResult
 import com.example.domain.model.RegistrationFormState
+import com.example.domain.use_case.ValidateEmail
 import com.example.domain.use_case.ValidatePassword
-import com.example.presentation.SignUpWithEmailUseCase
 import com.example.presentation.sealed.SignUpEvent
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
-@HiltViewModel
-class SignUpViewModel @Inject constructor(
-    private val signUpWithEmail: SignUpWithEmailUseCase,
+class SignUpViewModel (
     private val validateEmail: ValidateEmail = ValidateEmail(),
     private val validatePassword: ValidatePassword = ValidatePassword(),
 ) : ViewModel() {
@@ -33,7 +26,7 @@ class SignUpViewModel @Inject constructor(
     var email by mutableStateOf("")
         private set
 
-    private val _events = Channel<ValidationEvent>()
+    private val _events = Channel<ValidationAction>()
     val events = _events.receiveAsFlow()
 
     val emailHasErrors by derivedStateOf {
@@ -75,25 +68,25 @@ class SignUpViewModel @Inject constructor(
     }
     private fun signUp() {
         viewModelScope.launch {
-            signUpWithEmail(email, state.password).collectLatest { result ->
-                when (result) {
-                    is AuthResult.Loading -> {
-                        state = state.copy(isLoading = true)
-                    }
-
-                    is AuthResult.Success -> {
-                        state = state.copy(isLoading = false)
-                        _events.send(ValidationEvent.NavigateToHome)
-                    }
-
-                    is AuthResult.Error -> {
-                        state = state.copy(isLoading = false)
-                        _events.send(
-                            ValidationEvent.Error(result.message)
-                        )
-                    }
-                }
-            }
+//            signUpWithEmail(email, state.password).collectLatest { result ->
+//                when (result) {
+//                    is AuthResult.Loading -> {
+//                        state = state.copy(isLoading = true)
+//                    }
+//
+//                    is AuthResult.Success -> {
+//                        state = state.copy(isLoading = false)
+//                        _events.send(ValidationAction.NavigateToHome)
+//                    }
+//
+//                    is AuthResult.Error -> {
+//                        state = state.copy(isLoading = false)
+//                        _events.send(
+//                            ValidationAction.ShowError(result.message)
+//                        )
+//                    }
+//                }
+//            }
         }
     }
 }

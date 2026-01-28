@@ -1,178 +1,181 @@
 package com.example.presentation.sign_in
 
 import android.content.Context
-import android.util.Log
-import android.util.Patterns
-import androidx.compose.runtime.derivedStateOf
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
+import androidx.credentials.CredentialManager
+import androidx.credentials.CustomCredential
+import androidx.credentials.GetCredentialRequest
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.domain.ValidateEmail
-import com.example.domain.model.AuthResult
-import com.example.domain.model.RegistrationFormState
-import com.example.domain.use_case.ValidatePassword
-import com.example.presentation.SignInWithEmailUseCase
-import com.example.presentation.SignInWithGoogleUseCase
+import com.example.allinone.core.presentation.R
+import com.example.domain.model.SignInResult
+import com.example.domain.repository.GoogleAuthUiClientRepo
 import com.example.presentation.sign_up.RegistrationFormEvent
-import com.example.presentation.sign_up.ValidationEvent
-import com.example.presentation.toastMessage
+import com.google.android.libraries.identity.googleid.GetGoogleIdOption
+import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class SignInViewModel @Inject constructor(
-    private val signInWithEmailUseCase: SignInWithEmailUseCase,
-    private val signInWithGoogleUseCase: SignInWithGoogleUseCase,
-    private val validateEmail: ValidateEmail,
-    private val validatePassword: ValidatePassword,
+    private val googleAuthUiClient: GoogleAuthUiClientRepo
 ) : ViewModel() {
 
-    var state by mutableStateOf(RegistrationFormState())
-        private set
+    private val _state = MutableStateFlow(SignInState())
+    val state = _state.asStateFlow()
 
-    private val validationEventChannel = Channel<ValidationEvent>()
-    val validationEvents = validationEventChannel.receiveAsFlow()
-
-    var email by mutableStateOf("")
-        private set
-
-    val emailHasErrors by derivedStateOf {
-        if (email.isNotEmpty()) {
-            !Patterns.EMAIL_ADDRESS.matcher(email).matches()
-        } else {
-            false
+    // ---------------- EMAIL ----------------
+    fun updateEmail(email: String) {
+        _state.update {
+            it.copy(
+                email = email,
+                emailError = validateEmail(email)
+            )
         }
     }
 
-    fun updateEmail(input: String) {
-        email = input
-        // Clear email error when user starts typing
-        if (state.emailError != null) {
-            state = state.copy(emailError = null)
-        }
-    }
+    val email: String
+        get() = _state.value.email
 
-    fun onEvent(
-        context: Context,
-        event: RegistrationFormEvent
-    ) {
+    val emailHasErrors: Boolean
+        get() = _state.value.emailError != null
+
+    // ---------------- EVENTS ----------------
+    fun onEvent(event: RegistrationFormEvent) {
         when (event) {
             is RegistrationFormEvent.PasswordChanged -> {
-                state = state.copy(password = event.password)
-                // Clear password error when user starts typing
-                if (state.passwordError != null) {
-                    state = state.copy(passwordError = null)
+                _state.update {
+                    it.copy(
+                        password = event.password,
+                        passwordError = validatePassword(event.password)
+                    )
                 }
             }
 
-            is RegistrationFormEvent.ClearPasswordError -> {
-                state = state.copy(passwordError = null)
+            RegistrationFormEvent.Submit -> {
+                submitEmailPasswordSignIn()
             }
 
-            is RegistrationFormEvent.CreateAccount -> {
-                // Navigation handled in UI layer
-            }
-
-            is RegistrationFormEvent.ForgotPassword -> {
-                // Navigation handled in UI layer
-            }
-            is RegistrationFormEvent.SignInWithGoogle -> signInWithGoogle(context)
-
-            is RegistrationFormEvent.Submit -> submitData(context = context)
+            else -> Unit
         }
     }
 
-    private fun signInWithGoogle(context: Context) {
-        viewModelScope.launch {
-            state = state.copy(isLoading = true)
+    // ---------------- EMAIL/PASSWORD SIGN IN ----------------
+    private fun submitEmailPasswordSignIn() {
+        val emailError = validateEmail(_state.value.email)
+        val passwordError = validatePassword(_state.value.password)
 
-            signInWithGoogleUseCase().collectLatest { response ->
-                state = state.copy(isLoading = false)
-
-                when (response) {
-                    is AuthResult.Success -> {
-                        toastMessage(
-                            context = context,
-                            message = "Sign in successfully!"
-                        )
-                        validationEventChannel.send(ValidationEvent.NavigateToHome)
-                    }
-
-                    is AuthResult.Error -> {
-                        toastMessage(
-                            context = context,
-                            message = response.message
-                        )
-                    }
-
-                    is AuthResult.Loading -> {
-                        Log.d(TAG, "Google Sign In - Loading")
-                    }
-                }
-            }
-        }
-    }
-
-    private fun performSignIn(context: Context) {
-        viewModelScope.launch {
-            state = state.copy(isLoading = true)
-
-            signInWithEmailUseCase(
-                email = email,
-                password = state.password
-            ).collectLatest { response ->
-                state = state.copy(isLoading = false)
-
-                when (response) {
-                    is AuthResult.Success -> {
-                        validationEventChannel.send(ValidationEvent.NavigateToHome)
-                    }
-
-                    is AuthResult.Error -> {
-                        toastMessage(
-                            context = context,
-                            message = "Error: ${response.message}"
-                        )
-                    }
-
-                    is AuthResult.Loading -> {
-                        Log.d(TAG, "Sign In - Loading")
-                    }
-                }
-            }
-        }
-    }
-
-    private fun submitData(context: Context) {
-        val emailResult = validateEmail.execute(email)
-        val passwordResult = validatePassword.execute(state.password)
-
-        val hasError = listOf(
-            emailResult,
-            passwordResult
-        ).any { !it.successful }
-
-        if (hasError) {
-            state = state.copy(
-                emailError = emailResult.errorMessage,
-                passwordError = passwordResult.errorMessage,
+        _state.update {
+            it.copy(
+                emailError = emailError,
+                passwordError = passwordError
             )
-            return
         }
 
+        if (emailError != null || passwordError != null) return
+
         viewModelScope.launch {
-            validationEventChannel.send(ValidationEvent.Success)
-            performSignIn(context = context)
+            _state.update { it.copy(isLoading = true) }
+
+            // TODO: connect to Firebase email/password here
+            // Fake success for now
+            kotlinx.coroutines.delay(1000)
+
+            _state.update {
+                it.copy(
+                    isLoading = false,
+                    isSignInSuccessful = true
+                )
+            }
         }
     }
 
-    companion object {
-        private const val TAG = "SignInViewModel"
+    // ---------------- GOOGLE SIGN IN (your existing code) ----------------
+    fun signIn(context: Context) {
+        viewModelScope.launch {
+            _state.update { it.copy(isLoading = true) }
+
+            val result = try {
+                val credentialManager = CredentialManager.create(context)
+
+                val googleIdOption = GetGoogleIdOption.Builder()
+                    .setFilterByAuthorizedAccounts(false)
+                    .setServerClientId(context.getString(R.string.web_client_id))
+                    .setAutoSelectEnabled(false)
+                    .build()
+
+                val request = GetCredentialRequest.Builder()
+                    .addCredentialOption(googleIdOption)
+                    .build()
+
+                val credentialResponse = credentialManager.getCredential(
+                    request = request,
+                    context = context
+                )
+
+                when (val credential = credentialResponse.credential) {
+                    is CustomCredential -> {
+                        if (credential.type == GoogleIdTokenCredential.TYPE_GOOGLE_ID_TOKEN_CREDENTIAL) {
+                            val googleIdTokenCredential =
+                                GoogleIdTokenCredential.createFrom(credential.data)
+
+                            val firebaseResult =
+                                googleAuthUiClient.signInWithCredential(googleIdTokenCredential.idToken)
+
+                            SignInResult(
+                                data = firebaseResult.data,
+                                errorMessage = firebaseResult.errorMessage
+                            )
+                        } else {
+                            SignInResult(null, "Unexpected credential type")
+                        }
+                    }
+
+                    else -> SignInResult(null, "Unexpected credential")
+                }
+            } catch (e: Exception) {
+                SignInResult(null, e.message)
+            }
+
+            _state.update { it.copy(isLoading = false) }
+            onSignInResult(result)
+        }
+    }
+
+    fun signOut() {
+        viewModelScope.launch {
+            googleAuthUiClient.signOut()
+            resetState()
+        }
+    }
+
+    private fun onSignInResult(result: SignInResult) {
+        _state.update {
+            it.copy(
+                isSignInSuccessful = result.data != null,
+                signInError = result.errorMessage,
+                userData = result.data
+            )
+        }
+    }
+
+    fun resetState() {
+        _state.update { SignInState() }
+    }
+
+    // ---------------- VALIDATION ----------------
+    private fun validateEmail(email: String): String? {
+        if (email.isBlank()) return "Email can't be empty"
+        if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches())
+            return "Invalid email"
+        return null
+    }
+
+    private fun validatePassword(password: String): String? {
+        if (password.length < 6) return "Password must be at least 6 chars"
+        return null
     }
 }

@@ -39,10 +39,10 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.allinone.core.presentation.R
+import com.example.presentation.ValidatedEmailTextField
 import com.example.presentation.components.PrimaryButton
-import com.example.presentation.components.ValidatedEmailTextField
 import com.example.presentation.sealed.SignUpEvent
 import com.example.presentation.toastMessage
 
@@ -52,19 +52,20 @@ fun SignUpScreenRoot(
     onNavigateToSignIn: () -> Unit = {},
 ) {
     val context = LocalContext.current
-    val signUpViewModel: SignUpViewModel = hiltViewModel()
+    val signUpViewModel: SignUpViewModel = viewModel()
 
     LaunchedEffect(Unit) {
         signUpViewModel.events.collect { event ->
             when (event) {
-                is ValidationEvent.NavigateToHome -> onNavigateToSignIn
-                is ValidationEvent.Error -> {
+                is ValidationAction.NavigateToHome -> onNavigateToSignIn()
+                is ValidationAction.ShowError -> {
                     toastMessage(
                         context = context,
-                        message = event.message
+                        message = event.message ?: ""
                     )
                 }
-                is ValidationEvent.Success -> onNavigateToSignIn()
+                is ValidationAction.Success -> onNavigateToSignIn()
+                else -> {Unit}
             }
         }
     }

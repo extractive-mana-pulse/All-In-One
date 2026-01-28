@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.allinone.android.library.compose)
     alias(libs.plugins.ksp)
+    id("com.google.gms.google-services")
 }
 
 android {
@@ -16,4 +17,5 @@ dependencies {
     }
     implementation(libs.bundles.hilt)
     ksp(libs.bundles.hilt.compiler)
+    implementation(libs.bundles.firebase)
 }

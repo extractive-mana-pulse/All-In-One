@@ -69,9 +69,9 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.AsyncImage
 import com.example.allinone.core.presentation.R
-import com.example.domain.UserCredentials
 import com.example.domain.model.Course
 import com.example.domain.model.Sections
+import com.example.domain.model.UserData
 import com.example.presentation.toastMessage
 import com.example.presentation.vm.HomeViewModel
 import com.example.presentation.vm.ReadingModeViewModel
@@ -89,7 +89,7 @@ fun HomeScreen(
     onNavigateToDetailWithId: (Int) -> Unit = {},
     onNavigateToSectionById: (Int) -> Unit = {},
     drawerState: DrawerState,
-    userCredentials: UserCredentials?
+    userData: UserData?
 ) {
     val homeViewModel: HomeViewModel = hiltViewModel()
     val timerViewModel: TimerViewModel = hiltViewModel()
@@ -205,18 +205,22 @@ fun HomeScreen(
                                         onNavigateToProfile()
                                     }
                                 ) {
-                                    if (userCredentials?.imageUrl != null) {
-                                        AsyncImage(
-                                            model = userCredentials.imageUrl,
-                                            contentScale = ContentScale.Crop,
-                                            contentDescription = stringResource(R.string.search_bar_profile_icon)
-                                        )
-                                    } else {
-                                        Icon(
-                                            painter = painterResource(R.drawable.outline_account_circle_24),
-                                            contentDescription = stringResource(R.string.search_bar_profile_icon)
-                                        )
-                                    }
+                                    AsyncImage(
+                                        model = userData?.profilePictureUrl ?: run {
+                                            val initials = userData?.username
+                                                ?.split(" ")
+                                                ?.mapNotNull { it.firstOrNull() }
+                                                ?.take(2)
+                                                ?.joinToString("")
+                                                ?: "U"
+                                            "https://ui-avatars.com/api/?name=$initials&size=200&background=4285f4&color=fff&bold=true"
+                                        },
+                                        contentDescription = "Profile Picture",
+                                        contentScale = ContentScale.Crop,
+                                        modifier = Modifier
+                                            .size(40.dp)
+                                            .clip(CircleShape)
+                                    )
                                 }
                             } else {
                                 Row {
@@ -486,7 +490,7 @@ private fun CourseListItem(
             verticalAlignment = Alignment.CenterVertically
         ) {
             AsyncImage(
-                model = course.imageUrl ?: painterResource(R.drawable.compose_logo),
+                model = course.imageUrl ?: R.drawable.compose_logo,
                 contentDescription = null,
                 modifier = Modifier
                     .size(60.dp)
@@ -548,7 +552,7 @@ fun ItemCard(
             verticalArrangement = Arrangement.Center
         ) {
             AsyncImage(
-                model = sections.imageUrl,
+                model = sections.imageUrl ?: R.drawable.compose_logo,
                 contentDescription = null,
                 modifier = Modifier
                     .size(60.dp)

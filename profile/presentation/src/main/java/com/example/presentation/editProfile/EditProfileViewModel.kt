@@ -6,11 +6,8 @@ import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.domain.model.AuthResult
-import com.example.domain.repository.AuthRepository
 import com.example.presentation.editProfile.ProfileResponse.Error
 import com.example.presentation.editProfile.ProfileResponse.Loading
-import com.example.presentation.editProfile.ProfileResponse.Success
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.UserProfileChangeRequest
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -18,8 +15,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
@@ -33,7 +28,6 @@ sealed interface ProfileResponse {
 
 @HiltViewModel
 class EditProfileViewModel @Inject constructor(
-    private val authManager: AuthRepository,
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(EditProfileUiState())
@@ -72,20 +66,20 @@ class EditProfileViewModel @Inject constructor(
             _profileResponse.value = ProfileResponse.Loading
 
             try {
-                authManager.fetchUserData().collectLatest { user ->
-                    if (user != null) {
-                        _uiState.value = EditProfileUiState(
-                            displayName = user.displayName,
-                            profilePictureUrl = user.imageUrl,
-                            email = user.email
-                        )
-                        _fetchUserDataStatus.value = FetchStatus.Success
-                        _profileResponse.value = null
-                    } else {
-                        _fetchUserDataStatus.value = FetchStatus.Error
-                        _profileResponse.value = ProfileResponse.Error("User data not found")
-                    }
-                }
+//                authManager.fetchUserData().collectLatest { user ->
+//                    if (user != null) {
+//                        _uiState.value = EditProfileUiState(
+//                            displayName = user.displayName,
+//                            profilePictureUrl = user.imageUrl,
+//                            email = user.email
+//                        )
+//                        _fetchUserDataStatus.value = FetchStatus.Success
+//                        _profileResponse.value = null
+//                    } else {
+//                        _fetchUserDataStatus.value = FetchStatus.Error
+//                        _profileResponse.value = ProfileResponse.Error("User data not found")
+//                    }
+//                }
             } catch (e: Exception) {
                 _fetchUserDataStatus.value = FetchStatus.Error
                 _profileResponse.value = ProfileResponse.Error(
@@ -118,7 +112,7 @@ class EditProfileViewModel @Inject constructor(
                         return@launch
                     }
 
-                authManager.deleteImageFromFirebaseStorage(userId)
+//                authManager.deleteImageFromFirebaseStorage(userId)
 
                 _uiState.value = _uiState.value.copy(
                     selectedImageUri = null,
@@ -155,34 +149,34 @@ class EditProfileViewModel @Inject constructor(
                 // Upload profile picture if selected
                 val imageUri = _uiState.value.selectedImageUri
                 if (imageUri != null) {
-                    when (val imageResult = authManager.uploadProfilePicture(imageUri.toString()).first()) {
-                        is AuthResult.Error -> {
-                            _profileResponse.value = Error(
-                                "Failed to upload image: ${imageResult.message}"
-                            )
-                            return@launch
-                        }
-                        is AuthResult.Loading -> Unit
-                        AuthResult.Success -> Unit
-                    }
+//                    when (val imageResult = authManager.uploadProfilePicture(imageUri.toString()).first()) {
+//                        is AuthResult.Error -> {
+//                            _profileResponse.value = Error(
+//                                "Failed to upload image: ${imageResult.message}"
+//                            )
+//                            return@launch
+//                        }
+//                        is AuthResult.Loading -> Unit
+//                        AuthResult.Success -> Unit
+//                    }
                 }
 
                 // Update display name if changed
                 val displayName = _uiState.value.displayName
                 if (displayName.isNotBlank()) {
-                    when (val displayNameResult = authManager.updateDisplayNameProfile(displayName).first()) {
-                        is AuthResult.Error -> {
-                            _profileResponse.value = Error(
-                                "Failed to update display name: ${displayNameResult.message}"
-                            )
-                            return@launch
-                        }
-                        AuthResult.Success -> {
-                            _profileResponse.value = Success
-                            onSuccessNavigateBack()
-                        }
-                        is AuthResult.Loading -> {}
-                    }
+//                    when (val displayNameResult = authManager.updateDisplayNameProfile(displayName).first()) {
+//                        is AuthResult.Error -> {
+//                            _profileResponse.value = Error(
+//                                "Failed to update display name: ${displayNameResult.message}"
+//                            )
+//                            return@launch
+//                        }
+//                        AuthResult.Success -> {
+//                            _profileResponse.value = Success
+//                            onSuccessNavigateBack()
+//                        }
+//                        is AuthResult.Loading -> {}
+//                    }
                 }
 
             } catch (e: Exception) {

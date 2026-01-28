@@ -29,7 +29,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -40,7 +39,7 @@ import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.animateLottieCompositionAsState
 import com.airbnb.lottie.compose.rememberLottieComposition
 import com.example.allinone.core.presentation.R
-import com.example.domain.UserCredentials
+import com.example.domain.model.UserData
 import com.example.presentation.components.AppTopBar
 import com.example.presentation.components.CustomAlertDialog
 import com.example.presentation.components.FetchStatusError
@@ -60,11 +59,8 @@ fun ProfileScreen(
     onNavigateToSignOut:() -> Unit = {},
     onNavigateUp: () -> Unit = {},
     editProfileViewModel: EditProfileViewModel = hiltViewModel(),
-    userCredentials: UserCredentials?
+    userData: UserData?,
 ) {
-    val context = LocalContext.current
-//    val authenticationManager = AuthenticationManager(context)
-//    val imageUrl = Firebase.auth.currentUser?.photoUrl
     val tabTitles = listOf(
         "Blogs",
         "Bookmarks"
@@ -150,39 +146,60 @@ fun ProfileScreen(
 
                         Spacer(modifier = Modifier.height(16.dp))
 
-                        if (userCredentials?.imageUrl != null) {
-                            AsyncImage(
-                                model = userCredentials.imageUrl,
-                                contentDescription = null,
-                                modifier = Modifier
-                                    .size(108.dp)
-                                    .clip(CircleShape)
-                                    .border(
-                                        width = 2.dp,
-                                        color = MaterialTheme.colorScheme.primary,
-                                        shape = CircleShape
-                                    ),
-                                contentScale = ContentScale.Crop
-                            )
-                        } else {
-                            Icon(
-                                painter = painterResource(R.drawable.outline_account_circle_24),
-                                contentDescription = null,
-                                modifier = Modifier.size(108.dp),
-                            )
-                        }
+                        AsyncImage(
+                            model = userData?.profilePictureUrl ?: run {
+                                val initials = userData?.username
+                                    ?.split(" ")
+                                    ?.mapNotNull { it.firstOrNull() }
+                                    ?.take(2)
+                                    ?.joinToString("")
+                                    ?: "U"
+                                "https://ui-avatars.com/api/?name=$initials&size=200&background=4285f4&color=fff&bold=true"
+                            },
+                            contentDescription = null,
+                            modifier = Modifier
+                                .size(108.dp)
+                                .clip(CircleShape)
+                                .border(
+                                    width = 2.dp,
+                                    color = MaterialTheme.colorScheme.primary,
+                                    shape = CircleShape
+                                ),
+                            contentScale = ContentScale.Crop
+                        )
+//                        if (userData?.profilePictureUrl != null) {
+//                            AsyncImage(
+//                                model = "https://picsum.photos/200",
+//                                contentDescription = null,
+//                                modifier = Modifier
+//                                    .size(108.dp)
+//                                    .clip(CircleShape)
+//                                    .border(
+//                                        width = 2.dp,
+//                                        color = MaterialTheme.colorScheme.primary,
+//                                        shape = CircleShape
+//                                    ),
+//                                contentScale = ContentScale.Crop
+//                            )
+//                        } else {
+//                            Icon(
+//                                painter = painterResource(R.drawable.outline_account_circle_24),
+//                                contentDescription = null,
+//                                modifier = Modifier.size(108.dp),
+//                            )
+//                        }
 
                         Spacer(modifier = Modifier.height(16.dp))
 
                         Text(
-                            text = "Name: ${userCredentials?.displayName}",
+                            text = "Name: ${userData?.username}",
                             fontSize = MaterialTheme.typography.headlineSmall.fontSize
                         )
 
                         Spacer(modifier = Modifier.height(8.dp))
 
                         Text(
-                            text = "Email: ${userCredentials?.email}",
+                            text = "Email: ${userData?.email}",
                             fontSize = MaterialTheme.typography.bodyMedium.fontSize
                         )
 
