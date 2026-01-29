@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="all_in_one">All In One</string>
+    <string name="screen_1_description">Welcome to All In One — your learning space for Android development, coding challenges, and real project practice. Explore Android labs, solve LeetCode-style problems, and grow your skills with GitHub projects — all in one app.</string>
+    <string name="code_labs">Android Code Labs</string>
+    <string name="screen_2_description">Follow hands-on Android labs inspired by official developer learning materials. Build real UI screens, understand modern Android tools, and gain practical experience step by step.</string>
+    <string name="leetcode">Coding Challenges</string>
+    <string name="screen_3_description">Practice problem-solving with algorithm and logic challenges similar to LeetCode. Strengthen your thinking skills, prepare for interviews, and become more confident in coding.</string>
+    <string name="github">Learn with GitHub</string>
+    <string name="screen_4_description">Discover real project structures, explore open-source code, and understand how apps are built in the real world. Learn best practices and improve by working with GitHub-based projects.</string>
+</resources>
