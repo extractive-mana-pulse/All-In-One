@@ -11,6 +11,8 @@ dependencies {
 
     implementation(libs.coil.compose)
     implementation(libs.coil.svg.compose)
+    implementation("io.coil-kt.coil3:coil-network-okhttp:3.0.4")
+    implementation("com.squareup.okhttp3:okhttp:4.12.0")
     implementation(libs.lottie.compose)
     implementation(libs.bundles.hilt)
     ksp(libs.bundles.hilt.compiler)

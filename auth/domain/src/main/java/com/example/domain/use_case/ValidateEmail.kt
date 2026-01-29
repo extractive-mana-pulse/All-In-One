@@ -1,4 +1,4 @@
-package com.example.domain
+package com.example.domain.use_case
 
 import com.example.domain.model.ValidationResult
 

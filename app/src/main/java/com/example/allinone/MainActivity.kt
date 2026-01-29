@@ -12,7 +12,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.allinone.navigation.navs.NavigationGraph
-import com.example.data.firebase.AuthenticationManager
 import com.example.domain.model.Twilight
 import com.example.presentation.autoNight.vm.AutoNightViewModel
 import com.example.presentation.autoNight.vm.DarkThemeViewModel
@@ -30,9 +29,7 @@ import java.time.LocalTime
 class MainActivity : ComponentActivity() {
 
     private val mainViewModel = viewModels<MainViewModel>()
-    private lateinit var authenticationManager: AuthenticationManager
     private lateinit var fusedLocationClient: FusedLocationProviderClient
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         installSplashScreen().apply {
@@ -41,7 +38,6 @@ class MainActivity : ComponentActivity() {
             }
         }
         enableEdgeToEdge()
-        authenticationManager = AuthenticationManager(this)
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
 
         setContent {
@@ -69,7 +65,6 @@ class MainActivity : ComponentActivity() {
                     },
                     fusedLocationClient = fusedLocationClient,
                     context = applicationContext,
-                    authenticationManager = authenticationManager,
                     scheduleToggleState = isScheduledMode
                 )
             }

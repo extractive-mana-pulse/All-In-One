@@ -14,6 +14,8 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.LayoutDirection
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -21,7 +23,8 @@ import androidx.navigation.compose.rememberNavController
 import com.example.allinone.navigation.NavigationDrawer
 import com.example.allinone.navigation.graph.Graph
 import com.example.allinone.navigation.screen.PlCoding
-import com.example.data.firebase.AuthenticationManager
+import com.example.data.firebase.GoogleAuthUiClient
+import com.example.presentation.sign_in.SignInViewModel
 import com.google.android.gms.location.FusedLocationProviderClient
 import kotlinx.coroutines.launch
 
@@ -33,15 +36,18 @@ fun NavigationGraph(
     onThemeChanged: (Boolean) -> Unit,
     fusedLocationClient: FusedLocationProviderClient,
     context: Context,
-    authenticationManager: AuthenticationManager,
     scheduleToggleState: Boolean
 ) {
+    val googleAuthUiClient by lazy { GoogleAuthUiClient() }
     val scope = rememberCoroutineScope()
     val topBarState = rememberSaveable { mutableStateOf(true) }
     val bottomBarState = rememberSaveable { mutableStateOf(true) }
     val gesturesEnabledState = rememberSaveable { mutableStateOf(true) }
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
+    val signInViewModel: SignInViewModel = hiltViewModel()
+
+    val state = signInViewModel.state.collectAsStateWithLifecycle()
 
     VisibilityOfUI(
         gesturesEnabledState = gesturesEnabledState,
@@ -54,7 +60,7 @@ fun NavigationGraph(
         content = { innerPadding ->
             NavHost(
                 navController = navController,
-                startDestination = Graph.HOME/*if (authenticationManager.isUserSignedIn()) Graph.HOME else Graph.AUTH*/,
+                startDestination = if (state.value.isSignInSuccessful) Graph.HOME else Graph.AUTH,
                 modifier = Modifier.padding(
                     start = innerPadding.calculateStartPadding(LayoutDirection.Ltr),
 //                    top = if (topBarState.value) innerPadding.calculateTopPadding() else 0.dp,
@@ -63,13 +69,15 @@ fun NavigationGraph(
                 )
             ) {
                 authNavigation(
-                    navController = navController
+                    navController = navController,
+                    applicationContext = context,
+                    googleAuthUiClient = googleAuthUiClient
                 )
                 mainNavigation(
+                    context = context,
                     navController = navController,
                     drawerState = drawerState,
-                    context = context,
-                    authenticationManager = authenticationManager
+                    googleAuthUiClient = googleAuthUiClient,
                 )
                 settingsNavigation(
                     navController = navController,

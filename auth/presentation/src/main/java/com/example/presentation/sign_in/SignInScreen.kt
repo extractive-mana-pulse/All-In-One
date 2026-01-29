@@ -1,6 +1,5 @@
 package com.example.presentation.sign_in
 
-import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -28,39 +27,29 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.allinone.core.presentation.R
 import com.example.presentation.sign_in.components.SignInForm
-import com.example.presentation.sign_up.ValidationEvent
 import com.example.presentation.toastMessage
 
 @Composable
 fun SignInScreenRoot(
+    state: SignInState,
+    onSignInWithGoogle: () -> Unit = {},
     onNavigateToSignUp: () -> Unit = {},
     onNavigateToForgotPassword: () -> Unit = {},
-    onNavigateToHome: () -> Unit = {},
     viewModel: SignInViewModel = hiltViewModel()
 ) {
     val context = LocalContext.current
 
-    // Handle validation events
-    LaunchedEffect(key1 = Unit) {
-        viewModel.validationEvents.collect { event ->
-            when (event) {
-                is ValidationEvent.Success -> {
-                    Log.d("SignInScreen", "Successfully logged in.")
-                }
-
-                is ValidationEvent.Error -> {
-                    toastMessage(
-                        context = context,
-                        message = event.message
-                    )
-                }
-
-                is ValidationEvent.NavigateToHome -> onNavigateToHome()
-            }
+    LaunchedEffect(key1 = state.signInError) {
+        state.signInError?.let { error ->
+            toastMessage(
+                context = context,
+                message = error
+            )
         }
     }
 
     SignInScreen(
+        onSignInWithGoogle = onSignInWithGoogle,
         viewModel = viewModel,
         onNavigateToSignUp = onNavigateToSignUp,
         onNavigateToForgotPassword = onNavigateToForgotPassword
@@ -69,6 +58,7 @@ fun SignInScreenRoot(
 
 @Composable
 private fun SignInScreen(
+    onSignInWithGoogle: () -> Unit,
     viewModel: SignInViewModel,
     onNavigateToSignUp: () -> Unit,
     onNavigateToForgotPassword: () -> Unit
@@ -113,6 +103,7 @@ private fun SignInScreen(
                 Spacer(modifier = Modifier.height(48.dp))
 
                 SignInForm(
+                    onSignInWithGoogle = onSignInWithGoogle,
                     viewModel = viewModel,
                     onNavigateToSignUp = onNavigateToSignUp,
                     onNavigateToForgotPassword = onNavigateToForgotPassword

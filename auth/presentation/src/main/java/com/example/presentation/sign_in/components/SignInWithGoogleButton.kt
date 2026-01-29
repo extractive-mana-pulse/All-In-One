@@ -12,29 +12,20 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
 import com.example.allinone.core.presentation.R
 import com.example.presentation.components.PrimaryButton
-import com.example.presentation.sign_in.SignInViewModel
-import com.example.presentation.sign_up.RegistrationFormEvent
 
 @Composable
 internal fun SignInWithGoogleButton(
-    viewModel: SignInViewModel
+    onClick: () -> Unit = {},
 ) {
-    val context = LocalContext.current
-
     PrimaryButton(
-        onClick = {
-            viewModel.onEvent(
-                context = context,
-                RegistrationFormEvent.SignInWithGoogle
-            )
-        },
+        onClick = onClick,
         modifier = Modifier
             .fillMaxWidth()
             .height(56.dp)
@@ -43,18 +34,17 @@ internal fun SignInWithGoogleButton(
         colors = ButtonDefaults.buttonColors(
             containerColor = MaterialTheme.colorScheme.surfaceContainerLow
         ),
-        enabled = !viewModel.state.isLoading
     ) {
         Box(
             modifier = Modifier.fillMaxWidth()
         ) {
             Image(
-                painter = painterResource(R.drawable._123025_logo_google_g_icon),
-                contentDescription = "Google Logo",
+                painter = painterResource(R.drawable.google_logo),
+                contentDescription = null,
                 modifier = Modifier.align(Alignment.CenterStart)
             )
             Text(
-                text = "Sign in with Google",
+                text = stringResource(R.string.sign_in_with_google),
                 style = MaterialTheme.typography.bodyLarge.copy(
                     color = MaterialTheme.colorScheme.primary,
                     fontFamily = FontFamily(Font(R.font.inknut_antiqua_semi_bold))

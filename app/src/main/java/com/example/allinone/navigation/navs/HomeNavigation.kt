@@ -14,17 +14,17 @@ import androidx.navigation.toRoute
 import com.example.allinone.navigation.graph.Graph
 import com.example.allinone.navigation.screen.HomeScreens
 import com.example.allinone.navigation.screen.ProfileScreens
-import com.example.data.firebase.AuthenticationManager
+import com.example.data.firebase.GoogleAuthUiClient
 import com.example.presentation.details.DetailsRoot
 import com.example.presentation.screens.HelpAndFeedbackScreen
 import com.example.presentation.screens.HomeScreen
 import com.example.presentation.screens.SectionScreen
 
 internal fun NavGraphBuilder.mainNavigation(
-    navController: NavHostController,
     context: Context,
+    navController: NavHostController,
     drawerState: DrawerState,
-    authenticationManager: AuthenticationManager
+    googleAuthUiClient: GoogleAuthUiClient
 ) {
     navigation(
         startDestination = HomeScreens.Home::class.qualifiedName ?: "",
@@ -45,7 +45,7 @@ internal fun NavGraphBuilder.mainNavigation(
                     navController.navigate(HomeScreens.DetailsScreen(it))
                 },
                 drawerState = drawerState,
-                userCredentials = authenticationManager.getSignedInUser()
+                userData = googleAuthUiClient.getSignedInUser()
             )
         }
         composable<HomeScreens.Help> {
@@ -76,8 +76,9 @@ internal fun NavGraphBuilder.mainNavigation(
             navController = navController
         )
         profileNavigation(
+            context = context,
             navController = navController,
-            authenticationManager = AuthenticationManager(context)
+            googleAuthUiClient = googleAuthUiClient
         )
     }
 }
