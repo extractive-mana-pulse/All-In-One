@@ -76,6 +76,7 @@ internal fun NavGraphBuilder.mainNavigation(
             navController = navController
         )
         profileNavigation(
+            context = context,
             navController = navController,
             googleAuthUiClient = googleAuthUiClient
         )
