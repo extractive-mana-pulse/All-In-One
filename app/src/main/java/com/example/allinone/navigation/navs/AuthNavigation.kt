@@ -1,7 +1,5 @@
 package com.example.allinone.navigation.navs
 
-import android.util.Log
-import android.widget.Toast
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.LocalContext
@@ -13,17 +11,13 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import com.example.allinone.navigation.graph.Graph
 import com.example.allinone.navigation.screen.AuthScreens
-import com.example.data.firebase.GoogleAuthUiClient
 import com.example.presentation.forgot_password.ForgotPasswordScreen
 import com.example.presentation.sign_in.SignInScreenRoot
 import com.example.presentation.sign_in.SignInViewModel
 import com.example.presentation.sign_up.SignUpScreenRoot
+import com.example.presentation.toastMessage
 
-internal fun NavGraphBuilder.authNavigation(
-    navController: NavHostController,
-    applicationContext: android.content.Context,
-    googleAuthUiClient: GoogleAuthUiClient
-) {
+internal fun NavGraphBuilder.authNavigation(navController: NavHostController) {
     navigation(
         startDestination = AuthScreens.SignIn::class.qualifiedName ?: "",
         route = Graph.AUTH
@@ -33,20 +27,8 @@ internal fun NavGraphBuilder.authNavigation(
             val viewModel = hiltViewModel<SignInViewModel>()
             val state by viewModel.state.collectAsStateWithLifecycle()
 
-            LaunchedEffect(Unit) {
-                val userData = googleAuthUiClient.getSignedInUser()
-                Log.d("UI", "UserData: $userData")
-                Log.d("UI", "Profile Picture URL: ${userData?.profilePictureUrl}")
-            }
-
             LaunchedEffect(key1 = state.isSignInSuccessful) {
                 if(state.isSignInSuccessful) {
-                    Toast.makeText(
-                        applicationContext,
-                        "Sign in successful",
-                        Toast.LENGTH_LONG
-                    ).show()
-
                     navController.navigate(Graph.HOME)
                     viewModel.resetState()
                 }
@@ -54,14 +36,23 @@ internal fun NavGraphBuilder.authNavigation(
 
             SignInScreenRoot(
                 state = state,
-                onSignInWithGoogle = {
-                    viewModel.signIn(context)
-                },
                 onNavigateToSignUp = {
-                    navController.navigate(AuthScreens.SignUp)
+//                    navController.navigate(AuthScreens.SignUp)
+                    toastMessage(context, "In development")
                 },
                 onNavigateToForgotPassword = {
-                    navController.navigate(AuthScreens.ForgotPassword)
+//                    navController.navigate(AuthScreens.ForgotPassword)
+                    toastMessage(context, "In development")
+                },
+                onLoginClick = {
+                    toastMessage(context, "In development")
+                },
+                onSocialLogin = { social ->
+                    when(social) {
+                        "Google" -> viewModel.signIn(context)
+                        "Apple" -> toastMessage(context, "In development")
+                        "Facebook" -> toastMessage(context, "In development")
+                    }
                 },
             )
         }

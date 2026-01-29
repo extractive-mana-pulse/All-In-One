@@ -59,7 +59,9 @@ fun NavigationDrawer(
             ModalDrawerSheet {
                 NavigationDrawerContent(
                     drawerState = drawerState,
-                    onNavigateToPLCoding = onNavigateToPLCoding
+                    onNavigateToPLCoding = onNavigateToPLCoding,
+                    onNavigateToSettings = onNavigateToSettings,
+                    onNavigateToHome = onNavigateToHome
                 )
             }
         },

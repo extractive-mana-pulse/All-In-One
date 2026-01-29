@@ -1,3 +1,4 @@
+@file:OptIn(ExperimentalMaterial3Api::class)
 package com.example.presentation.profile
 
 import androidx.compose.foundation.border
@@ -32,8 +33,6 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.AsyncImage
 import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.animateLottieCompositionAsState
@@ -42,23 +41,14 @@ import com.example.allinone.core.presentation.R
 import com.example.domain.model.UserData
 import com.example.presentation.components.AppTopBar
 import com.example.presentation.components.CustomAlertDialog
-import com.example.presentation.components.FetchStatusError
-import com.example.presentation.components.Loading
-import com.example.presentation.editProfile.EditProfileViewModel
 import com.example.presentation.profile.components.BlogsTab
 import com.example.presentation.profile.components.BookmarksTab
 
-@Composable
-fun ProfileScreenRoot() {
-
-}
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProfileScreen(
     onNavigateToEditProfile: () -> Unit = {},
     onNavigateToSignOut:() -> Unit = {},
     onNavigateUp: () -> Unit = {},
-    editProfileViewModel: EditProfileViewModel = hiltViewModel(),
     userData: UserData?,
 ) {
     val tabTitles = listOf(
@@ -73,7 +63,6 @@ fun ProfileScreen(
         isPlaying = isPlaying
     )
     val openAlertDialog = remember { mutableStateOf(false) }
-    val fetchStatus by editProfileViewModel.fetchUserDataStatus.collectAsStateWithLifecycle()
 
     Scaffold(
         topBar = {
@@ -94,9 +83,7 @@ fun ProfileScreen(
                         )
                     }
                     IconButton(
-                        onClick = {
-                            onNavigateToEditProfile()
-                        }
+                        onClick = onNavigateToEditProfile
                     ) {
                         Icon(
                             painter = painterResource(R.drawable.outline_edit_24),
@@ -115,7 +102,6 @@ fun ProfileScreen(
                 onDismissRequest = { openAlertDialog.value = false },
                 onConfirmation = {
                     openAlertDialog.value = false
-//                    authenticationManager.signOut()
                     onNavigateToSignOut()
                 },
                 icon = painterResource(R.drawable.outline_logout_24),
@@ -123,105 +109,73 @@ fun ProfileScreen(
                 dismissText = stringResource(R.string.dismiss)
             )
         }
+        Box(
+            modifier = Modifier
+                .padding(paddingValues)
+                .fillMaxSize(),
+        ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .align(Alignment.TopCenter),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
+            ) {
 
-        when(fetchStatus) {
+                Spacer(modifier = Modifier.height(16.dp))
 
-            EditProfileViewModel.FetchStatus.Loading -> Loading()
-
-            EditProfileViewModel.FetchStatus.Error -> FetchStatusError(editProfileViewModel)
-
-            else ->  {
-                Box(
+                AsyncImage(
+                    model = userData?.profilePictureUrl ?: run {
+                        val initials = userData?.username
+                            ?.split(" ")
+                            ?.mapNotNull { it.firstOrNull() }
+                            ?.take(2)
+                            ?.joinToString("")
+                            ?: "U"
+                        "https://ui-avatars.com/api/?name=$initials&size=200&background=4285f4&color=fff&bold=true"
+                    },
+                    contentDescription = null,
                     modifier = Modifier
-                        .padding(paddingValues)
-                        .fillMaxSize(),
+                        .size(108.dp)
+                        .clip(CircleShape)
+                        .border(
+                            width = 1.dp,
+                            color = MaterialTheme.colorScheme.primary,
+                            shape = CircleShape
+                        ),
+                    contentScale = ContentScale.Crop
+                )
+                Spacer(modifier = Modifier.height(16.dp))
+
+                Text(
+                    text = "Name: ${userData?.username}",
+                    fontSize = MaterialTheme.typography.headlineSmall.fontSize
+                )
+
+                Spacer(modifier = Modifier.height(8.dp))
+
+                Text(
+                    text = "Email: ${userData?.email}",
+                    fontSize = MaterialTheme.typography.bodyMedium.fontSize
+                )
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                TabRow(
+                    selectedTabIndex.intValue,
+                    modifier = Modifier.fillMaxWidth()
                 ) {
-                    Column(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .align(Alignment.TopCenter),
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.Center
-                    ) {
-
-                        Spacer(modifier = Modifier.height(16.dp))
-
-                        AsyncImage(
-                            model = userData?.profilePictureUrl ?: run {
-                                val initials = userData?.username
-                                    ?.split(" ")
-                                    ?.mapNotNull { it.firstOrNull() }
-                                    ?.take(2)
-                                    ?.joinToString("")
-                                    ?: "U"
-                                "https://ui-avatars.com/api/?name=$initials&size=200&background=4285f4&color=fff&bold=true"
-                            },
-                            contentDescription = null,
-                            modifier = Modifier
-                                .size(108.dp)
-                                .clip(CircleShape)
-                                .border(
-                                    width = 2.dp,
-                                    color = MaterialTheme.colorScheme.primary,
-                                    shape = CircleShape
-                                ),
-                            contentScale = ContentScale.Crop
+                    tabTitles.forEachIndexed { index, title ->
+                        Tab(
+                            selected = selectedTabIndex.intValue == index,
+                            onClick = { selectedTabIndex.intValue = index },
+                            text = { Text(title) }
                         )
-//                        if (userData?.profilePictureUrl != null) {
-//                            AsyncImage(
-//                                model = "https://picsum.photos/200",
-//                                contentDescription = null,
-//                                modifier = Modifier
-//                                    .size(108.dp)
-//                                    .clip(CircleShape)
-//                                    .border(
-//                                        width = 2.dp,
-//                                        color = MaterialTheme.colorScheme.primary,
-//                                        shape = CircleShape
-//                                    ),
-//                                contentScale = ContentScale.Crop
-//                            )
-//                        } else {
-//                            Icon(
-//                                painter = painterResource(R.drawable.outline_account_circle_24),
-//                                contentDescription = null,
-//                                modifier = Modifier.size(108.dp),
-//                            )
-//                        }
-
-                        Spacer(modifier = Modifier.height(16.dp))
-
-                        Text(
-                            text = "Name: ${userData?.username}",
-                            fontSize = MaterialTheme.typography.headlineSmall.fontSize
-                        )
-
-                        Spacer(modifier = Modifier.height(8.dp))
-
-                        Text(
-                            text = "Email: ${userData?.email}",
-                            fontSize = MaterialTheme.typography.bodyMedium.fontSize
-                        )
-
-                        Spacer(modifier = Modifier.height(16.dp))
-
-                        TabRow(
-                            selectedTabIndex.intValue,
-                            modifier = Modifier.fillMaxWidth()
-                        ) {
-                            tabTitles.forEachIndexed { index, title ->
-                                Tab(
-                                    selected = selectedTabIndex.intValue == index,
-                                    onClick = { selectedTabIndex.intValue = index },
-                                    text = { Text(title) }
-                                )
-                            }
-                        }
-                        when (selectedTabIndex.intValue) {
-                            0 -> BlogsTab(composition, progress)
-                            1 -> BookmarksTab(composition, progress)
-                        }
                     }
+                }
+                when (selectedTabIndex.intValue) {
+                    0 -> BlogsTab(composition, progress)
+                    1 -> BookmarksTab(composition, progress)
                 }
             }
         }

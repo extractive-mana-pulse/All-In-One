@@ -169,6 +169,11 @@ dependencies {
             implementation(domain)
             implementation(data)
         }
+        with(onboarding ){
+            implementation(presentation)
+            implementation(domain)
+            implementation(data)
+        }
     }
     // retrofit
     implementation(libs.retrofit)

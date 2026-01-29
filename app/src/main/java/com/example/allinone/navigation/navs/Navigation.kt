@@ -10,12 +10,11 @@ import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.LayoutDirection
-import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -23,8 +22,8 @@ import androidx.navigation.compose.rememberNavController
 import com.example.allinone.navigation.NavigationDrawer
 import com.example.allinone.navigation.graph.Graph
 import com.example.allinone.navigation.screen.PlCoding
+import com.example.data.OnBoardingPreferences
 import com.example.data.firebase.GoogleAuthUiClient
-import com.example.presentation.sign_in.SignInViewModel
 import com.google.android.gms.location.FusedLocationProviderClient
 import kotlinx.coroutines.launch
 
@@ -45,9 +44,9 @@ fun NavigationGraph(
     val gesturesEnabledState = rememberSaveable { mutableStateOf(true) }
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
-    val signInViewModel: SignInViewModel = hiltViewModel()
-
-    val state = signInViewModel.state.collectAsStateWithLifecycle()
+    val onBoardingPrefs = remember { OnBoardingPreferences(context) }
+    val isOnBoardingCompleted = remember { onBoardingPrefs.isOnBoardingCompleted() }
+    val currentUser = remember { googleAuthUiClient.getSignedInUser() }
 
     VisibilityOfUI(
         gesturesEnabledState = gesturesEnabledState,
@@ -60,19 +59,18 @@ fun NavigationGraph(
         content = { innerPadding ->
             NavHost(
                 navController = navController,
-                startDestination = if (state.value.isSignInSuccessful) Graph.HOME else Graph.AUTH,
+                startDestination = when {
+                    !isOnBoardingCompleted -> Graph.ONBOARDING
+                    currentUser != null -> Graph.HOME
+                    else -> Graph.AUTH
+                },
                 modifier = Modifier.padding(
                     start = innerPadding.calculateStartPadding(LayoutDirection.Ltr),
-//                    top = if (topBarState.value) innerPadding.calculateTopPadding() else 0.dp,
                     end = innerPadding.calculateEndPadding(LayoutDirection.Ltr),
-//                    bottom = if (bottomBarState.value) innerPadding.calculateBottomPadding() else 0.dp
                 )
             ) {
-                authNavigation(
-                    navController = navController,
-                    applicationContext = context,
-                    googleAuthUiClient = googleAuthUiClient
-                )
+                onBoardingNavigation(navController = navController)
+                authNavigation(navController = navController)
                 mainNavigation(
                     context = context,
                     navController = navController,
@@ -87,7 +85,6 @@ fun NavigationGraph(
                     readingMode = isReadingMode,
                     scheduleToggleState = scheduleToggleState
                 )
-                // later implement auth & onBoarding graphs
                 plCodingNavigation(navController)
             }
         },
@@ -96,7 +93,7 @@ fun NavigationGraph(
         gesturesEnabledState = gesturesEnabledState,
         drawerState = drawerState,
         onNavigateToPLCoding = {
-            navController.navigate(PlCoding)
+            navController.navigate(PlCoding.Home)
             scope.launch {
                 if (drawerState.isClosed) {
                     drawerState.open()

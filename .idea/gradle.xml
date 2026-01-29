@@ -49,6 +49,10 @@
             <option value="$PROJECT_DIR$/main/data" />
             <option value="$PROJECT_DIR$/main/domain" />
             <option value="$PROJECT_DIR$/main/presentation" />
+            <option value="$PROJECT_DIR$/onboarding" />
+            <option value="$PROJECT_DIR$/onboarding/data" />
+            <option value="$PROJECT_DIR$/onboarding/domain" />
+            <option value="$PROJECT_DIR$/onboarding/presentation" />
             <option value="$PROJECT_DIR$/pl_coding" />
             <option value="$PROJECT_DIR$/pl_coding/app_challenges" />
             <option value="$PROJECT_DIR$/pl_coding/app_challenges/data" />

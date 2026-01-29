@@ -1,7 +1,5 @@
 package com.example.allinone.navigation.navs
 
-import android.content.Context
-import android.widget.Toast
 import androidx.compose.animation.expandHorizontally
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -19,7 +17,6 @@ import com.example.presentation.profile.ProfileScreen
 import kotlinx.coroutines.launch
 
 internal fun NavGraphBuilder.profileNavigation(
-    context: Context,
     navController: NavHostController,
     googleAuthUiClient: GoogleAuthUiClient
 ) {
@@ -43,13 +40,11 @@ internal fun NavGraphBuilder.profileNavigation(
                 onNavigateToSignOut = {
                     scope.launch {
                         googleAuthUiClient.signOut()
-                        Toast.makeText(
-                            context,
-                            "Signed out",
-                            Toast.LENGTH_LONG
-                        ).show()
-
-                        navController.popBackStack()
+                        navController.navigate(Graph.AUTH) {
+                            popUpTo(Graph.HOME) {
+                                inclusive = true
+                            }
+                        }
                     }
                 },
             )

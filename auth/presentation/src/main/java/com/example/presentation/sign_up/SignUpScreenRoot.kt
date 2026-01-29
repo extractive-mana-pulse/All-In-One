@@ -1,54 +1,49 @@
 package com.example.presentation.sign_up
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.KeyboardActions
-import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.allinone.core.presentation.R
-import com.example.presentation.ValidatedEmailTextField
-import com.example.presentation.components.PrimaryButton
-import com.example.presentation.sealed.SignUpEvent
+import com.example.presentation.components.AuthTextField
+import com.example.presentation.components.SignInScreenDecoration
 import com.example.presentation.toastMessage
 
 @Preview(showBackground = true)
 @Composable
 fun SignUpScreenRoot(
+    modifier :Modifier = Modifier,
     onNavigateToSignIn: () -> Unit = {},
 ) {
     val context = LocalContext.current
@@ -65,156 +60,171 @@ fun SignUpScreenRoot(
                     )
                 }
                 is ValidationAction.Success -> onNavigateToSignIn()
-                else -> {Unit}
+                else -> Unit
             }
         }
     }
-    SignUpScreen(signUpViewModel = signUpViewModel)
+    SignUpScreen(
+        onBackToLogin = onNavigateToSignIn,
+        onSignUpClick = onNavigateToSignIn
+    )
 }
 @Composable
-private fun SignUpScreen(
-    signUpViewModel: SignUpViewModel
+fun SignUpScreen(
+    onBackToLogin: () -> Unit = {},
+    onSignUpClick: () -> Unit = {}
 ) {
-    val state = signUpViewModel.state
-    val focusManager = LocalFocusManager.current
-    var isPasswordVisible by remember { mutableStateOf(false) }
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color(0xFF5DBB9B))
+    ) {
+        SignInScreenDecoration(isSignUp = true)
 
-    Scaffold { innerPadding ->
-        Box(
+        Column(
             modifier = Modifier
-                .padding(innerPadding)
                 .fillMaxSize()
-                .background(Color.White)
+                .statusBarsPadding()
         ) {
-            Column(
+            Spacer(modifier = Modifier.height(60.dp))
+
+            Surface(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(horizontal = 16.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
+                    .clip(RoundedCornerShape(topStart = 40.dp, topEnd = 40.dp)),
+                color = MaterialTheme.colorScheme.surfaceVariant
             ) {
-
-                Spacer(modifier = Modifier.height(80.dp))
-
-                Text(
-                    text = stringResource(R.string.sign_up),
-                    style = MaterialTheme.typography.headlineMedium,
-                    fontWeight = FontWeight.Bold
-                )
-
-                Spacer(modifier = Modifier.height(40.dp))
-
-                Card(
+                Column(
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(16.dp),
-                    colors = CardDefaults.cardColors(
-                        containerColor = Color(0xFFF5F5F5)
-                    ),
-                    shape = RoundedCornerShape(24.dp)
+                        .fillMaxSize()
+                        .padding(24.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    Column(
+                    Row(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(horizontal = 16.dp, vertical = 24.dp),
-                        horizontalAlignment = Alignment.CenterHorizontally
+                            .clickable { onBackToLogin() },
+                        verticalAlignment = Alignment.CenterVertically
                     ) {
-
-                        Column(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(horizontal = 16.dp)
-                        ) {
-
-                            Text(
-                                text = stringResource(R.string.email),
-                                style = MaterialTheme.typography.bodyMedium,
-                                modifier = Modifier.padding(bottom = 8.dp)
+                        Icon(
+                            painter = painterResource(id = R.drawable.outline_arrow_back_24),
+                            contentDescription = null,
+                            tint = Color(0xFF1B4332),
+                            modifier = Modifier.size(24.dp)
+                        )
+                        Spacer(modifier = Modifier.width(4.dp))
+                        Text(
+                            text = "Back to login",
+                            style = MaterialTheme.typography.titleMedium.copy(
+                                fontWeight = FontWeight.Bold,
+                                color = Color(0xFF1B4332)
                             )
+                        )
+                    }
 
-                            ValidatedEmailTextField(
-                                email = signUpViewModel.email,
-                                updateState = signUpViewModel::updateEmail,
-                                validatorHasErrors = signUpViewModel.emailHasErrors
+                    Spacer(modifier = Modifier.height(24.dp))
+
+                    Text(
+                        text = "Sign Up",
+                        style = MaterialTheme.typography.titleLarge.copy(
+                            color = Color(0xFF1B4332),
+                        ),
+                        modifier = Modifier
+                            .align(Alignment.Start)
+                            .padding(bottom = 24.dp)
+                    )
+
+                    AuthTextField(
+                        value = "",
+                        onValueChange = {},
+                        placeholder = "Email",
+                        leadingIcon = {
+                            Icon(
+                                painter = painterResource(id = R.drawable.outline_mail_24),
+                                contentDescription = null,
+                                tint = Color.LightGray,
+                                modifier = Modifier.size(20.dp)
                             )
+                        }
+                    )
 
-                            Spacer(modifier = Modifier.height(16.dp))
+                    Spacer(modifier = Modifier.height(16.dp))
 
-                            Text(
-                                text = stringResource(R.string.password),
-                                style = MaterialTheme.typography.bodyMedium,
-                                modifier = Modifier.padding(bottom = 8.dp)
+                    AuthTextField(
+                        value = "",
+                        onValueChange = {},
+                        placeholder = "Password",
+                        leadingIcon = {
+                            Icon(
+                                painter = painterResource(id = R.drawable.lock_24px),
+                                tint = Color.LightGray,
+                                contentDescription = null,
+                                modifier = Modifier.size(24.dp)
                             )
-
-                            OutlinedTextField(
-                                value = state.password,
-                                onValueChange = {
-                                    signUpViewModel.onEvent(
-                                        SignUpEvent.PasswordChanged(it)
-                                    )
-                                },
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .height(56.dp),
-                                shape = RoundedCornerShape(16.dp),
-                                visualTransformation =
-                                    if (isPasswordVisible) VisualTransformation.None
-                                    else PasswordVisualTransformation(),
-                                singleLine = true,
-                                trailingIcon = {
-                                    IconButton(onClick = {
-                                        isPasswordVisible = !isPasswordVisible
-                                    }) {
-                                        Icon(
-                                            painter = painterResource(
-                                                if (isPasswordVisible)
-                                                    R.drawable.outline_visibility_24
-                                                else
-                                                    R.drawable.visibility_off_24
-                                            ),
-                                            contentDescription = null
-                                        )
-                                    }
-                                },
-                                isError = state.passwordError != null,
-                                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
-                                keyboardActions = KeyboardActions(
-                                    onDone = {
-                                        focusManager.clearFocus()
-                                        signUpViewModel.onEvent(SignUpEvent.Submit)
-                                    }
-                                )
-                            )
-
-                            if (state.passwordError != null) {
-                                Text(
-                                    text = state.passwordError ?: "Unknown error occurred, please try again!",
-                                    color = MaterialTheme.colorScheme.error,
-                                    modifier = Modifier.align(Alignment.End)
+                        },
+                        trailingIcon = {
+                            IconButton(
+                                onClick = {},
+                            ) {
+                                Icon(
+                                    painter = painterResource(id = R.drawable.visibility_off_24),
+                                    contentDescription = null,
                                 )
                             }
                         }
+                    )
 
-                        Spacer(modifier = Modifier.height(16.dp))
+                    Spacer(modifier = Modifier.height(16.dp))
 
-                        PrimaryButton(
-                            onClick = {
-                                signUpViewModel.onEvent(SignUpEvent.Submit)
-                            },
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .height(56.dp)
-                                .padding(horizontal = 16.dp),
-                            shape = RoundedCornerShape(24.dp)
-                        ) {
-                            if (state.isLoading) {
-                                CircularProgressIndicator()
-                            } else {
-                                Text(text = stringResource(R.string.sign_up))
+                    AuthTextField(
+                        value = "",
+                        onValueChange = {},
+                        placeholder = "Confirm Password",
+                        leadingIcon = {
+                            Icon(
+                                painter = painterResource(id = R.drawable.lock_24px),
+                                tint = Color.LightGray,
+                                contentDescription = null,
+                                modifier = Modifier.size(24.dp)
+                            )
+                        },
+                        trailingIcon = {
+                            IconButton(
+                                onClick = {},
+                            ) {
+                                Icon(
+                                    painter = painterResource(id = R.drawable.visibility_off_24),
+                                    contentDescription = null,
+                                )
                             }
                         }
+                    )
+
+                    Spacer(modifier = Modifier.height(40.dp))
+
+                    Button(
+                        onClick = onSignUpClick,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(56.dp),
+                        shape = RoundedCornerShape(28.dp),
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = Color(0xFF1B4332)
+                        )
+                    ) {
+                        Text(text = "Sign Up", fontSize = 18.sp, fontWeight = FontWeight.Bold)
                     }
                 }
             }
         }
     }
+}
+
+@PreviewLightDark
+@Composable
+fun SignUpPreview(modifier: Modifier = Modifier) {
+    SignUpScreenRoot(
+        modifier = modifier,
+        onNavigateToSignIn = {}
+    )
 }
