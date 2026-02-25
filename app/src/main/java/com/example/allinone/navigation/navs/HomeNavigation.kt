@@ -1,6 +1,5 @@
 package com.example.allinone.navigation.navs
 
-import android.content.Context
 import androidx.compose.animation.expandHorizontally
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -21,7 +20,6 @@ import com.example.presentation.screens.HomeScreen
 import com.example.presentation.screens.SectionScreen
 
 internal fun NavGraphBuilder.mainNavigation(
-    context: Context,
     navController: NavHostController,
     drawerState: DrawerState,
     googleAuthUiClient: GoogleAuthUiClient

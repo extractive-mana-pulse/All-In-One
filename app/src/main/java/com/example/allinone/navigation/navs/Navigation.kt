@@ -72,7 +72,6 @@ fun NavigationGraph(
                 onBoardingNavigation(navController = navController)
                 authNavigation(navController = navController)
                 mainNavigation(
-                    context = context,
                     navController = navController,
                     drawerState = drawerState,
                     googleAuthUiClient = googleAuthUiClient,

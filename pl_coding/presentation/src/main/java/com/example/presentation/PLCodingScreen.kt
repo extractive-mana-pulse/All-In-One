@@ -37,11 +37,12 @@ fun PLCodingScreen(
     onNavigateToMiniChallenges: () -> Unit,
     onNavigateToAppChallenges: () -> Unit
 ) {
+    // new gmail account password strychnine )0
     Scaffold(
         topBar = {
             AppTopBar(
                 title = "PL Coding",
-                onNavigationClick = { onNavigateUpFromPlCodingScreen() }
+                onNavigationClick = onNavigateUpFromPlCodingScreen
             )
         }
     ) { innerPadding ->
@@ -50,7 +51,7 @@ fun PLCodingScreen(
                 .fillMaxSize()
                 .padding(innerPadding)
         ) {
-            // About text section
+
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -63,7 +64,6 @@ fun PLCodingScreen(
                 )
             }
 
-            // Bottom navigation card
             Card(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -95,7 +95,6 @@ fun PLCodingScreen(
                             contentColor = MaterialTheme.colorScheme.onSurfaceVariant
                         ),
                         onClick = onNavigateToMiniChallenges,
-                        // contentPadding = ButtonDefaults.TextButtonContentPadding
                     ) {
                         Row(
                             modifier = Modifier.fillMaxWidth(),
@@ -123,7 +122,6 @@ fun PLCodingScreen(
                             contentColor = MaterialTheme.colorScheme.onSurfaceVariant
                         ),
                         onClick = onNavigateToAppChallenges,
-                        // contentPadding = ButtonDefaults.TextButtonContentPadding
                     ) {
                         Row(
                             modifier = Modifier.fillMaxWidth(),

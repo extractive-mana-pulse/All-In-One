@@ -24,7 +24,8 @@ fun PrimaryButton(
         onClick = { onClick() },
         enabled = enabled,
         shape = shape,
-        colors = colors
+        colors = colors,
+        contentPadding = ButtonDefaults.TextButtonContentPadding
     ) {
         contentOfTheButton()
     }
