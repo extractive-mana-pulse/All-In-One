@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.DrawerValue
@@ -21,6 +22,9 @@ import androidx.compose.material3.ModalDrawerSheet
 import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.NavigationDrawerItem
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Snackbar
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
@@ -52,6 +56,7 @@ fun NavigationDrawer(
     onNavigateToPLCoding: () -> Unit,
     onNavigateToSettings: () -> Unit = {},
     onNavigateToHome: () -> Unit = {},
+    snackbarHostState: SnackbarHostState,
     navController: NavHostController
 ) {
     ModalNavigationDrawer(
@@ -73,6 +78,17 @@ fun NavigationDrawer(
                 BottomNavigationBar(
                     bottomBarState = bottomBarState,
                     navController = navController
+                )
+            },
+            snackbarHost = {
+                SnackbarHost(
+                    hostState = snackbarHostState,
+                    snackbar = { data ->
+                        Snackbar(
+                            snackbarData = data,
+                            shape = RoundedCornerShape(8.dp),
+                        )
+                    }
                 )
             },
         ) { innerPadding ->

@@ -64,7 +64,6 @@ class MainActivity : ComponentActivity() {
                         darkThemeViewModel.toggleDarkTheme(newDarkTheme)
                     },
                     fusedLocationClient = fusedLocationClient,
-                    context = applicationContext,
                     scheduleToggleState = isScheduledMode
                 )
             }
