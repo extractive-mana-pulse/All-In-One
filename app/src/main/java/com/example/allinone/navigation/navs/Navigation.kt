@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.calculateEndPadding
 import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.DrawerValue
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -25,6 +26,7 @@ import com.example.allinone.navigation.screen.PlCoding
 import com.example.allinone.navigation.screen.SettingsScreens
 import com.example.data.OnBoardingPreferences
 import com.example.data.firebase.GoogleAuthUiClient
+import com.example.presentation.components.AllInOneDefaultScreen
 import com.google.android.gms.location.FusedLocationProviderClient
 import kotlinx.coroutines.launch
 
@@ -51,6 +53,8 @@ fun NavigationGraph(
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
 
     val navBackStackEntry by navController.currentBackStackEntryAsState()
+
+    val snackbarHostState = remember { SnackbarHostState() }
 
     // Computed once
     val startDestination = remember {
@@ -87,32 +91,37 @@ fun NavigationGraph(
             toggleDrawer()
         },
         content = { innerPadding ->
-            NavHost(
-                navController = navController,
-                startDestination = startDestination,
-                modifier = Modifier.padding(
-                    start = innerPadding.calculateStartPadding(LayoutDirection.Ltr),
-                    end = innerPadding.calculateEndPadding(LayoutDirection.Ltr),
-                )
-            ) {
-                onBoardingNavigation(navController)
-                authNavigation(navController)
-                mainNavigation(
-                    context = context,
-                    navController = navController,
-                    drawerState = drawerState,
-                    googleAuthUiClient = googleAuthUiClient,
-                )
-                settingsNavigation(
-                    navController = navController,
-                    isDarkTheme = isDarkTheme,
-                    onThemeChanged = onThemeChanged,
-                    fusedLocationClient = fusedLocationClient,
-                    readingMode = isReadingMode,
-                    scheduleToggleState = scheduleToggleState
-                )
-                plCodingNavigation(navController)
-            }
-        }
+            AllInOneDefaultScreen(
+                content = {
+                    NavHost(
+                        navController = navController,
+                        startDestination = startDestination,
+                        modifier = Modifier.padding(
+                            start = innerPadding.calculateStartPadding(LayoutDirection.Ltr),
+                            end = innerPadding.calculateEndPadding(LayoutDirection.Ltr),
+                        )
+                    ) {
+                        onBoardingNavigation(navController)
+                        authNavigation(navController)
+                        mainNavigation(
+                            context = context,
+                            navController = navController,
+                            drawerState = drawerState,
+                            googleAuthUiClient = googleAuthUiClient,
+                        )
+                        settingsNavigation(
+                            navController = navController,
+                            isDarkTheme = isDarkTheme,
+                            onThemeChanged = onThemeChanged,
+                            fusedLocationClient = fusedLocationClient,
+                            readingMode = isReadingMode,
+                            scheduleToggleState = scheduleToggleState
+                        )
+                        plCodingNavigation(navController)
+                    }
+                }
+            )
+        },
+        snackbarHostState = snackbarHostState
     )
 }
