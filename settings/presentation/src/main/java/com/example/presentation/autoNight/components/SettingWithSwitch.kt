@@ -1,11 +1,9 @@
 package com.example.presentation.autoNight.components
 
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -31,79 +29,54 @@ internal fun SettingWithSwitch(
     description: String,
     icon: Painter,
     checked: Boolean,
+    isLast: Boolean = false,
     onCheckedChange: (Boolean) -> Unit
 ) {
-    Column(
+    Row(
         modifier = modifier
-            .fillMaxWidth(),
-        horizontalAlignment = Alignment.CenterHorizontally
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp, vertical = 8.dp),
+        verticalAlignment = Alignment.CenterVertically
     ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp, vertical = 12.dp),
-            verticalAlignment = Alignment.CenterVertically
+        Box(
+            modifier = Modifier.size(28.dp),
+            contentAlignment = Alignment.Center
         ) {
-            Box(
-                modifier = Modifier.size(48.dp),
-                contentAlignment = Alignment.Center
-            ) {
-                Icon(
-                    painter = icon,
-                    contentDescription = null,
-                    modifier = Modifier.size(36.dp),
-                )
-            }
-
-            Spacer(modifier = Modifier.width(16.dp))
-
-            Column(
-                modifier = Modifier.weight(1f)
-            ) {
-                Text(
-                    text = title,
-                    style = MaterialTheme.typography.bodyMedium.copy(
-                        fontFamily = FontFamily(Font(R.font.inknut_antiqua_semi_bold)),
-                        fontSize = MaterialTheme.typography.bodyMedium.fontSize,
-                        fontWeight = MaterialTheme.typography.bodyMedium.fontWeight,
-                        lineHeight = MaterialTheme.typography.bodyMedium.lineHeight,
-                        letterSpacing = MaterialTheme.typography.bodyMedium.letterSpacing,
-                    ),
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis,
-                )
-
-                Spacer(modifier = Modifier.height(4.dp))
-
-                Text(
-                    text = description,
-                    style = MaterialTheme.typography.bodySmall.copy(
-                        fontFamily = FontFamily(Font(R.font.inknut_antiqua_medium)),
-                        fontSize = MaterialTheme.typography.bodySmall.fontSize,
-                        fontWeight = MaterialTheme.typography.bodySmall.fontWeight,
-                        lineHeight = MaterialTheme.typography.bodySmall.lineHeight,
-                        letterSpacing = MaterialTheme.typography.bodySmall.letterSpacing,
-                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.8f),
-                    ),
-                    maxLines = 3,
-                    overflow = TextOverflow.Ellipsis
-                )
-            }
-
-            Box(
-                modifier = Modifier.padding(start = 8.dp),
-                contentAlignment = Alignment.Center
-            ) {
-                Switch(
-                    checked = checked,
-                    onCheckedChange = onCheckedChange,
-                )
-            }
+            Icon(
+                painter = icon,
+                contentDescription = null,
+                modifier = Modifier.size(22.dp),
+                tint = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.75f)
+            )
         }
+
+        Spacer(modifier = Modifier.width(14.dp))
+
+        Text(
+            text = title,
+            modifier = Modifier.weight(1f),
+            style = MaterialTheme.typography.bodyMedium.copy(
+                fontFamily = FontFamily(Font(R.font.inknut_antiqua_semi_bold)),
+                fontSize = MaterialTheme.typography.bodyMedium.fontSize,
+                fontWeight = MaterialTheme.typography.bodyMedium.fontWeight,
+                lineHeight = MaterialTheme.typography.bodyMedium.lineHeight,
+                letterSpacing = MaterialTheme.typography.bodyMedium.letterSpacing,
+            ),
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis
+        )
+
+        Switch(
+            checked = checked,
+            onCheckedChange = onCheckedChange,
+        )
+    }
+
+    if (!isLast) {
         HorizontalDivider(
-            modifier = Modifier.padding(start = 80.dp, end = 16.dp),
-            thickness = 1.dp,
-            color = MaterialTheme.colorScheme.outline.copy(alpha = 0.3f)
+            modifier = Modifier.padding(start = 58.dp, end = 0.dp),
+            thickness = 0.5.dp,
+            color = MaterialTheme.colorScheme.outline.copy(alpha = 0.25f)
         )
     }
 }
