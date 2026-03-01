@@ -22,7 +22,6 @@ import androidx.navigation.compose.rememberNavController
 import com.example.allinone.navigation.NavigationDrawer
 import com.example.allinone.navigation.graph.Graph
 import com.example.allinone.navigation.screen.PlCoding
-import com.example.allinone.navigation.screen.SettingsScreens
 import com.example.data.OnBoardingPreferences
 import com.example.data.firebase.GoogleAuthUiClient
 import com.google.android.gms.location.FusedLocationProviderClient
@@ -95,16 +94,6 @@ fun NavigationGraph(
         drawerState = drawerState,
         onNavigateToPLCoding = {
             navController.navigate(PlCoding.Home)
-            scope.launch {
-                if (drawerState.isClosed) {
-                    drawerState.open()
-                } else {
-                    drawerState.close()
-                }
-            }
-        },
-        onNavigateToSettings = {
-            navController.navigate(SettingsScreens.Settings)
             scope.launch {
                 if (drawerState.isClosed) {
                     drawerState.open()
