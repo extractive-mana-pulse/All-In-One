@@ -25,7 +25,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.allinone.core.presentation.R
 import com.example.presentation.components.AppTopBar
-import com.example.presentation.toastMessage
+import com.example.presentation.helper.toastMessage
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

@@ -48,7 +48,7 @@ import com.example.presentation.autoNight.components.SwitchOffMode
 import com.example.presentation.autoNight.components.SwitchOnMode
 import com.example.presentation.autoNight.vm.AutoNightViewModel
 import com.example.presentation.autoNight.vm.ScheduledModeViewModel
-import com.example.presentation.toastMessage
+import com.example.presentation.helper.toastMessage
 import com.google.android.gms.location.FusedLocationProviderClient
 
 @OptIn(ExperimentalMaterial3Api::class)

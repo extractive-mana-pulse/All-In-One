@@ -25,7 +25,7 @@ import com.example.allinone.core.presentation.R
 import com.example.domain.model.LocationResult
 import com.example.domain.model.Twilight
 import com.example.presentation.autoNight.vm.LocationViewModel
-import com.example.presentation.toastMessage
+import com.example.presentation.helper.toastMessage
 import java.time.LocalDateTime
 import java.time.LocalTime
 

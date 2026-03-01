@@ -35,7 +35,7 @@ import androidx.glance.text.TextStyle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.allinone.widget.presentation.R
 import com.example.domain.TemperatureData
-import com.example.presentation.toastMessage
+import com.example.presentation.helper.toastMessage
 import com.example.presentation.vm.TemperatureViewModel
 import kotlinx.coroutines.flow.Flow
 

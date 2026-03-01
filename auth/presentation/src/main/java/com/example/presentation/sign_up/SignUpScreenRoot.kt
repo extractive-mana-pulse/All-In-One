@@ -38,7 +38,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.allinone.core.presentation.R
 import com.example.presentation.components.AuthTextField
 import com.example.presentation.components.SignInScreenDecoration
-import com.example.presentation.toastMessage
+import com.example.presentation.helper.toastMessage
 
 @Preview(showBackground = true)
 @Composable

@@ -13,7 +13,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import com.airbnb.lottie.LottieComposition
 import com.airbnb.lottie.compose.LottieAnimation
-import com.example.presentation.toastMessage
+import com.example.presentation.helper.toastMessage
 
 @Composable
 internal fun BlogsTab(

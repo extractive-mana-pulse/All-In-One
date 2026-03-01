@@ -15,7 +15,7 @@ import com.example.presentation.forgot_password.ForgotPasswordScreen
 import com.example.presentation.sign_in.SignInScreenRoot
 import com.example.presentation.sign_in.SignInViewModel
 import com.example.presentation.sign_up.SignUpScreenRoot
-import com.example.presentation.toastMessage
+import com.example.presentation.helper.toastMessage
 
 internal fun NavGraphBuilder.authNavigation(navController: NavHostController) {
     navigation(

@@ -32,7 +32,7 @@ import com.example.allinone.core.presentation.R
 import com.example.domain.model.CourseDetails
 import com.example.presentation.components.CustomAlertDialog
 import com.example.presentation.components.PrimaryButton
-import com.example.presentation.toastMessage
+import com.example.presentation.helper.toastMessage
 
 @Composable
 internal fun DetailsItem(course: CourseDetails) {
