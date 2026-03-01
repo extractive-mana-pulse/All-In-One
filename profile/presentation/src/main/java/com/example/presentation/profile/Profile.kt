@@ -1,6 +1,7 @@
 @file:OptIn(ExperimentalMaterial3Api::class)
 package com.example.presentation.profile
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -205,6 +206,7 @@ private fun TabBars(
     surfaceCard: Color
 ) {
     Spacer(modifier = Modifier.height(16.dp))
+    Log.d("for commit","commit")
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.spacedBy(10.dp)
