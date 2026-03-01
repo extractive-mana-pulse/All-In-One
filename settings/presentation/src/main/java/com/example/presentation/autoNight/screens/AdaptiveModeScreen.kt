@@ -37,8 +37,8 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.allinone.core.presentation.R
 import com.example.presentation.autoNight.vm.SliderViewModel
-import com.example.presentation.getBrightness
-import com.example.presentation.toastMessage
+import com.example.presentation.helper.getBrightness
+import com.example.presentation.helper.toastMessage
 import kotlin.math.roundToInt
 
 @OptIn(ExperimentalMaterial3Api::class)

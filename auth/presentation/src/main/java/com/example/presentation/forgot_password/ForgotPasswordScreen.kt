@@ -30,7 +30,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import com.example.allinone.core.presentation.R
 import com.example.presentation.components.PrimaryButton
-import com.example.presentation.toastMessage
+import com.example.presentation.helper.toastMessage
 
 @Composable
 fun ForgotPasswordScreen(

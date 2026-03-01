@@ -15,7 +15,7 @@ import com.example.allinone.navigation.screen.ProfileScreens
 import com.example.data.firebase.GoogleAuthUiClient
 import com.example.presentation.editProfile.EditProfileScreen
 import com.example.presentation.profile.ProfileScreen
-import com.example.presentation.toastMessage
+import com.example.presentation.helper.toastMessage
 import kotlinx.coroutines.launch
 
 internal fun NavGraphBuilder.profileNavigation(

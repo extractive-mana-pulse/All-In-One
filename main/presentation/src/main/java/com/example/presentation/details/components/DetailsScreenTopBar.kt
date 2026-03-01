@@ -19,7 +19,7 @@ import androidx.compose.ui.res.painterResource
 import com.example.allinone.core.presentation.R
 import com.example.domain.model.CourseDetails
 import com.example.presentation.components.AppTopBar
-import com.example.presentation.toastMessage
+import com.example.presentation.helper.toastMessage
 
 @Composable
 fun DetailsScreenTopBar(

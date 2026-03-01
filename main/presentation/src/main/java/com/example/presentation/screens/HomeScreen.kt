@@ -72,7 +72,7 @@ import com.example.allinone.core.presentation.R
 import com.example.domain.model.Course
 import com.example.domain.model.Sections
 import com.example.domain.model.UserData
-import com.example.presentation.toastMessage
+import com.example.presentation.helper.toastMessage
 import com.example.presentation.vm.HomeViewModel
 import com.example.presentation.vm.ReadingModeViewModel
 import com.example.presentation.vm.TimerViewModel
