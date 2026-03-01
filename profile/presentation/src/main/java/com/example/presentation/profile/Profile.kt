@@ -1,6 +1,7 @@
 @file:OptIn(ExperimentalMaterial3Api::class)
 package com.example.presentation.profile
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -46,6 +47,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
 import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.animateLottieCompositionAsState
@@ -74,35 +76,50 @@ fun ProfileScreen(
     val progress by animateLottieCompositionAsState(composition, isPlaying = isPlaying)
     val openAlertDialog = remember { mutableStateOf(false) }
 
+    val surfaceCard = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.45f)
+    val cardShape = RoundedCornerShape(20.dp)
+
+    if (openAlertDialog.value) {
+        CustomAlertDialog(
+            dialogTitle = stringResource(R.string.logout),
+            dialogText = stringResource(R.string.logout_desc),
+            onDismissRequest = { openAlertDialog.value = false },
+            onConfirmation = {
+                openAlertDialog.value = false
+                onNavigateToSignOut()
+            },
+            icon = painterResource(R.drawable.outline_logout_24),
+            confirmText = stringResource(R.string.logout),
+            dismissText = stringResource(R.string.dismiss)
+        )
+    }
+
     Scaffold(
         // Disable Scaffold's built-in inset handling so we control insets manually
         contentWindowInsets = WindowInsets(0),
         containerColor = MaterialTheme.colorScheme.background,
         topBar = {
-            AppTopBar(
-                title = "",
-                onNavigationClick = {
-                    onNavigateUp()
-                },
-                onActionClick = {
-                    IconButton(
-                        onClick = {
-                            openAlertDialog.value = true
-                        }
-                    ) {
-                        Icon(
-                            painter = painterResource(R.drawable.outline_logout_24),
-                            contentDescription = null
-                        )
-                    }
-                    IconButton(
-                        onClick = onNavigateToEditProfile
-                    ) {
-                        Icon(
-                            painter = painterResource(R.drawable.outline_edit_24),
-                            contentDescription = null
-                        )
-                    }
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .statusBarsPadding()
+                    .padding(horizontal = 16.dp, vertical = 12.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Box(
+                    modifier = Modifier
+                        .size(40.dp)
+                        .clip(RoundedCornerShape(12.dp))
+                        .background(surfaceCard)
+                        .clickable { onNavigateUp() },
+                    contentAlignment = Alignment.Center
+                ) {
+                    Icon(
+                        painter = painterResource(R.drawable.outline_arrow_back_24),
+                        contentDescription = null,
+                        modifier = Modifier.size(20.dp),
+                        tint = MaterialTheme.colorScheme.onSurface
+                    )
                 }
                 Spacer(modifier = Modifier.width(8.dp))
                 Text(
@@ -133,90 +150,197 @@ fun ProfileScreen(
                 )
             }
         }
-    )
-    { paddingValues ->
-        if (openAlertDialog.value) {
-            CustomAlertDialog(
-                dialogTitle = stringResource(R.string.logout),
-                dialogText = stringResource(R.string.logout_desc),
-                onDismissRequest = { openAlertDialog.value = false },
-                onConfirmation = {
-                    openAlertDialog.value = false
-                    onNavigateToSignOut()
-                },
-                icon = painterResource(R.drawable.outline_logout_24),
-                confirmText = stringResource(R.string.logout),
-                dismissText = stringResource(R.string.dismiss)
-            )
-        }
-        Box(
+    ) { paddingValues ->
+        LazyColumn(
             modifier = Modifier
                 .padding(paddingValues)
-                .fillMaxSize(),
+                .fillMaxSize()
+                .padding(horizontal = 16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .align(Alignment.TopCenter),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center
-            ) {
-
-                Spacer(modifier = Modifier.height(16.dp))
-
-                AsyncImage(
-                    model = userData?.profilePictureUrl ?: run {
-                        val initials = userData?.username
-                            ?.split(" ")
-                            ?.mapNotNull { it.firstOrNull() }
-                            ?.take(2)
-                            ?.joinToString("")
-                            ?: "U"
-                        "https://ui-avatars.com/api/?name=$initials&size=200&background=4285f4&color=fff&bold=true"
-                    },
-                    contentDescription = null,
-                    modifier = Modifier
-                        .size(108.dp)
-                        .clip(CircleShape)
-                        .border(
-                            width = 1.dp,
-                            color = MaterialTheme.colorScheme.primary,
-                            shape = CircleShape
-                        ),
-                    contentScale = ContentScale.Crop
+            // Profile card with avatar overlapping the top edge
+            item {
+                ProfileCard(
+                    cardShape,
+                    surfaceCard,
+                    userData,
+                    onNavigateToEditProfile,
+                    onShareProfileClick,
+                    openAlertDialog
                 )
-                Spacer(modifier = Modifier.height(16.dp))
+            }
 
-                Text(
-                    text = "Name: ${userData?.username}",
-                    fontSize = MaterialTheme.typography.headlineSmall.fontSize
+            // Icon tab bar
+            item {
+                TabBars(
+                    selectedTabIndex,
+                    surfaceCard
                 )
+            }
 
-                Spacer(modifier = Modifier.height(8.dp))
-
-                Text(
-                    text = "Email: ${userData?.email}",
-                    fontSize = MaterialTheme.typography.bodyMedium.fontSize
-                )
-
+            // Tab content
+            item {
                 Spacer(modifier = Modifier.height(16.dp))
-
-                TabRow(
-                    selectedTabIndex.intValue,
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    tabTitles.forEachIndexed { index, title ->
-                        Tab(
-                            selected = selectedTabIndex.intValue == index,
-                            onClick = { selectedTabIndex.intValue = index },
-                            text = { Text(title) }
-                        )
-                    }
-                }
                 when (selectedTabIndex.intValue) {
                     0 -> BlogsTab(composition, progress)
                     1 -> BookmarksTab(composition, progress)
+                    else -> BlogsTab(composition, progress)
                 }
+            }
+
+            // Bottom spacer that also clears the navigation bar
+            item {
+                Spacer(
+                    modifier = Modifier
+                        .height(24.dp)
+                        .navigationBarsPadding()
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun TabBars(
+    selectedTabIndex: MutableIntState,
+    surfaceCard: Color
+) {
+    Spacer(modifier = Modifier.height(16.dp))
+    Log.d("for commit","commit")
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.spacedBy(10.dp)
+    ) {
+        val tabs = listOf(
+            R.drawable.pencil_square,
+            R.drawable.bookmark,
+            R.drawable.linked_in_logo,
+            R.drawable.github_logo,
+            R.drawable.globe_ic
+        )
+        tabs.forEachIndexed { index, iconRes ->
+            val isSelected = selectedTabIndex.intValue == index
+            Box(
+                modifier = Modifier
+                    .weight(1f)
+                    .aspectRatio(1f)
+                    .clip(RoundedCornerShape(14.dp))
+                    .background(
+                        if (isSelected) MaterialTheme.colorScheme.onSurface.copy(alpha = 0.85f)
+                        else surfaceCard
+                    )
+                    .clickable { selectedTabIndex.intValue = index },
+                contentAlignment = Alignment.Center
+            ) {
+                Icon(
+                    painter = painterResource(iconRes),
+                    contentDescription = null,
+                    modifier = Modifier.size(22.dp),
+                    tint = if (isSelected) MaterialTheme.colorScheme.background
+                    else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.65f)
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun ProfileCard(
+    cardShape: RoundedCornerShape,
+    surfaceCard: Color,
+    userData: UserData?,
+    onNavigateToEditProfile: () -> Unit,
+    onShareProfileClick: () -> Unit,
+    openAlertDialog: MutableState<Boolean>
+) {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(top = 48.dp)
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .clip(cardShape)
+                .background(surfaceCard)
+                .padding(top = 56.dp, bottom = 20.dp, start = 16.dp, end = 16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Text(
+                text = userData?.username ?: "Jane Cooper",
+                style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold),
+                textAlign = TextAlign.Center
+            )
+            Spacer(modifier = Modifier.height(4.dp))
+            Text(
+                text = userData?.email ?: "Video maker & photographer",
+                style = MaterialTheme.typography.bodySmall.copy(
+                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.55f)
+                ),
+                textAlign = TextAlign.Center
+            )
+
+            Spacer(modifier = Modifier.height(20.dp))
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceEvenly
+            ) {
+                StatItem(text = "--", label = "Following")
+                StatItem(text = "--", label = "Followers")
+                StatItem(text = "--", label = "Likes")
+            }
+
+            Spacer(modifier = Modifier.height(20.dp))
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(10.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                AllInOneTextButton(
+                    onClick = onNavigateToEditProfile,
+                    text = stringResource(R.string.edit_profile),
+                    modifier = Modifier
+                        .weight(1f)
+                        .border(
+                            width = 1.dp,
+                            color = MaterialTheme.colorScheme.outline.copy(alpha = 0.4f),
+                            shape = CircleShape
+                        )
+                        .align(Alignment.CenterVertically),
+                    style = MaterialTheme.typography.bodyMedium.copy(
+                        fontWeight = FontWeight.Medium
+                    )
+                )
+                AllInOneIconButton(
+                    icon = painterResource(R.drawable.outline_share_24),
+                    modifier = Modifier
+                        .size(42.dp)
+                        .clip(CircleShape)
+                        .border(
+                            1.dp,
+                            MaterialTheme.colorScheme.outline.copy(alpha = 0.4f),
+                            CircleShape
+                        )
+                        .align(Alignment.CenterVertically),
+                    onClick = onShareProfileClick,
+                    tint = MaterialTheme.colorScheme.onSurface
+                )
+                AllInOneIconButton(
+                    icon = painterResource(R.drawable.outline_more_vert_24),
+                    modifier = Modifier
+                        .size(42.dp)
+                        .clip(CircleShape)
+                        .border(
+                            1.dp,
+                            MaterialTheme.colorScheme.outline.copy(alpha = 0.4f),
+                            CircleShape
+                        )
+                        .align(Alignment.CenterVertically),
+                    onClick = onShareProfileClick,
+                    tint = MaterialTheme.colorScheme.onSurface
+                )
             }
         }
 
