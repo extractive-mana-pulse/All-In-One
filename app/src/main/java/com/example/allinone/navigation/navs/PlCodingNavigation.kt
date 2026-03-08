@@ -3,7 +3,7 @@ package com.example.allinone.navigation.navs
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
-import com.example.allinone.navigation.screen.PlCoding
+import com.example.allinone.navigation.screens.PlCoding
 import com.example.presentation.MiniChallengesScreen
 import com.example.presentation.PLCodingScreen
 import com.example.presentation.december.WinterGreetingEditorScreen

@@ -55,6 +55,7 @@ fun NavigationDrawer(
     drawerState: DrawerState = rememberDrawerState(initialValue = DrawerValue.Closed),
     onNavigateToPLCoding: () -> Unit,
     onNavigateToSettings: () -> Unit = {},
+    onNavigateToBlogs: () -> Unit = {},
     onNavigateToHome: () -> Unit = {},
     snackbarHostState: SnackbarHostState,
     navController: NavHostController
@@ -66,6 +67,7 @@ fun NavigationDrawer(
                     drawerState = drawerState,
                     onNavigateToPLCoding = onNavigateToPLCoding,
                     onNavigateToSettings = onNavigateToSettings,
+                    onNavigateToBlogs = onNavigateToBlogs,
                     onNavigateToHome = onNavigateToHome
                 )
             }
@@ -102,6 +104,7 @@ private fun NavigationDrawerContent(
     drawerState: DrawerState,
     onNavigateToPLCoding: () -> Unit,
     onNavigateToSettings: () -> Unit = {},
+    onNavigateToBlogs: () -> Unit = {},
     onNavigateToHome: () -> Unit = {}
 ) {
     val scope = rememberCoroutineScope()
@@ -158,7 +161,7 @@ private fun NavigationDrawerContent(
                         contentDescription = stringResource(R.string.folder_icon)
                     )
                 },
-                onClick = { /* Handle click */ }
+                onClick = { onNavigateToBlogs() }
             )
 
             NavigationDrawerItem(

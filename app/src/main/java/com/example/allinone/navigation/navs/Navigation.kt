@@ -22,8 +22,9 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.allinone.navigation.NavigationDrawer
 import com.example.allinone.navigation.graph.Graph
-import com.example.allinone.navigation.screen.PlCoding
-import com.example.allinone.navigation.screen.SettingsScreens
+import com.example.allinone.navigation.screens.BlogsScreens
+import com.example.allinone.navigation.screens.PlCoding
+import com.example.allinone.navigation.screens.SettingsScreens
 import com.example.data.OnBoardingPreferences
 import com.example.data.firebase.GoogleAuthUiClient
 import com.example.presentation.components.AllInOneDefaultScreen
@@ -86,6 +87,10 @@ fun NavigationGraph(
             navController.navigate(PlCoding.Home)
             toggleDrawer()
         },
+        onNavigateToBlogs = {
+            navController.navigate(BlogsScreens.Blogs)
+            toggleDrawer()
+        },
         onNavigateToSettings = {
             navController.navigate(SettingsScreens.Settings)
             toggleDrawer()
@@ -118,6 +123,7 @@ fun NavigationGraph(
                             scheduleToggleState = scheduleToggleState
                         )
                         plCodingNavigation(navController)
+                        blogsNavigation(navController)
                     }
                 }
             )

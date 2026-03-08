@@ -1,10 +1,10 @@
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.navigation.NavBackStackEntry
-import com.example.allinone.navigation.screen.CodeLabScreens
-import com.example.allinone.navigation.screen.HomeScreens
-import com.example.allinone.navigation.screen.ProfileScreens
-import com.example.allinone.navigation.screen.SettingsScreens
+import com.example.allinone.navigation.screens.CodeLabScreens
+import com.example.allinone.navigation.screens.HomeScreens
+import com.example.allinone.navigation.screens.ProfileScreens
+import com.example.allinone.navigation.screens.SettingsScreens
 
 @Composable
 internal fun VisibilityOfUI(
