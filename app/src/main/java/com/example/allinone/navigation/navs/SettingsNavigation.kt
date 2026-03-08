@@ -9,8 +9,8 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import com.example.allinone.navigation.graph.Graph
-import com.example.allinone.navigation.screen.HomeScreens
-import com.example.allinone.navigation.screen.SettingsScreens
+import com.example.allinone.navigation.screens.HomeScreens
+import com.example.allinone.navigation.screens.SettingsScreens
 import com.example.presentation.autoNight.screens.AdaptiveModeScreen
 import com.example.presentation.autoNight.screens.AutoNightModeScreen
 import com.example.presentation.autoNight.screens.ScheduledModeScreen

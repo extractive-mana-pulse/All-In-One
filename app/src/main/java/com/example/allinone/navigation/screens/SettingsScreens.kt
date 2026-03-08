@@ -1,4 +1,4 @@
-package com.example.allinone.navigation.screen
+package com.example.allinone.navigation.screens
 
 import kotlinx.serialization.Serializable
 

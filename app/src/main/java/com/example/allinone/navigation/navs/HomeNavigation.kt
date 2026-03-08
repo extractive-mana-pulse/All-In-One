@@ -12,8 +12,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import androidx.navigation.toRoute
 import com.example.allinone.navigation.graph.Graph
-import com.example.allinone.navigation.screen.HomeScreens
-import com.example.allinone.navigation.screen.ProfileScreens
+import com.example.allinone.navigation.screens.HomeScreens
+import com.example.allinone.navigation.screens.ProfileScreens
 import com.example.data.firebase.GoogleAuthUiClient
 import com.example.presentation.details.DetailsRoot
 import com.example.presentation.screens.HelpAndFeedbackScreen

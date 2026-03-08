@@ -44,7 +44,7 @@ retrofit = "2.9.0"
 roomKtx = "2.7.1"
 animation = "1.8.1"
 workRuntimeKtx = "2.10.1"
-material3 = "1.4.0"
+material3 = "1.5.0-alpha15"
 jetbrainsKotlinJvm = "2.1.10"
 room = "2.7.2"
 androidTools = "31.12.0"
@@ -62,6 +62,7 @@ projectCompileSdkVersion = "36"
 material3Version = "1.0.0-alpha13"
 uiGraphics = "1.10.0"
 playServicesAuthVersion = "21.5.0"
+androidxMaterial3 = "1.0.0-alpha15"
 
 [libraries]
 
@@ -179,6 +180,7 @@ ksp-gradlePlugin = { group = "com.google.devtools.ksp", name = "com.google.devto
 material3 = { group = "androidx.xr.compose.material3", name = "material3", version.ref = "material3Version" }
 androidx-compose-ui-graphics = { group = "androidx.compose.ui", name = "ui-graphics", version.ref = "uiGraphics" }
 play-services-auth = { group = "com.google.android.gms", name = "play-services-auth", version.ref = "playServicesAuthVersion" }
+androidx-xr-compose-material3-material3 = { group = "androidx.xr.compose.material3", name = "material3", version.ref = "androidxMaterial3" }
 
 [bundles]
 firebase = [

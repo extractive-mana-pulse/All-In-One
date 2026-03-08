@@ -1,6 +1,6 @@
 package com.example.allinone.navigation.util
 
-import com.example.allinone.navigation.screen.CodeLabScreens
+import com.example.allinone.navigation.screens.CodeLabScreens
 
 internal fun String.navigateByTitle(
     onNavigate: (route: Any, shouldStopTimer: Boolean) -> Unit,

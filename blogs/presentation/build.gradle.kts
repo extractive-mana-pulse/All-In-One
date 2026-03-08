@@ -7,5 +7,9 @@ android {
 }
 
 dependencies {
-
+    with(projects) {
+        implementation(core.domain)
+        implementation(core.presentation)
+    }
+    implementation(libs.androidx.xr.compose.material3.material3)
 }

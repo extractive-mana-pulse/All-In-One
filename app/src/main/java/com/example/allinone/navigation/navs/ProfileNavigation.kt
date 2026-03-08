@@ -11,7 +11,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import com.example.allinone.navigation.graph.Graph
-import com.example.allinone.navigation.screen.ProfileScreens
+import com.example.allinone.navigation.screens.ProfileScreens
 import com.example.data.firebase.GoogleAuthUiClient
 import com.example.presentation.editProfile.EditProfileScreen
 import com.example.presentation.profile.ProfileScreen

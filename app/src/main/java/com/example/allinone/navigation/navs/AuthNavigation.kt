@@ -10,7 +10,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import com.example.allinone.navigation.graph.Graph
-import com.example.allinone.navigation.screen.AuthScreens
+import com.example.allinone.navigation.screens.AuthScreens
 import com.example.presentation.forgot_password.ForgotPasswordScreen
 import com.example.presentation.sign_in.SignInScreenRoot
 import com.example.presentation.sign_in.SignInViewModel

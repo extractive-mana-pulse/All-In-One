@@ -9,7 +9,7 @@ import androidx.compose.animation.slideOutVertically
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
-import com.example.allinone.navigation.screen.CodeLabScreens
+import com.example.allinone.navigation.screens.CodeLabScreens
 import com.example.presentation.ComposeArticleScreen
 import com.example.presentation.Lemonade
 import com.example.presentation.TaskManager
