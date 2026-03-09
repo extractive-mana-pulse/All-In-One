@@ -16,9 +16,9 @@ import com.example.allinone.navigation.screens.HomeScreens
 import com.example.allinone.navigation.screens.ProfileScreens
 import com.example.data.firebase.GoogleAuthUiClient
 import com.example.presentation.details.DetailsRoot
-import com.example.presentation.screens.HelpAndFeedbackScreen
-import com.example.presentation.screens.HomeScreen
-import com.example.presentation.screens.SectionScreen
+import com.example.presentation.help.HelpAndFeedbackScreen
+import com.example.presentation.home.HomeScreen
+import com.example.presentation.home.SectionScreen
 
 internal fun NavGraphBuilder.mainNavigation(
     context: Context,
@@ -38,9 +38,9 @@ internal fun NavGraphBuilder.mainNavigation(
                 onNavigateToProfile = {
                     navController.navigate(ProfileScreens.Profile)
                 },
-                onNavigateToSectionById = {
+                /*onNavigateToSectionById = {
                     navController.navigate(HomeScreens.SectionScreen(it))
-                },
+                },*/
                 onNavigateToDetailWithId = {
                     navController.navigate(HomeScreens.DetailsScreen(it))
                 },

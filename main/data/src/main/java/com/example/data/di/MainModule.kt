@@ -2,9 +2,10 @@ package com.example.data.di
 
 import android.content.Context
 import com.example.data.repositoryImpl.DetailsRepositoryImpl
-import com.example.data.repositoryImpl.HomeRepositoryImpl
+import com.example.data.repositoryImpl.FirestoreCodelabsRepository
+import com.example.domain.repository.CodelabsRepository
 import com.example.domain.repository.DetailsRepository
-import com.example.domain.repository.HomeRepository
+import com.google.firebase.firestore.FirebaseFirestore
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -24,7 +25,12 @@ object MainModule {
 
     @Provides
     @Singleton
-    fun provideHomeRepository(
-        @ApplicationContext context: Context
-    ) : HomeRepository = HomeRepositoryImpl(context)
+    fun provideFirebaseFirestore(): FirebaseFirestore = FirebaseFirestore.getInstance()
+
+    @Provides
+    @Singleton
+    fun provideCodelabsRepository(
+        db: FirebaseFirestore
+    ): CodelabsRepository = FirestoreCodelabsRepository(db)
+
 }

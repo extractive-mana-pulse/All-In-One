@@ -26,6 +26,7 @@ import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.FloatingToolbarDefaults
+import androidx.compose.material3.HorizontalFloatingToolbar
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -51,8 +52,6 @@ import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import androidx.core.view.WindowInsetsControllerCompat
-import androidx.xr.compose.material3.ExperimentalMaterial3XrApi
-import androidx.xr.compose.material3.HorizontalFloatingToolbar
 import com.example.allinone.pl_coding.mini_challenges.presentation.R
 import com.example.presentation.ui.themes.bg
 import com.example.presentation.ui.themes.evergreenWish
@@ -304,7 +303,6 @@ private fun WinterGreetingThemeDropDownMenu(
     }
 }
 
-@OptIn(ExperimentalMaterial3XrApi::class)
 @PreviewLightDark
 @Composable
 private fun FloatingToolbar() {

@@ -60,6 +60,9 @@ internal fun NavGraphBuilder.settingsNavigation(
                 },
                 onNavigateToAdaptiveMode = {
                     navController.navigate(SettingsScreens.AdaptiveMode)
+                },
+                onNavigateUp = {
+                    navController.navigateUp()
                 }
             )
         }

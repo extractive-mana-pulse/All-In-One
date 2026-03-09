@@ -6,13 +6,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.LargeTopAppBar
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -21,11 +16,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.Font
-import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.allinone.core.presentation.R
@@ -33,6 +25,7 @@ import com.example.domain.model.SwipeGestureAction
 import com.example.presentation.autoNight.components.SettingWithSwitch
 import com.example.presentation.autoNight.components.SettingsItem
 import com.example.presentation.autoNight.components.SettingsItemWithSheet
+import com.example.presentation.components.AppTopBar
 import com.example.presentation.swipe.SwipeActionAppearance
 import com.example.presentation.swipe.components.ChatListSwipeGestureSelector
 import com.example.presentation.vm.ReadingModeViewModel
@@ -47,7 +40,6 @@ fun SettingScreen(
     onNavigateToTemperature: () -> Unit
 ) {
     val viewModel: ReadingModeViewModel = hiltViewModel()
-    val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
     var swipeAction by remember { mutableStateOf(SwipeGestureAction.DISABLE) }
 
     val cardBackground = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.4f)
@@ -55,32 +47,12 @@ fun SettingScreen(
 
     Scaffold(
         modifier = Modifier
-            .fillMaxSize()
-            .nestedScroll(scrollBehavior.nestedScrollConnection),
+            .fillMaxSize(),
         containerColor = MaterialTheme.colorScheme.background,
         topBar = {
-            LargeTopAppBar(
-                title = {
-                    Text(
-                        text = stringResource(R.string.settings),
-                        style = MaterialTheme.typography.titleLarge.copy(
-                            fontFamily = FontFamily(Font(R.font.inknut_antiqua_semi_bold)),
-                        )
-                    )
-                },
-                navigationIcon = {
-                    IconButton(onClick = onNavigateBack) {
-                        Icon(
-                            painter = painterResource(R.drawable.outline_arrow_back_24),
-                            contentDescription = null
-                        )
-                    }
-                },
-                colors = TopAppBarDefaults.largeTopAppBarColors(
-                    containerColor = Color.Transparent,
-                    scrolledContainerColor = MaterialTheme.colorScheme.background
-                ),
-                scrollBehavior = scrollBehavior
+            AppTopBar(
+                title = stringResource(R.string.settings),
+                onNavigationClick = onNavigateBack
             )
         }
     ) { innerPadding ->
@@ -90,20 +62,6 @@ fun SettingScreen(
                 .padding(innerPadding)
                 .padding(horizontal = 16.dp),
         ) {
-
-            // Section header
-            item {
-                Text(
-                    text = "Other Settings",
-                    style = MaterialTheme.typography.labelLarge.copy(
-                        fontFamily = FontFamily(Font(R.font.inknut_antiqua_semi_bold)),
-                        color = MaterialTheme.colorScheme.onSurface
-                    ),
-                    modifier = Modifier.padding(bottom = 8.dp, top = 4.dp)
-                )
-            }
-
-            // Group 1: Navigation items
             item {
                 androidx.compose.foundation.layout.Column(
                     modifier = Modifier
@@ -144,7 +102,6 @@ fun SettingScreen(
                 }
             }
 
-            // Group 2: Swipe gesture
             item {
                 androidx.compose.foundation.layout.Column(
                     modifier = Modifier
@@ -174,11 +131,6 @@ fun SettingScreen(
                         },
                     )
                 }
-            }
-
-            // Bottom padding
-            item {
-                androidx.compose.foundation.layout.Spacer(modifier = Modifier.padding(bottom = 24.dp))
             }
         }
     }

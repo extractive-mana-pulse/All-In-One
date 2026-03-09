@@ -1,4 +1,4 @@
-package com.example.presentation.screens
+package com.example.presentation.help
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -15,6 +15,10 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -25,6 +29,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.allinone.core.presentation.R
 import com.example.presentation.components.AppTopBar
+import com.example.presentation.help.components.FeedbackBottomSheet
 import com.example.presentation.helper.toastMessage
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -33,6 +38,8 @@ fun HelpAndFeedbackScreen(
     navController: NavHostController = rememberNavController()
 ) {
     val context = LocalContext.current
+    var showFeedbackSheet by remember { mutableStateOf(false) }
+
     Scaffold(
         topBar = {
             AppTopBar(
@@ -67,9 +74,6 @@ fun HelpAndFeedbackScreen(
                 supportingContent = {
                     Text(text = "Get in touch with our support team")
                 },
-//                trailingContent = {
-//                    Text(text = "Help")
-//                },
                 leadingContent = {
                     Icon(
                         painter = painterResource(R.drawable.outline_article_24),
@@ -101,13 +105,13 @@ fun HelpAndFeedbackScreen(
                     )
                 },
                 modifier = Modifier.clickable {
-                    toastMessage(
-                        context = context,
-                        message = "Hello world"
-                    )
-                    // open bottom bar that works directly with gmail.
+                    showFeedbackSheet = true
                 }
             )
         }
+    }
+
+    if (showFeedbackSheet) {
+        FeedbackBottomSheet(onDismiss = { showFeedbackSheet = false })
     }
 }
