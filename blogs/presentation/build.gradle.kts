@@ -11,5 +11,5 @@ dependencies {
         implementation(core.domain)
         implementation(core.presentation)
     }
-    implementation(libs.androidx.xr.compose.material3.material3)
+    implementation(libs.androidx.compose.material3)
 }

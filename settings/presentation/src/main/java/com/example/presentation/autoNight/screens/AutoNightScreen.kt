@@ -24,8 +24,6 @@ import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import com.example.allinone.core.presentation.R
 import com.example.presentation.autoNight.components.AutoNightModeItem
 import com.example.presentation.autoNight.vm.AutoNightViewModel
@@ -33,11 +31,10 @@ import com.example.presentation.autoNight.vm.AutoNightViewModel
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AutoNightModeScreen(
-    navController: NavHostController = rememberNavController(),
     onThemeChanged: (Boolean) -> Unit,
     onNavigateToScheduleMode: () -> Unit,
     onNavigateToAdaptiveMode: () -> Unit,
-
+    onNavigateUp: () -> Unit
 ) {
     val viewModel: AutoNightViewModel = hiltViewModel()
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
@@ -58,7 +55,7 @@ fun AutoNightModeScreen(
                     )
                 },
                 navigationIcon = {
-                    IconButton(onClick = { navController.navigateUp() }) {
+                    IconButton(onClick = onNavigateUp) {
                         Icon(
                             painter = painterResource(R.drawable.outline_arrow_back_24),
                             contentDescription = null

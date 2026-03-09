@@ -23,6 +23,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.allinone.navigation.NavigationDrawer
 import com.example.allinone.navigation.graph.Graph
 import com.example.allinone.navigation.screens.BlogsScreens
+import com.example.allinone.navigation.screens.HomeScreens
 import com.example.allinone.navigation.screens.PlCoding
 import com.example.allinone.navigation.screens.SettingsScreens
 import com.example.data.OnBoardingPreferences
@@ -93,6 +94,10 @@ fun NavigationGraph(
         },
         onNavigateToSettings = {
             navController.navigate(SettingsScreens.Settings)
+            toggleDrawer()
+        },
+        onNavigateToHelp = {
+            navController.navigate(HomeScreens.Help)
             toggleDrawer()
         },
         content = { innerPadding ->

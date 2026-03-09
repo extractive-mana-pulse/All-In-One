@@ -32,6 +32,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -200,9 +201,14 @@ private fun SwipeActionPicker(
     val view = LocalView.current
     val coroutineScope = rememberCoroutineScope()
 
+    var previousIndex by remember { mutableIntStateOf(centreIndex) }
+
     LaunchedEffect(centreIndex) {
         if (centreIndex in actions.indices) {
-            ViewCompat.performHapticFeedback(view, HapticFeedbackConstantsCompat.SEGMENT_TICK)
+            if (centreIndex != previousIndex) {
+                ViewCompat.performHapticFeedback(view, HapticFeedbackConstantsCompat.SEGMENT_TICK)
+                previousIndex = centreIndex
+            }
             onActionSelected(actions[centreIndex])
         }
     }
@@ -260,7 +266,7 @@ private fun SwipeActionPicker(
                         text = action.name.lowercase(),
                         fontSize = if (index == centreIndex) 16.sp else 14.sp,
                         fontWeight = if (index == centreIndex) FontWeight.SemiBold else FontWeight.Normal,
-                        color = if (index == centreIndex) Color.LightGray else Color.Black
+                        color = if (index == centreIndex) Color.Black else Color.LightGray
                     )
                 }
             }

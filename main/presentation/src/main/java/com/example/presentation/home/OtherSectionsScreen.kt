@@ -1,4 +1,4 @@
-package com.example.presentation.screens
+package com.example.presentation.home
 
 import android.content.Context
 import android.util.Log
@@ -19,7 +19,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -32,13 +31,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.allinone.core.presentation.R
 import com.example.domain.model.GithubCommands
 import com.example.domain.model.Sections
-import com.example.presentation.vm.HomeViewModel
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 
@@ -51,7 +48,7 @@ fun SectionScreen(
     val context = LocalContext.current
     val homeViewModel: HomeViewModel = hiltViewModel()
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
-    val loadGithubCommands by homeViewModel.githubCommands.collectAsStateWithLifecycle()
+//    val loadGithubCommands by homeViewModel.githubCommands.collectAsStateWithLifecycle()
     val sectionsDetails = remember { mutableStateOf(loadSectionsByIdFromJson(context = context, id = id)) }
 
     Scaffold(
@@ -91,9 +88,9 @@ fun SectionScreen(
         ) {
             when(sectionsDetails.value?.name) {
                 "Github commands" -> {
-                    items(loadGithubCommands?.size ?: 0) { command ->
-                        CommandItem(commands = loadGithubCommands!![command])
-                    }
+//                    items(loadGithubCommands?.size ?: 0) { command ->
+//                        CommandItem(commands = loadGithubCommands!![command])
+//                    }
                 }
             }
         }

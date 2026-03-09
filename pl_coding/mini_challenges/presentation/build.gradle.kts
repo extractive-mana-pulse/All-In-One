@@ -8,8 +8,7 @@ android {
 
 dependencies {
     // material 3 expressive
-    implementation(libs.androidx.compose.material3.android)
-    implementation(libs.material3)
+    implementation(libs.androidx.compose.material3)
     with(projects) {
         implementation(plCoding.miniChallenges.domain)
         implementation(core.presentation)

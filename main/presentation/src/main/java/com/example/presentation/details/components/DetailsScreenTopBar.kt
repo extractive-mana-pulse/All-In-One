@@ -1,5 +1,4 @@
 @file:OptIn(ExperimentalMaterial3Api::class)
-
 package com.example.presentation.details.components
 
 import androidx.compose.foundation.layout.PaddingValues
@@ -48,19 +47,6 @@ fun DetailsScreenTopBar(
                 onActionClick = {
                     IconButton(
                         onClick = { onPreviewClick(courseDetails.title) }
-//                                onPreviewClick = { title ->
-//                            title.navigateByTitle(
-//                                onNavigate = { route, shouldStopTimer ->
-//                                    if (shouldStopTimer) {
-//                                        onNavigateAway()
-//                                    }
-//                                    onNavigateByRoute(route)
-//                                },
-//                                onError = {
-//                                    toastMessage(context = context, message = "Preview not found.")
-//                                }
-//                            )
-//                        }
                     ) {
                         Icon(
                             painter = painterResource(R.drawable.outline_preview_24),

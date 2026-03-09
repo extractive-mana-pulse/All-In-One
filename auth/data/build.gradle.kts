@@ -16,7 +16,6 @@ dependencies {
     implementation(libs.googleid)
 
     implementation (libs.firebase.storage)
-    implementation (libs.firebase.firestore.ktx)
     implementation(libs.play.services.auth)
 
     with(projects) {

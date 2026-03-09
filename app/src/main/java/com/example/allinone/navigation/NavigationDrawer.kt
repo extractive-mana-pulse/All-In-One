@@ -56,7 +56,7 @@ fun NavigationDrawer(
     onNavigateToPLCoding: () -> Unit,
     onNavigateToSettings: () -> Unit = {},
     onNavigateToBlogs: () -> Unit = {},
-    onNavigateToHome: () -> Unit = {},
+    onNavigateToHelp: () -> Unit = {},
     snackbarHostState: SnackbarHostState,
     navController: NavHostController
 ) {
@@ -68,7 +68,7 @@ fun NavigationDrawer(
                     onNavigateToPLCoding = onNavigateToPLCoding,
                     onNavigateToSettings = onNavigateToSettings,
                     onNavigateToBlogs = onNavigateToBlogs,
-                    onNavigateToHome = onNavigateToHome
+                    onNavigateToHelp = onNavigateToHelp
                 )
             }
         },
@@ -105,7 +105,7 @@ private fun NavigationDrawerContent(
     onNavigateToPLCoding: () -> Unit,
     onNavigateToSettings: () -> Unit = {},
     onNavigateToBlogs: () -> Unit = {},
-    onNavigateToHome: () -> Unit = {}
+    onNavigateToHelp: () -> Unit = {}
 ) {
     val scope = rememberCoroutineScope()
     Box(
@@ -248,7 +248,7 @@ private fun NavigationDrawerContent(
                 },
                 onClick = {
                     scope.launch(Dispatchers.Main) { drawerState.close() }
-                    onNavigateToHome()
+                    onNavigateToHelp()
                 },
             )
 

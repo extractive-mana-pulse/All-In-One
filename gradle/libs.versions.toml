@@ -54,15 +54,13 @@ ksp = "2.1.0-1.0.29"
 pager = "1.10.1"
 
 projectAppId = "com.example.allinone"
-projectVersionName = "1.0.0"
+projectVersionName = "1.0.1"
 projectVersionCode = "1"
 projectMinSdkVersion = "26"
 projectTargetSdkVersion = "36"
 projectCompileSdkVersion = "36"
-material3Version = "1.0.0-alpha13"
 uiGraphics = "1.10.0"
 playServicesAuthVersion = "21.5.0"
-androidxMaterial3 = "1.0.0-alpha15"
 
 [libraries]
 
@@ -104,7 +102,7 @@ androidx-work-runtime-ktx = { module = "androidx.work:work-runtime-ktx", version
 credentials-play-services-auth = { module = "androidx.credentials:credentials-play-services-auth", version.ref = "credentialsPlayServicesAuth" }
 firebase-auth = { module = "com.google.firebase:firebase-auth", version.ref = "firebaseAuth" }
 firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebaseBom" }
-firebase-firestore-ktx = { module = "com.google.firebase:firebase-firestore-ktx", version.ref = "firebaseFirestoreKtx" }
+firebase-firestore = { module = "com.google.firebase:firebase-firestore" }
 firebase-storage = { module = "com.google.firebase:firebase-storage", version.ref = "firebaseStorage" }
 googleid = { module = "com.google.android.libraries.identity.googleid:googleid", version.ref = "googleid" }
 
@@ -177,15 +175,12 @@ kotlin-gradlePlugin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-pl
 room-gradlePlugin = { group = "androidx.room", name = "room-gradle-plugin", version.ref = "room" }
 android-tools-common = { module = "com.android.tools:common", version.ref = "androidTools" }
 ksp-gradlePlugin = { group = "com.google.devtools.ksp", name = "com.google.devtools.ksp.gradle.plugin", version.ref = "ksp" }
-material3 = { group = "androidx.xr.compose.material3", name = "material3", version.ref = "material3Version" }
 androidx-compose-ui-graphics = { group = "androidx.compose.ui", name = "ui-graphics", version.ref = "uiGraphics" }
 play-services-auth = { group = "com.google.android.gms", name = "play-services-auth", version.ref = "playServicesAuthVersion" }
-androidx-xr-compose-material3-material3 = { group = "androidx.xr.compose.material3", name = "material3", version.ref = "androidxMaterial3" }
 
 [bundles]
 firebase = [
     "firebase-auth",
-    "firebase-firestore-ktx",
     "firebase-storage",
     "googleid",
     "credentials-play-services-auth",
