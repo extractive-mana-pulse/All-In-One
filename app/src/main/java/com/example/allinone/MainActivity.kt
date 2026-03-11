@@ -2,10 +2,19 @@ package com.example.allinone
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
+import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.statusBars
+import androidx.compose.foundation.layout.windowInsetsTopHeight
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Modifier
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -37,7 +46,12 @@ class MainActivity : ComponentActivity() {
                 !mainViewModel.value.isReady.value
             }
         }
-        enableEdgeToEdge()
+        enableEdgeToEdge(
+            statusBarStyle = SystemBarStyle.auto(
+                lightScrim = android.graphics.Color.TRANSPARENT,
+                darkScrim = android.graphics.Color.TRANSPARENT
+            )
+        )
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
 
         setContent {
@@ -66,6 +80,14 @@ class MainActivity : ComponentActivity() {
                     fusedLocationClient = fusedLocationClient,
                     scheduleToggleState = isScheduledMode
                 )
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .windowInsetsTopHeight(WindowInsets.statusBars)
+                        .background(
+                            color = MaterialTheme.colorScheme.surface.copy(alpha = 0.75f)
+                        )
+                )
             }
             // check when sunset, it should automatically change the theme of the app.
             scheduledMode(
@@ -77,7 +99,7 @@ class MainActivity : ComponentActivity() {
                 }
             )
             // write a function. is scheduled mode is selected.
-            // use logic -> take current time and determine if it's day time or night time.
+            // use logic -> take current time and determine if it's day time or nighttime.
             // depending on that change theme of the app. (This logic already implemented in screen ScheduledModeScreen.kt)
             // just wrap it correctly and implement it in main activity.
         }
