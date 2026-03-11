@@ -7,74 +7,119 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Card
-import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.foundation.text.input.rememberTextFieldState
+import androidx.compose.material3.AppBarWithSearch
 import androidx.compose.material3.DrawerState
+import androidx.compose.material3.ExpandedFullScreenSearchBar
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SearchBar
 import androidx.compose.material3.SearchBarDefaults
+import androidx.compose.material3.SearchBarValue
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberSearchBarState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.AsyncImage
 import com.example.allinone.core.presentation.R
-import com.example.domain.model.Codelab
-import com.example.domain.model.Sections
 import com.example.domain.model.UserData
+import com.example.presentation.components.Loading
+import com.example.presentation.home.components.CodelabListItem
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import java.util.Locale
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreen(
+fun HomeScreenRoot(
+    onNavigateToHelp: () -> Unit = {},
+    onNavigateToBlogs: () -> Unit = {},
+    onNavigateToSettings: () -> Unit = {},
     onNavigateToProfile: () -> Unit = {},
+    onNavigateToCodelabs: () -> Unit = {},
+    onNavigateToPlCoding: () -> Unit = {},
     onNavigateToDetailWithId: (Int) -> Unit = {},
     drawerState: DrawerState,
     userData: UserData?
 ) {
     val homeViewModel: HomeViewModel = hiltViewModel()
     val state by homeViewModel.state.collectAsStateWithLifecycle()
-
     val scope = rememberCoroutineScope()
-    var active by remember { mutableStateOf(false) }
+    val snackbarHostState = remember { SnackbarHostState() }
+
+    LaunchedEffect(Unit) {
+        homeViewModel.event.collect { event ->
+            when (event) {
+                is HomeEvent.Error -> snackbarHostState.showSnackbar(message = event.message)
+            }
+        }
+    }
+
+    HomeScreen(
+        snackbarHostState = snackbarHostState,
+        onAction = { action ->
+            when (action) {
+                is HomeScreenAction.OnItemClick -> onNavigateToDetailWithId(action.id.toInt())
+                HomeScreenAction.OnNavigationDrawerClick -> {
+                    scope.launch { drawerState.apply { if (isClosed) open() else close() } }
+                }
+                HomeScreenAction.OnNavigationDrawerClick.OnDrawerBlogsClick -> onNavigateToBlogs()
+                HomeScreenAction.OnNavigationDrawerClick.OnDrawerCodelabsClick -> onNavigateToCodelabs()
+                HomeScreenAction.OnNavigationDrawerClick.OnDrawerPlCodingClick -> onNavigateToPlCoding()
+                HomeScreenAction.OnNavigationDrawerClick.OnDrawerHelpClick -> onNavigateToHelp()
+                HomeScreenAction.OnNavigationDrawerClick.OnDrawerSettingsClick -> onNavigateToSettings()
+                HomeScreenAction.OnProfileClick -> onNavigateToProfile()
+                else -> Unit
+            }
+            homeViewModel.onAction(action)
+        },
+        state = state,
+        userData = userData,
+        scope = scope
+    )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun HomeScreen(
+    snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
+    onAction: (HomeScreenAction) -> Unit = {},
+    state: HomeUiState,
+    userData: UserData?,
+    scope: CoroutineScope
+) {
     val searchHistory = remember { mutableStateListOf<String>() }
 
     val speechRecognizerLauncher = rememberLauncherForActivityResult(
@@ -85,198 +130,134 @@ fun HomeScreen(
                 ?.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS)
                 ?.get(0)
             if (spokenText != null) {
-                homeViewModel.onAction(HomeAction.OnSearchQueryChange(spokenText))
+                onAction(HomeScreenAction.OnSearchQueryChange(spokenText))
             }
         }
     }
 
-    Scaffold(
-        topBar = {
-            SearchBar(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(if (active) 0.dp else 16.dp),
-                inputField = {
-                    SearchBarDefaults.InputField(
-                        query = state.searchQuery,
-                        onQueryChange = {
-                            homeViewModel.onAction(HomeAction.OnSearchQueryChange(it))
-                        },
-                        onSearch = { newQuery ->
-                            if (newQuery.isNotBlank()) searchHistory.add(newQuery)
-                            active = false
-                            homeViewModel.onAction(HomeAction.ClearSearch)
-                        },
-                        expanded = active,
-                        onExpandedChange = { active = it },
-                        placeholder = {
-                            Text(text = stringResource(R.string.search))
-                        },
-                        leadingIcon = {
-                            if (!active) {
-                                IconButton(
-                                    onClick = {
-                                        scope.launch {
-                                            drawerState.apply {
-                                                if (isClosed) open() else close()
-                                            }
-                                        }
-                                    }
-                                ) {
-                                    Icon(
-                                        painter = painterResource(R.drawable.baseline_menu_24),
-                                        contentDescription = null
-                                    )
-                                }
-                            } else {
-                                IconButton(
-                                    onClick = {
-                                        active = false
-                                        homeViewModel.onAction(HomeAction.ClearSearch)
-                                    }
-                                ) {
-                                    Icon(
-                                        painter = painterResource(R.drawable.outline_arrow_back_24),
-                                        contentDescription = null
-                                    )
-                                }
-                            }
-                        },
-                        trailingIcon = {
-                            if (!active) {
-                                IconButton(onClick = onNavigateToProfile) {
-                                    AsyncImage(
-                                        model = userData?.profilePictureUrl ?: run {
-                                            val initials = userData?.username
-                                                ?.split(" ")
-                                                ?.mapNotNull { it.firstOrNull() }
-                                                ?.take(2)
-                                                ?.joinToString("")
-                                                ?: "U"
-                                            "https://ui-avatars.com/api/?name=$initials&size=200&background=4285f4&color=fff&bold=true"
-                                        },
-                                        contentDescription = null,
-                                        contentScale = ContentScale.Crop,
-                                        modifier = Modifier
-                                            .size(40.dp)
-                                            .clip(CircleShape)
-                                    )
-                                }
-                            } else {
-                                if (state.searchQuery.isEmpty()) {
-                                    IconButton(onClick = {
-                                        val intent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH).apply {
-                                            putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM)
-                                            putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault())
-                                            putExtra(RecognizerIntent.EXTRA_PROMPT, "Speak to search...")
-                                        }
-                                        speechRecognizerLauncher.launch(intent)
-                                    }) {
-                                        Icon(
-                                            painter = painterResource(R.drawable.outline_mic_24),
-                                            contentDescription = null
-                                        )
-                                    }
-                                } else {
-                                    IconButton(
-                                        onClick = {
-                                            homeViewModel.onAction(HomeAction.ClearSearch)
-                                        }
-                                    ) {
-                                        Icon(
-                                            painter = painterResource(R.drawable.outline_close_24),
-                                            contentDescription = null
-                                        )
-                                    }
-                                }
-                            }
-                        }
-                    )
-                },
-                expanded = active,
-                onExpandedChange = { active = it },
-            ) {
-                if (searchHistory.isEmpty()) {
+    val searchBarState = rememberSearchBarState()
+    val textFieldState = rememberTextFieldState(initialText = state.searchQuery)
+    val isExpanded = searchBarState.currentValue == SearchBarValue.Expanded
+    val isCollapsed = searchBarState.currentValue == SearchBarValue.Collapsed
+
+    val scrollBehavior = SearchBarDefaults.enterAlwaysSearchBarScrollBehavior()
+
+    LaunchedEffect(textFieldState.text) {
+        onAction(HomeScreenAction.OnSearchQueryChange(textFieldState.text.toString()))
+    }
+
+    val profileModel = userData?.profilePictureUrl ?: run {
+        val initials = userData?.username
+            ?.split(" ")?.mapNotNull { it.firstOrNull() }?.take(2)?.joinToString("") ?: "U"
+        "https://ui-avatars.com/api/?name=$initials&size=200&background=4285f4&color=fff&bold=true"
+    }
+
+    val inputField = @Composable {
+        SearchBarDefaults.InputField(
+            searchBarState = searchBarState,
+            textFieldState = textFieldState,
+            onSearch = { query ->
+                if (query.isNotBlank()) searchHistory.add(query)
+                scope.launch { searchBarState.animateToCollapsed() }
+                onAction(HomeScreenAction.ClearSearch)
+            },
+            placeholder = {
+                if (isCollapsed) {
                     Text(
-                        text = stringResource(R.string.search_history_empty),
+                        text = "Search in collections",
+                        style = MaterialTheme.typography.bodyLarge,
+                        textAlign = TextAlign.Center,
                         modifier = Modifier
-                            .padding(16.dp)
-                            .align(Alignment.CenterHorizontally)
+                            .fillMaxWidth()
+                            .clearAndSetSemantics {}
                     )
-                } else {
-                    searchHistory.forEach { item ->
-                        ListItem(
-                            modifier = Modifier
-                                .clickable {
-                                    homeViewModel.onAction(HomeAction.OnSearchQueryChange(item))
-                                    active = false
-                                }
-                                .fillMaxWidth(),
-                            headlineContent = {
-                                Text(
-                                    text = item,
-                                    style = MaterialTheme.typography.bodyMedium.copy(
-                                        color = MaterialTheme.colorScheme.primary,
-                                        fontFamily = FontFamily(Font(R.font.inknut_antiqua_bold)),
-                                    )
-                                )
-                            },
-                            leadingContent = {
-                                Icon(
-                                    painter = painterResource(R.drawable.outline_history_24),
-                                    contentDescription = null
-                                )
-                            },
-                            colors = ListItemDefaults.colors(
-                                containerColor = MaterialTheme.colorScheme.surfaceContainerHigh
-                            )
+                }
+            },
+            leadingIcon = {
+                if (isExpanded) {
+                    IconButton(onClick = {
+                        scope.launch { searchBarState.animateToCollapsed() }
+                        onAction(HomeScreenAction.ClearSearch)
+                    }) {
+                        Icon(
+                            painter = painterResource(R.drawable.outline_arrow_back_24),
+                            contentDescription = null
                         )
                     }
                 }
-            }
-        }
-    ) { innerPadding ->
-        when {
-            state.isLoading -> {
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(innerPadding),
-                    contentAlignment = Alignment.Center
-                ) {
-                    CircularProgressIndicator()
+            },
+            trailingIcon = {
+                when {
+                    isExpanded && textFieldState.text.isEmpty() -> {
+                        IconButton(onClick = {
+                            val intent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH).apply {
+                                putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM)
+                                putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault())
+                                putExtra(RecognizerIntent.EXTRA_PROMPT, "Speak to search...")
+                            }
+                            speechRecognizerLauncher.launch(intent)
+                        }) {
+                            Icon(painter = painterResource(R.drawable.outline_mic_24), contentDescription = null)
+                        }
+                    }
+                    isExpanded && textFieldState.text.isNotEmpty() -> {
+                        IconButton(onClick = {
+                            textFieldState.edit { replace(0, length, "") }
+                            onAction(HomeScreenAction.ClearSearch)
+                        }) {
+                            Icon(painter = painterResource(R.drawable.outline_close_24), contentDescription = null)
+                        }
+                    }
                 }
             }
+        )
+    }
 
+    Scaffold(
+        modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
+        topBar = {
+            AppBarWithSearch(
+                state = searchBarState,
+                inputField = inputField,
+                scrollBehavior = scrollBehavior,
+                navigationIcon = {
+                    IconButton(onClick = { onAction(HomeScreenAction.OnNavigationDrawerClick) }) {
+                        Icon(
+                            painter = painterResource(R.drawable.baseline_menu_24),
+                            contentDescription = null
+                        )
+                    }
+                },
+                actions = {
+                    IconButton(onClick = { onAction(HomeScreenAction.OnProfileClick) }) {
+                        AsyncImage(
+                            model = profileModel,
+                            contentDescription = null,
+                            contentScale = ContentScale.Crop,
+                            modifier = Modifier
+                                .size(32.dp)
+                                .clip(CircleShape)
+                        )
+                    }
+                }
+            )
+        },
+        snackbarHost = { SnackbarHost(hostState = snackbarHostState) }
+    ) { innerPadding ->
+        when {
+            state.isLoading -> Loading()
             state.error != null -> {
                 Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(innerPadding),
+                    modifier = Modifier.fillMaxSize().padding(innerPadding),
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
-                        text = state.error ?: "Unknown error",
+                        text = state.error,
                         color = MaterialTheme.colorScheme.error,
                         style = MaterialTheme.typography.bodyMedium
                     )
                 }
             }
-
-            state.codelabsFiltered.isEmpty() && state.searchQuery.isNotBlank() -> {
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(innerPadding),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text(
-                        text = "No results for \"${state.searchQuery}\"",
-                        style = MaterialTheme.typography.bodyMedium
-                    )
-                }
-            }
-
             else -> {
                 LazyColumn(
                     modifier = Modifier
@@ -296,7 +277,6 @@ fun HomeScreen(
                                 .padding(vertical = 8.dp)
                         )
                     }
-
                     item {
                         Column(
                             modifier = Modifier
@@ -305,11 +285,13 @@ fun HomeScreen(
                                 .background(MaterialTheme.colorScheme.surfaceVariant)
                                 .padding(vertical = 8.dp)
                         ) {
-                            state.codelabsFiltered.forEach { codelab ->
+                            state.codelabs.forEach { codelab ->
                                 CodelabListItem(
                                     codelab = codelab,
-                                    onNavigateToDetailWithId = onNavigateToDetailWithId,
-                                    isLastItem = codelab == state.codelabsFiltered.last()
+                                    onNavigateToDetailWithId = {
+                                        onAction(HomeScreenAction.OnItemClick(codelab.id))
+                                    },
+                                    isLastItem = codelab == state.codelabs.last()
                                 )
                             }
                         }
@@ -318,96 +300,104 @@ fun HomeScreen(
             }
         }
     }
-}
 
-@Composable
-private fun CodelabListItem(
-    modifier: Modifier = Modifier,
-    codelab: Codelab,
-    onNavigateToDetailWithId: (Int) -> Unit,
-    isLastItem: Boolean = false
-) {
-    Column(modifier = modifier.fillMaxWidth()) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .clickable { onNavigateToDetailWithId(codelab.id.toIntOrNull() ?: 0) }
-                .padding(horizontal = 8.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            AsyncImage(
-                model = codelab.imageUrl.ifEmpty { R.drawable.compose_logo },
-                contentDescription = null,
-                modifier = Modifier
-                    .size(60.dp)
-                    .clip(CircleShape),
-                contentScale = ContentScale.Fit
-            )
-            Spacer(modifier = Modifier.width(16.dp))
-            Column {
-                Text(
-                    text = codelab.title,
-                    style = MaterialTheme.typography.labelMedium.copy(
-                        fontFamily = FontFamily(Font(R.font.inknut_antiqua_bold)),
-                    )
-                )
-                Text(
-                    text = codelab.subtitle,
-                    style = MaterialTheme.typography.labelSmall.copy(
-                        fontFamily = FontFamily(Font(R.font.inknut_antiqua_light)),
-                    ),
-                    maxLines = 2,
-                    overflow = TextOverflow.Ellipsis
-                )
-            }
-        }
-        if (!isLastItem) {
-            HorizontalDivider(color = MaterialTheme.colorScheme.surface)
-        }
-    }
-}
-@Composable
-fun ItemCard(
-    onNavigateToSectionById: (Int) -> Unit = {},
-    sections: Sections
-) {
-    Card(
-        modifier = Modifier
-            .size(120.dp)
-            .clickable {
-                sections.id?.let { id -> onNavigateToSectionById(id) }
-            },
+    ExpandedFullScreenSearchBar(
+        state = searchBarState,
+        inputField = inputField,
     ) {
-        Column(
-            modifier = Modifier
-                .padding(12.dp)
-                .align(Alignment.CenterHorizontally),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
-        ) {
-            AsyncImage(
-                model = sections.imageUrl ?: R.drawable.compose_logo,
-                contentDescription = null,
-                modifier = Modifier
-                    .size(60.dp)
-                    .clip(RoundedCornerShape(8.dp))
-            )
-            Spacer(modifier = Modifier.height(6.dp))
-            Text(
-                text = sections.name ?: "Section not found",
-                style = MaterialTheme.typography.bodySmall.copy(
-                    fontFamily = FontFamily(Font(R.font.inknut_antiqua_light)),
-                    fontSize = MaterialTheme.typography.bodySmall.fontSize,
-                    fontWeight = MaterialTheme.typography.bodySmall.fontWeight,
-                    letterSpacing = MaterialTheme.typography.bodySmall.letterSpacing,
-                    lineHeight = MaterialTheme.typography.bodySmall.lineHeight,
-                    platformStyle = MaterialTheme.typography.bodySmall.platformStyle,
-                    textAlign = MaterialTheme.typography.bodySmall.textAlign,
-                    textDirection = MaterialTheme.typography.bodySmall.textDirection,
-                ),
-                maxLines = 2,
-                overflow = TextOverflow.Ellipsis
-            )
+        if (textFieldState.text.isNotEmpty()) {
+            if (state.codelabsFiltered.isEmpty()) {
+                Box(
+                    modifier = Modifier.fillMaxWidth().padding(24.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = "No results for \"${state.searchQuery}\"",
+                        style = MaterialTheme.typography.bodyMedium
+                    )
+                }
+            } else {
+                Text(
+                    text = "Results",
+                    style = MaterialTheme.typography.labelLarge,
+                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 10.dp)
+                )
+                state.codelabsFiltered.forEach { codelab ->
+                    ListItem(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable {
+                                onAction(HomeScreenAction.OnItemClick(codelab.id))
+                                scope.launch { searchBarState.animateToCollapsed() }
+                                onAction(HomeScreenAction.ClearSearch)
+                            },
+                        headlineContent = {
+                            Text(
+                                text = codelab.title,
+                                style = MaterialTheme.typography.bodyMedium.copy(
+                                    fontFamily = FontFamily(Font(R.font.inknut_antiqua_bold))
+                                )
+                            )
+                        },
+                        supportingContent = {
+                            Text(
+                                text = codelab.subtitle,
+                                style = MaterialTheme.typography.bodySmall,
+                                maxLines = 1
+                            )
+                        },
+                        leadingContent = {
+                            AsyncImage(
+                                model = codelab.imageUrl.ifEmpty { R.drawable.compose_logo },
+                                contentDescription = null,
+                                modifier = Modifier.size(40.dp).clip(CircleShape),
+                                contentScale = ContentScale.Fit
+                            )
+                        },
+                        colors = ListItemDefaults.colors(
+                            containerColor = MaterialTheme.colorScheme.surfaceContainerHigh
+                        )
+                    )
+                }
+            }
+        } else {
+            if (searchHistory.isEmpty()) {
+                Text(
+                    text = stringResource(R.string.search_history_empty),
+                    modifier = Modifier
+                        .padding(16.dp)
+                        .align(Alignment.CenterHorizontally)
+                )
+            } else {
+                searchHistory.forEach { item ->
+                    ListItem(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable {
+                                textFieldState.edit { replace(0, length, item) }
+                                onAction(HomeScreenAction.OnSearchQueryChange(item))
+                            },
+                        headlineContent = {
+                            Text(
+                                text = item,
+                                style = MaterialTheme.typography.bodyMedium.copy(
+                                    color = MaterialTheme.colorScheme.primary,
+                                    fontFamily = FontFamily(Font(R.font.inknut_antiqua_bold)),
+                                )
+                            )
+                        },
+                        leadingContent = {
+                            Icon(
+                                painter = painterResource(R.drawable.outline_history_24),
+                                contentDescription = null
+                            )
+                        },
+                        colors = ListItemDefaults.colors(
+                            containerColor = MaterialTheme.colorScheme.surfaceContainerHigh
+                        )
+                    )
+                }
+            }
         }
     }
 }

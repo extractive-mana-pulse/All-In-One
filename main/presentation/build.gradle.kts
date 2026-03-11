@@ -14,6 +14,7 @@ dependencies {
         implementation(core.domain)
         implementation(main.domain)
     }
+    implementation(libs.androidx.compose.material3)
     implementation(libs.gson)
     implementation(libs.coil.compose)
     implementation(libs.bundles.hilt)
