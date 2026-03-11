@@ -114,7 +114,6 @@ fun NavigationGraph(
                         onBoardingNavigation(navController)
                         authNavigation(navController)
                         mainNavigation(
-                            context = context,
                             navController = navController,
                             drawerState = drawerState,
                             googleAuthUiClient = googleAuthUiClient,

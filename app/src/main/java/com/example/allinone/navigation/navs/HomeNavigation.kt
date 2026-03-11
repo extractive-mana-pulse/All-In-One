@@ -1,6 +1,5 @@
 package com.example.allinone.navigation.navs
 
-import android.content.Context
 import androidx.compose.animation.expandHorizontally
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -17,11 +16,10 @@ import com.example.allinone.navigation.screens.ProfileScreens
 import com.example.data.firebase.GoogleAuthUiClient
 import com.example.presentation.details.DetailsRoot
 import com.example.presentation.help.HelpAndFeedbackScreen
-import com.example.presentation.home.HomeScreen
+import com.example.presentation.home.HomeScreenRoot
 import com.example.presentation.home.SectionScreen
 
 internal fun NavGraphBuilder.mainNavigation(
-    context: Context,
     navController: NavHostController,
     drawerState: DrawerState,
     googleAuthUiClient: GoogleAuthUiClient
@@ -34,13 +32,10 @@ internal fun NavGraphBuilder.mainNavigation(
             enterTransition = { expandHorizontally() + fadeIn() },
             exitTransition = { shrinkHorizontally() + fadeOut() }
         ) {
-            HomeScreen(
+            HomeScreenRoot(
                 onNavigateToProfile = {
                     navController.navigate(ProfileScreens.Profile)
                 },
-                /*onNavigateToSectionById = {
-                    navController.navigate(HomeScreens.SectionScreen(it))
-                },*/
                 onNavigateToDetailWithId = {
                     navController.navigate(HomeScreens.DetailsScreen(it))
                 },

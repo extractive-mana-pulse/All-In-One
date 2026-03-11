@@ -2,7 +2,6 @@ package com.example.presentation.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.domain.model.Codelab
 import com.example.domain.repository.CodelabsRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
@@ -16,29 +15,12 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import javax.inject.Inject
 
-data class HomeState(
-    val codelabs: List<Codelab> = emptyList(),
-    val codelabsFiltered: List<Codelab> = emptyList(),
-    val searchQuery: String = "",
-    val isLoading: Boolean = true,
-    val error: String? = null
-)
-
-sealed interface HomeAction {
-    data class OnSearchQueryChange(val query: String) : HomeAction
-    data object ClearSearch : HomeAction
-}
-
-sealed interface HomeEvent {
-    data class Error(val message: String) : HomeEvent
-}
-
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     private val codelabsRepository: CodelabsRepository
 ) : ViewModel() {
 
-    private val _state = MutableStateFlow(HomeState())
+    private val _state = MutableStateFlow(HomeUiState())
     val state = _state.asStateFlow()
 
     private val _event = Channel<HomeEvent>()
@@ -48,9 +30,9 @@ class HomeViewModel @Inject constructor(
         loadCodelabs()
     }
 
-    fun onAction(action: HomeAction) {
+    fun onAction(action: HomeScreenAction) {
         when (action) {
-            is HomeAction.OnSearchQueryChange -> {
+            is HomeScreenAction.OnSearchQueryChange -> {
                 val filtered = if (action.query.isNotBlank()) {
                     _state.value.codelabs.filter { codelab ->
                         codelab.title.contains(action.query, ignoreCase = true) ||
@@ -60,7 +42,6 @@ class HomeViewModel @Inject constructor(
                 } else {
                     _state.value.codelabs
                 }
-
                 _state.update {
                     it.copy(
                         searchQuery = action.query,
@@ -68,8 +49,7 @@ class HomeViewModel @Inject constructor(
                     )
                 }
             }
-
-            HomeAction.ClearSearch -> {
+            HomeScreenAction.ClearSearch -> {
                 _state.update {
                     it.copy(
                         searchQuery = "",
@@ -77,6 +57,7 @@ class HomeViewModel @Inject constructor(
                     )
                 }
             }
+            else -> Unit
         }
     }
 
