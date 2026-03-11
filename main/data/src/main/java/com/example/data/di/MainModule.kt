@@ -3,8 +3,10 @@ package com.example.data.di
 import android.content.Context
 import com.example.data.repositoryImpl.DetailsRepositoryImpl
 import com.example.data.repositoryImpl.FirestoreCodelabsRepository
+import com.example.data.repositoryImpl.FirestoreLeetcodeRepository
 import com.example.domain.repository.CodelabsRepository
 import com.example.domain.repository.DetailsRepository
+import com.example.domain.repository.LeetcodeRepository
 import com.google.firebase.firestore.FirebaseFirestore
 import dagger.Module
 import dagger.Provides
@@ -33,4 +35,9 @@ object MainModule {
         db: FirebaseFirestore
     ): CodelabsRepository = FirestoreCodelabsRepository(db)
 
+    @Provides
+    @Singleton
+    fun provideLeetcodeRepository(
+        db: FirebaseFirestore
+    ): LeetcodeRepository = FirestoreLeetcodeRepository(db)
 }

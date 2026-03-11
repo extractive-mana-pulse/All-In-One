@@ -1,44 +1,44 @@
 package com.example.data.repositoryImpl
 
-import com.example.data.CodelabEntity
-import com.example.domain.model.Codelab
-import com.example.domain.repository.CodelabsRepository
+import com.example.data.LeetcodeEntity
+import com.example.domain.model.Leetcode
+import com.example.domain.repository.LeetcodeRepository
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 
-class FirestoreCodelabsRepository(
+class FirestoreLeetcodeRepository(
     private val db: FirebaseFirestore
-) : CodelabsRepository {
+) : LeetcodeRepository {
 
     companion object {
-        const val CODELABS_COLLECTION = "codelabs"
+        const val LEETCODE_COLLECTION = "leetcode"
     }
 
-    override fun getAllAlgorithms(): Flow<List<Codelab>> = callbackFlow {
+    override fun getAllAlgorithms(): Flow<List<Leetcode>> = callbackFlow {
         val listener = db
-            .collection(CODELABS_COLLECTION)
+            .collection(LEETCODE_COLLECTION)
             .addSnapshotListener { snapshot, error ->
                 if (error != null) {
                     trySend(emptyList())
                     return@addSnapshotListener
                 }
 
-                val codelabs = snapshot?.documents.orEmpty().mapNotNull { document ->
-                    document.toObject(CodelabEntity::class.java)
-                        ?.toCodelab(id = document.id)
+                val leetcode = snapshot?.documents.orEmpty().mapNotNull { document ->
+                    document.toObject(LeetcodeEntity::class.java)
+                        ?.toLeetcode(id = document.id)
                 }
 
-                trySend(codelabs)
+                trySend(leetcode)
             }
 
         awaitClose { listener.remove() }
     }
 
-    override fun getCodelabById(id: String): Flow<Codelab?> = callbackFlow {
+    override fun getLeetCodeById(id: String): Flow<Leetcode?> = callbackFlow {
         val listener = db
-            .collection(CODELABS_COLLECTION)
+            .collection(LEETCODE_COLLECTION)
             .document(id)
             .addSnapshotListener { snapshot, error ->
                 if (error != null) {
@@ -46,19 +46,19 @@ class FirestoreCodelabsRepository(
                     return@addSnapshotListener
                 }
 
-                val codelab = snapshot
-                    ?.toObject(CodelabEntity::class.java)
-                    ?.toCodelab(id = snapshot.id)
+                val leetcode = snapshot
+                    ?.toObject(LeetcodeEntity::class.java)
+                    ?.toLeetcode(id = snapshot.id)
 
-                trySend(codelab)
+                trySend(leetcode)
             }
 
         awaitClose { listener.remove() }
     }
 
-    override fun getCodelabByTitle(title: String): Flow<Codelab?> = callbackFlow {
+    override fun getLeetCodeByTitle(title: String): Flow<Leetcode?> = callbackFlow {
         val listener = db
-            .collection(CODELABS_COLLECTION)
+            .collection(LEETCODE_COLLECTION)
             .whereEqualTo("title", title)
             .limit(1)
             .addSnapshotListener { snapshot, error ->
@@ -67,15 +67,15 @@ class FirestoreCodelabsRepository(
                     return@addSnapshotListener
                 }
 
-                val codelab = snapshot
+                val leetcode = snapshot
                     ?.documents
                     ?.firstOrNull()
                     ?.let { document ->
-                        document.toObject(CodelabEntity::class.java)
-                            ?.toCodelab(id = document.id)
+                        document.toObject(LeetcodeEntity::class.java)
+                            ?.toLeetcode(id = document.id)
                     }
 
-                trySend(codelab)
+                trySend(leetcode)
             }
 
         awaitClose { listener.remove() }

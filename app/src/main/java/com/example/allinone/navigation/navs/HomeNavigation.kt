@@ -5,6 +5,9 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.shrinkHorizontally
 import androidx.compose.material3.DrawerState
+import androidx.compose.runtime.getValue
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
@@ -15,8 +18,10 @@ import com.example.allinone.navigation.screens.HomeScreens
 import com.example.allinone.navigation.screens.ProfileScreens
 import com.example.data.firebase.GoogleAuthUiClient
 import com.example.presentation.details.DetailsRoot
+import com.example.presentation.details.LeetcodeDetailScreen
 import com.example.presentation.help.HelpAndFeedbackScreen
 import com.example.presentation.home.HomeScreenRoot
+import com.example.presentation.home.HomeViewModel
 import com.example.presentation.home.SectionScreen
 
 internal fun NavGraphBuilder.mainNavigation(
@@ -40,7 +45,10 @@ internal fun NavGraphBuilder.mainNavigation(
                     navController.navigate(HomeScreens.DetailsScreen(it))
                 },
                 drawerState = drawerState,
-                userData = googleAuthUiClient.getSignedInUser()
+                userData = googleAuthUiClient.getSignedInUser(),
+                onLeetCodeDetailWithId = {
+                    navController.navigate(HomeScreens.LeetCodeDetailsScreen(it))
+                },
             )
         }
         composable<HomeScreens.Help> {
@@ -60,6 +68,20 @@ internal fun NavGraphBuilder.mainNavigation(
                 }
             )
         }
+        composable<HomeScreens.LeetCodeDetailsScreen> {
+            val argument = it.toRoute<HomeScreens.LeetCodeDetailsScreen>()
+            val homeViewModel: HomeViewModel = hiltViewModel()
+            val algorithm by homeViewModel.getAlgorithmById(argument.id.toString())
+                .collectAsStateWithLifecycle(initialValue = null)
+
+            algorithm?.let { leetcode ->
+                LeetcodeDetailScreen(
+                    algorithm = leetcode,
+                    onNavigateBack = { navController.navigateUp() }
+                )
+            }
+        }
+
         composable<HomeScreens.SectionScreen> {
             val argument = it.toRoute<HomeScreens.SectionScreen>()
             SectionScreen(
