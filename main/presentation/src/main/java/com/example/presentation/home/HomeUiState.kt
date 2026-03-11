@@ -1,11 +1,14 @@
 package com.example.presentation.home
 
 import com.example.domain.model.Codelab
+import com.example.domain.model.Leetcode
 
 data class HomeUiState(
     val codelabs: List<Codelab> = emptyList(),
     val codelabsFiltered: List<Codelab> = emptyList(),
     val searchQuery: String = "",
     val isLoading: Boolean = true,
-    val error: String? = null
+    val error: String? = null,
+    val leetcodeAlgorithms: List<Leetcode> = emptyList(),
+    val leetcodeFiltered: List<Leetcode> = emptyList(),
 )

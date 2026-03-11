@@ -12,6 +12,9 @@ sealed interface HomeScreens {
     data class DetailsScreen(val id: Int) : HomeScreens
 
     @Serializable
+    data class LeetCodeDetailsScreen(val id: Int) : HomeScreens
+
+    @Serializable
     object Help : HomeScreens
 
     @Serializable

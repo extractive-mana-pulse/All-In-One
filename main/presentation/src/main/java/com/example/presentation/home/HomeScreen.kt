@@ -42,6 +42,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
@@ -58,6 +59,7 @@ import com.example.allinone.core.presentation.R
 import com.example.domain.model.UserData
 import com.example.presentation.components.Loading
 import com.example.presentation.home.components.CodelabListItem
+import com.example.presentation.home.components.LeetcodeListItem
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import java.util.Locale
@@ -71,6 +73,7 @@ fun HomeScreenRoot(
     onNavigateToCodelabs: () -> Unit = {},
     onNavigateToPlCoding: () -> Unit = {},
     onNavigateToDetailWithId: (Int) -> Unit = {},
+    onLeetCodeDetailWithId: (Int) -> Unit = {},
     drawerState: DrawerState,
     userData: UserData?
 ) {
@@ -101,6 +104,7 @@ fun HomeScreenRoot(
                 HomeScreenAction.OnNavigationDrawerClick.OnDrawerHelpClick -> onNavigateToHelp()
                 HomeScreenAction.OnNavigationDrawerClick.OnDrawerSettingsClick -> onNavigateToSettings()
                 HomeScreenAction.OnProfileClick -> onNavigateToProfile()
+                is HomeScreenAction.OnLeetcodeItemClick -> onLeetCodeDetailWithId(action.id.toInt())
                 else -> Unit
             }
             homeViewModel.onAction(action)
@@ -265,6 +269,7 @@ fun HomeScreen(
                         .padding(innerPadding)
                         .padding(horizontal = 16.dp)
                 ) {
+                    // ── Codelabs Section ──────────────────────────────
                     item {
                         Text(
                             text = stringResource(R.string.courses),
@@ -296,6 +301,39 @@ fun HomeScreen(
                             }
                         }
                     }
+
+                    // ── LeetCode Section ──────────────────────────────
+                    item {
+                        Text(
+                            text = "LeetCode",
+                            style = MaterialTheme.typography.bodyLarge.copy(
+                                fontFamily = FontFamily(Font(R.font.inknut_antiqua_extra_bold)),
+                            ),
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .background(MaterialTheme.colorScheme.surface)
+                                .padding(vertical = 8.dp)
+                        )
+                    }
+                    item {
+                        Column(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .clip(RoundedCornerShape(24.dp))
+                                .background(MaterialTheme.colorScheme.surfaceVariant)
+                                .padding(vertical = 8.dp)
+                        ) {
+                            state.leetcodeAlgorithms.forEach { algorithm ->
+                                LeetcodeListItem(
+                                    algorithm = algorithm,
+                                    onItemClick = {
+                                        onAction(HomeScreenAction.OnLeetcodeItemClick(algorithm.id))
+                                    },
+                                    isLastItem = algorithm == state.leetcodeAlgorithms.last()
+                                )
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -306,7 +344,7 @@ fun HomeScreen(
         inputField = inputField,
     ) {
         if (textFieldState.text.isNotEmpty()) {
-            if (state.codelabsFiltered.isEmpty()) {
+            if (state.codelabsFiltered.isEmpty() && state.leetcodeFiltered.isEmpty()) {
                 Box(
                     modifier = Modifier.fillMaxWidth().padding(24.dp),
                     contentAlignment = Alignment.Center
@@ -317,47 +355,108 @@ fun HomeScreen(
                     )
                 }
             } else {
-                Text(
-                    text = "Results",
-                    style = MaterialTheme.typography.labelLarge,
-                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 10.dp)
-                )
-                state.codelabsFiltered.forEach { codelab ->
-                    ListItem(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .clickable {
-                                onAction(HomeScreenAction.OnItemClick(codelab.id))
-                                scope.launch { searchBarState.animateToCollapsed() }
-                                onAction(HomeScreenAction.ClearSearch)
-                            },
-                        headlineContent = {
-                            Text(
-                                text = codelab.title,
-                                style = MaterialTheme.typography.bodyMedium.copy(
-                                    fontFamily = FontFamily(Font(R.font.inknut_antiqua_bold))
-                                )
-                            )
-                        },
-                        supportingContent = {
-                            Text(
-                                text = codelab.subtitle,
-                                style = MaterialTheme.typography.bodySmall,
-                                maxLines = 1
-                            )
-                        },
-                        leadingContent = {
-                            AsyncImage(
-                                model = codelab.imageUrl.ifEmpty { R.drawable.compose_logo },
-                                contentDescription = null,
-                                modifier = Modifier.size(40.dp).clip(CircleShape),
-                                contentScale = ContentScale.Fit
-                            )
-                        },
-                        colors = ListItemDefaults.colors(
-                            containerColor = MaterialTheme.colorScheme.surfaceContainerHigh
-                        )
+                if (state.codelabsFiltered.isNotEmpty()) {
+                    Text(
+                        text = "Codelabs",
+                        style = MaterialTheme.typography.labelLarge,
+                        modifier = Modifier.padding(horizontal = 16.dp, vertical = 10.dp)
                     )
+                    state.codelabsFiltered.forEach { codelab ->
+                        ListItem(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .clickable {
+                                    onAction(HomeScreenAction.OnItemClick(codelab.id))
+                                    scope.launch { searchBarState.animateToCollapsed() }
+                                    onAction(HomeScreenAction.ClearSearch)
+                                },
+                            headlineContent = {
+                                Text(
+                                    text = codelab.title,
+                                    style = MaterialTheme.typography.bodyMedium.copy(
+                                        fontFamily = FontFamily(Font(R.font.inknut_antiqua_bold))
+                                    )
+                                )
+                            },
+                            supportingContent = {
+                                Text(
+                                    text = codelab.subtitle,
+                                    style = MaterialTheme.typography.bodySmall,
+                                    maxLines = 1
+                                )
+                            },
+                            leadingContent = {
+                                AsyncImage(
+                                    model = codelab.imageUrl.ifEmpty { R.drawable.compose_logo },
+                                    contentDescription = null,
+                                    modifier = Modifier.size(40.dp).clip(CircleShape),
+                                    contentScale = ContentScale.Fit
+                                )
+                            },
+                            colors = ListItemDefaults.colors(
+                                containerColor = MaterialTheme.colorScheme.surfaceContainerHigh
+                            )
+                        )
+                    }
+                }
+
+                if (state.leetcodeFiltered.isNotEmpty()) {
+                    Text(
+                        text = "LeetCode",
+                        style = MaterialTheme.typography.labelLarge,
+                        modifier = Modifier.padding(horizontal = 16.dp, vertical = 10.dp)
+                    )
+                    state.leetcodeFiltered.forEach { algorithm ->
+                        val difficultyColor = when (algorithm.difficulty.lowercase()) {
+                            "easy" -> Color(0xFF00B8A3)
+                            "medium" -> Color(0xFFFFC01E)
+                            "hard" -> Color(0xFFFF375F)
+                            else -> MaterialTheme.colorScheme.outline
+                        }
+                        ListItem(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .clickable {
+                                    onAction(HomeScreenAction.OnLeetcodeItemClick(algorithm.id))
+                                    scope.launch { searchBarState.animateToCollapsed() }
+                                    onAction(HomeScreenAction.ClearSearch)
+                                },
+                            headlineContent = {
+                                Text(
+                                    text = algorithm.title,
+                                    style = MaterialTheme.typography.bodyMedium.copy(
+                                        fontFamily = FontFamily(Font(R.font.inknut_antiqua_bold))
+                                    )
+                                )
+                            },
+                            supportingContent = {
+                                Text(
+                                    text = algorithm.category,
+                                    style = MaterialTheme.typography.bodySmall,
+                                    maxLines = 1
+                                )
+                            },
+                            trailingContent = {
+                                Box(
+                                    modifier = Modifier
+                                        .clip(RoundedCornerShape(6.dp))
+                                        .background(difficultyColor.copy(alpha = 0.15f))
+                                        .padding(horizontal = 8.dp, vertical = 4.dp)
+                                ) {
+                                    Text(
+                                        text = algorithm.difficulty,
+                                        style = MaterialTheme.typography.labelSmall.copy(
+                                            color = difficultyColor,
+                                            fontFamily = FontFamily(Font(R.font.inknut_antiqua_bold))
+                                        )
+                                    )
+                                }
+                            },
+                            colors = ListItemDefaults.colors(
+                                containerColor = MaterialTheme.colorScheme.surfaceContainerHigh
+                            )
+                        )
+                    }
                 }
             }
         } else {

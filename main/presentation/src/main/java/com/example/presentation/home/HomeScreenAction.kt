@@ -12,4 +12,5 @@ sealed interface HomeScreenAction {
     data class OnItemClick(val id: String) : HomeScreenAction
     data class OnSearchQueryChange(val query: String) : HomeScreenAction
     data object ClearSearch : HomeScreenAction
+    data class OnLeetcodeItemClick(val id: String) : HomeScreenAction
 }
