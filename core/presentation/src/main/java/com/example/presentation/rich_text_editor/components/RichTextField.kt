@@ -28,7 +28,7 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.presentation.R
+import com.example.allinone.core.presentation.R
 import com.example.presentation.rich_text_editor.FormattingSpan
 import com.example.presentation.rich_text_editor.RichTextEditorAction
 import com.example.presentation.rich_text_editor.RichTextEditorState

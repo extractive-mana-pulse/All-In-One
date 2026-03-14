@@ -15,4 +15,8 @@ dependencies {
     ksp(libs.room.compiler)
 
     implementation(projects.core.domain)
+
+    // hilt
+    implementation(libs.hilt.android)
+    ksp(libs.hilt.android.compiler)
 }
