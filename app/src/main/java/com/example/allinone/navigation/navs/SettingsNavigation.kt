@@ -11,13 +11,13 @@ import androidx.navigation.navigation
 import com.example.allinone.navigation.graph.Graph
 import com.example.allinone.navigation.screens.HomeScreens
 import com.example.allinone.navigation.screens.SettingsScreens
-import com.example.presentation.autoNight.screens.AdaptiveModeScreen
-import com.example.presentation.autoNight.screens.AutoNightModeScreen
-import com.example.presentation.autoNight.screens.ScheduledModeScreen
-import com.example.presentation.autoNight.screens.SettingScreen
-import com.example.presentation.batterySafe.screens.BatterySavingScreen
-import com.example.presentation.deviceTemp.screens.AllSensorsScreen
-import com.example.presentation.deviceTemp.screens.DeviceTempScreen
+import com.example.presentation.auto_night.screens.AdaptiveModeScreen
+import com.example.presentation.auto_night.screens.AutoNightModeScreen
+import com.example.presentation.auto_night.screens.ScheduledModeScreen
+import com.example.presentation.SettingScreen
+import com.example.presentation.battery_safe.screens.BatterySavingScreen
+import com.example.presentation.device_temp.screens.AllSensorsScreen
+import com.example.presentation.device_temp.screens.DeviceTempScreen
 import com.google.android.gms.location.FusedLocationProviderClient
 
 internal fun NavGraphBuilder.settingsNavigation(

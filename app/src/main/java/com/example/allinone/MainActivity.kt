@@ -22,9 +22,9 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.allinone.navigation.navs.NavigationGraph
 import com.example.domain.model.Twilight
-import com.example.presentation.autoNight.vm.AutoNightViewModel
-import com.example.presentation.autoNight.vm.DarkThemeViewModel
-import com.example.presentation.autoNight.vm.ScheduledModeViewModel
+import com.example.presentation.auto_night.vm.AutoNightViewModel
+import com.example.presentation.auto_night.vm.DarkThemeViewModel
+import com.example.presentation.auto_night.vm.ScheduledModeViewModel
 import com.example.presentation.theme.AllInOneTheme
 import com.example.presentation.vm.MainViewModel
 import com.example.presentation.vm.ReadingModeViewModel
