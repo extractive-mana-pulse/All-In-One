@@ -2,4 +2,6 @@
 <resources>
     <string name="app_name">All In One</string>
     <string name="sign_in_with_google">Sign in with Google</string>
+    <string name="rte_desc">Enable this option to use a rich text editor in screens where text formatting is supported. When turned on, you’ll be able to apply formatting such as headings, bold, lists, and other styling tools directly while editing content.</string>
+    <string name="rich_text_editor">Rich Text Editor</string>
 </resources>

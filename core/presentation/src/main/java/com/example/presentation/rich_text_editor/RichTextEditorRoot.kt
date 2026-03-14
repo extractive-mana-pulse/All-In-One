@@ -24,11 +24,11 @@ import com.example.presentation.rich_text_editor.components.RichTextToolbar
 
 @Composable
 fun RichTextEditorRoot(
-    viewModel: RichTextEditorViewModel = viewModel(),
+    viewModel: com.example.presentation.rich_text_editor.RichTextEditorViewModel = viewModel(),
     onNavigateUp: () -> Unit = {}
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
-    RichTextEditorScreen(
+    _root_ide_package_.com.example.presentation.rich_text_editor.RichTextEditorScreen(
         state = state,
         onAction = viewModel::onAction,
         onNavigateUp = onNavigateUp
@@ -38,8 +38,8 @@ fun RichTextEditorRoot(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun RichTextEditorScreen(
-    state: RichTextEditorState,
-    onAction: (RichTextEditorAction) -> Unit,
+    state: com.example.presentation.rich_text_editor.RichTextEditorState,
+    onAction: (com.example.presentation.rich_text_editor.RichTextEditorAction) -> Unit,
     onNavigateUp: () -> Unit = {}
 ) {
     Scaffold(
@@ -71,12 +71,12 @@ private fun RichTextEditorScreen(
                 .padding(innerPadding)
                 .imePadding()
         ) {
-            RichTextField(
+            _root_ide_package_.com.example.presentation.rich_text_editor.components.RichTextField(
                 state = state,
                 onAction = onAction,
                 modifier = Modifier.fillMaxSize()
             )
-            RichTextToolbar(
+            _root_ide_package_.com.example.presentation.rich_text_editor.components.RichTextToolbar(
                 state = state,
                 onAction = onAction,
                 modifier = Modifier
