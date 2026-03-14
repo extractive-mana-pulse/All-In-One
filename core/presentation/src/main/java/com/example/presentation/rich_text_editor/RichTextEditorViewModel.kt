@@ -10,24 +10,24 @@ import kotlinx.coroutines.flow.update
 
 class RichTextEditorViewModel : ViewModel() {
 
-    private val _state = MutableStateFlow(RichTextEditorState())
+    private val _state = MutableStateFlow(_root_ide_package_.com.example.presentation.rich_text_editor.RichTextEditorState())
     val state = _state.asStateFlow()
 
-    fun onAction(action: RichTextEditorAction) {
+    fun onAction(action: com.example.presentation.rich_text_editor.RichTextEditorAction) {
         when (action) {
-            RichTextEditorAction.OnBoldClick ->
+            _root_ide_package_.com.example.presentation.rich_text_editor.RichTextEditorAction.OnBoldClick ->
                 _state.update { it.copy(isCurrentlyBold = !it.isCurrentlyBold) }
 
-            RichTextEditorAction.OnItalicClick ->
+            _root_ide_package_.com.example.presentation.rich_text_editor.RichTextEditorAction.OnItalicClick ->
                 _state.update { it.copy(isCurrentlyItalic = !it.isCurrentlyItalic) }
 
-            RichTextEditorAction.OnUnderlineClick ->
+            _root_ide_package_.com.example.presentation.rich_text_editor.RichTextEditorAction.OnUnderlineClick ->
                 _state.update { it.copy(isCurrentlyUnderline = !it.isCurrentlyUnderline) }
 
-            RichTextEditorAction.OnColorClick ->
+            _root_ide_package_.com.example.presentation.rich_text_editor.RichTextEditorAction.OnColorClick ->
                 _state.update { it.copy(isSelectColorDropdownExpanded = true) }
 
-            RichTextEditorAction.OnColorDropdownDismiss ->
+            _root_ide_package_.com.example.presentation.rich_text_editor.RichTextEditorAction.OnColorDropdownDismiss ->
                 _state.update { it.copy(isSelectColorDropdownExpanded = false) }
 
             is RichTextEditorAction.OnColorChange ->
