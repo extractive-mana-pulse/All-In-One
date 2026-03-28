@@ -12,6 +12,120 @@ All In One is a learning platform for Android developers and Algorithms beginner
 
 4. **Blogs** — A collection of the latest blog posts covering trends and updates in the Android ecosystem, helping you stay up to date in this fast-evolving field.
 
+## 🎥 Demo
+
+<details>
+<summary>Phone Demo</summary>
+
+https://github.com/user-attachments/assets/afca2762-50ce-4f1c-8e46-c2bc0a48bff0
+
+</details>
+
+## 📱 App Screenshots
+
+> [!WARNING]
+> Application screenshots are currently in development. Stay tuned—great visuals are on the way. Please be patient!
+
+<details>
+  <details>
+  <summary>Home Screen</summary>
+  
+  | Phone-portrait | Phone-landscape |
+  |------|----------|
+  |  |  |
+
+  | Tablet-portrait | Tablet-landscape |
+  |------|----------|
+  | |  |
+</details>
+
+<details>
+  <summary>Codelab Detail Screen</summary>
+
+  | Phone-portrait | Phone-landscape |
+  |------|----------|
+  |  |  |
+
+  | Tablet-portrait | Tablet-landscape |
+  |------|----------|
+  |  |  |
+
+</details>
+
+<details>
+   <summary>Leetcode Detail Screen</summary>
+
+  | Phone-portrait | Phone-landscape |
+  |------|----------|
+  |  |  |
+
+  | Tablet-portrait | Tablet-landscape |
+  |------|----------|
+  |  |  |
+</details>
+
+<details>
+   <summary>Settings Screen</summary>
+
+  | Phone-portrait | Phone-landscape |
+  |------|----------|
+  |  |  |
+
+  | Tablet-portrait | Tablet-landscape |
+  |------|----------|
+  |  |  |
+</details>
+
+<details>
+   <summary>Profile Screen</summary>
+
+  | Phone-portrait | Phone-landscape |
+  |------|----------|
+  |  |  |
+
+  | Tablet-portrait | Tablet-landscape |
+  |------|----------|
+  |  |  |
+</details>
+
+<details>
+   <summary>Pl Coding Screen</summary>
+
+  | Phone-portrait | Phone-landscape |
+  |------|----------|
+  |  |  |
+
+  | Tablet-portrait | Tablet-landscape |
+  |------|----------|
+  |  |  |
+</details>
+
+<details>
+   <summary>Blogs Screen</summary>
+
+  | Phone-portrait | Phone-landscape |
+  |------|----------|
+  |  |  |
+
+  | Tablet-portrait | Tablet-landscape |
+  |------|----------|
+  |  |  |
+</details>
+
+<details>
+   <summary>Git Screen</summary>
+
+  | Phone-portrait | Phone-landscape |
+  |------|----------|
+  |  |  |
+
+  | Tablet-portrait | Tablet-landscape |
+  |------|----------|
+  |  |  |
+</details>
+</details>
+
+
 ## ✨ Features
 
 ### Codelabs Module
