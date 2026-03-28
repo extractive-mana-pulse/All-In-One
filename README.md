@@ -1,25 +1,20 @@
-# ComposeCodeLab
+<img style="width: 100%; height: auto;" alt="All In One Thumbnail" src="https://github.com/user-attachments/assets/ca630239-1675-4116-8760-990430f40bcd" />
 
-![Jetpack Compose](https://img.shields.io/badge/Jetpack%20Compose-Latest-brightgreen)
-![Kotlin](https://img.shields.io/badge/Kotlin-2.1.10-blue)
-![LeetCode](https://img.shields.io/badge/LeetCode-Problems-orange)
-![License](https://img.shields.io/badge/License-MIT-green)
+All In One is a learning platform for Android developers and Algorithms beginners looking to master both modern Android UI development with Jetpack Compose and improve their algorithmic problem-solving skills for technical interviews.
 
-A comprehensive learning app that combines Jetpack Compose tutorials with coding interview preparation through LeetCode-style algorithmic challenges.
+## 🧩 The app features four main modules:
 
-## 📱 Overview
+1. **Codelabs** - A structured learning path for Jetpack Compose based on the official Android Developers codelab materials, redesigned with a custom interface and interactive elements.
 
-ComposeCodeLab is an all-in-one learning platform for Android developers looking to master both modern Android UI development with Jetpack Compose and improve their algorithmic problem-solving skills for technical interviews.
+2. **LeetCode Challenges** — A curated collection of the most frequently asked algorithmic interview questions, organized by difficulty level with detailed explanations and optimal solutions.
 
-The app features two main modules:
+3. **PL Coding Challenges** — A curated list of challenges from PL Coding Campus that showcase what you’ll be building. If you want to dive deeper and access full learning materials, check out the Campus [here](https://www.pl-coding.com/about).
 
-1. **Compose Course** - A structured learning path for Jetpack Compose based on the official Android Developers codelab materials, redesigned with a custom interface and interactive elements.
-
-2. **LeetCode Challenges** - A curated collection of the most frequently asked algorithmic interview questions, organized by difficulty level with detailed explanations and optimal solutions.
+4. **Blogs** — A collection of the latest blog posts covering trends and updates in the Android ecosystem, helping you stay up to date in this fast-evolving field.
 
 ## ✨ Features
 
-### Compose Course Module
+### Codelabs Module
 - Step-by-step tutorials for learning Jetpack Compose
 - Interactive code examples with live previews
 - Practical projects to reinforce learning
@@ -28,8 +23,8 @@ The app features two main modules:
 
 ### LeetCode Challenge Module
 - 10-15 Easy algorithmic problems
-- 10-15 Medium complexity challenges
-- 5-10 Hard interview questions
+- 2-5 Medium complexity challenges
+- 2 Hard interview questions
 - Detailed explanations and multiple approaches for each problem
 - Time and space complexity analysis
 - In-app code editor for practice
@@ -38,12 +33,11 @@ The app features two main modules:
 
 - **UI**: Jetpack Compose
 - **Language**: Kotlin
-- **Architecture**: MVVM with Clean Architecture
+- **Architecture**: MVI with Clean Architecture
 - **Navigation**: Compose Navigation
 - **State Management**: Flow and StateFlow
 - **Dependency Injection**: Hilt
 - **Storage**: Room Database for offline access and progress tracking
-- **Testing**: JUnit, Espresso, and Compose UI Testing
 
 ## 📋 Installation (not available yet)
 
@@ -59,32 +53,14 @@ The app features two main modules:
 
 3. Build and run the app on an emulator or physical device.
 
+4. JSON file might be required for data to be loaded
+
 ## 🔧 Requirements
 
 - Android Studio Arctic Fox or newer
 - Kotlin 2.1.10+
 - Android SDK 21+
 - Gradle 7.0+
-
-## 📚 Usage
-
-### Compose Course
-Navigate to the Compose Course section from the main menu to access a series of lessons. Each lesson includes:
-
-- Theory explanations
-- Code examples
-- Interactive challenges
-- Projects to complete
-
-### LeetCode Problems
-Access the LeetCode section to practice algorithmic problems:
-
-1. Select difficulty level (Easy, Medium, Hard)
-2. Choose a problem to solve
-3. Read the problem statement and examples
-4. Write your solution in the in-app code editor
-5. Test your solution against multiple test cases
-6. View the optimal solution and explanation
 
 ## 🌱 Roadmap
 
@@ -105,8 +81,6 @@ Contributions are welcome! If you'd like to contribute:
 4. Push to the branch (`git push origin feature/amazing-feature`)
 5. Open a Pull Request
 
-Please make sure to update tests as appropriate.
-
 ## 📄 License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
@@ -117,6 +91,19 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - [LeetCode](https://leetcode.com/) for inspiration on the algorithmic problems structure
 - All contributors who help make this project better
 
----
+## 💖 Support My Work
 
+If you find this project helpful or enjoy what I build, you can support me here:
+
+<p align="left">
+  <a href="https://github.com/sponsors/extractive-mana-pulse">
+    <img src="https://img.shields.io/badge/GitHub%20Sponsors-181717?style=for-the-badge&logo=github&logoColor=white" />
+  </a>
+  <a href="https://paypal.me/yourname">
+    <img src="https://img.shields.io/badge/PayPal-00457C?style=for-the-badge&logo=paypal&logoColor=white" />
+  </a>
+</p>
+
+Your support helps me keep building and sharing projects 🚀
+---
 Built with ❤️ for the Android developer community
