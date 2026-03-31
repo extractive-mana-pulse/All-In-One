@@ -213,9 +213,6 @@ If you find this project helpful or enjoy what I build, you can support me here:
   <a href="https://github.com/sponsors/extractive-mana-pulse">
     <img src="https://img.shields.io/badge/GitHub%20Sponsors-181717?style=for-the-badge&logo=github&logoColor=white" />
   </a>
-  <a href="https://paypal.me/yourname">
-    <img src="https://img.shields.io/badge/PayPal-00457C?style=for-the-badge&logo=paypal&logoColor=white" />
-  </a>
 </p>
 
 Your support helps me keep building and sharing projects 🚀
