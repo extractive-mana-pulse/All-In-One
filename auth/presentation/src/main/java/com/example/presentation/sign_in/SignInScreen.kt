@@ -49,8 +49,8 @@ import com.example.allinone.core.presentation.R
 import com.example.presentation.components.AuthTextField
 import com.example.presentation.components.SignInScreenDecoration
 import com.example.presentation.components.SocialIconButton
-import com.example.presentation.sign_up.RegistrationFormEvent
 import com.example.presentation.helper.toastMessage
+import com.example.presentation.sign_up.RegistrationFormEvent
 
 @Composable
 fun SignInScreenRoot(

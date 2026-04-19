@@ -4,13 +4,16 @@ import android.content.Context
 import androidx.credentials.CredentialManager
 import androidx.credentials.CustomCredential
 import androidx.credentials.GetCredentialRequest
+import androidx.credentials.exceptions.GetCredentialCancellationException
+import androidx.credentials.exceptions.GetCredentialException
+import androidx.credentials.exceptions.NoCredentialException
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.allinone.core.presentation.R
 import com.example.domain.model.SignInResult
 import com.example.domain.repository.GoogleAuthUiClientRepo
 import com.example.presentation.sign_up.RegistrationFormEvent
-import com.google.android.libraries.identity.googleid.GetGoogleIdOption
+import com.google.android.libraries.identity.googleid.GetSignInWithGoogleOption
 import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -18,6 +21,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import kotlin.coroutines.cancellation.CancellationException
 
 @HiltViewModel
 class SignInViewModel @Inject constructor(
@@ -93,27 +97,24 @@ class SignInViewModel @Inject constructor(
         }
     }
 
-    // ---------------- GOOGLE SIGN IN (your existing code) ----------------
+    // ---------------- GOOGLE SIGN IN ----------------
     fun signIn(context: Context) {
         viewModelScope.launch {
             _state.update { it.copy(isLoading = true) }
 
             val result = try {
                 val credentialManager = CredentialManager.create(context)
-
-                val googleIdOption = GetGoogleIdOption.Builder()
-                    .setFilterByAuthorizedAccounts(false)
-                    .setServerClientId(context.getString(R.string.web_client_id))
-                    .setAutoSelectEnabled(false)
-                    .build()
+                val signInOption = GetSignInWithGoogleOption.Builder(
+                    serverClientId = context.getString(R.string.web_client_id),
+                ).build()
 
                 val request = GetCredentialRequest.Builder()
-                    .addCredentialOption(googleIdOption)
+                    .addCredentialOption(signInOption)
                     .build()
 
                 val credentialResponse = credentialManager.getCredential(
                     request = request,
-                    context = context
+                    context = context,
                 )
 
                 when (val credential = credentialResponse.credential) {
@@ -127,7 +128,7 @@ class SignInViewModel @Inject constructor(
 
                             SignInResult(
                                 data = firebaseResult.data,
-                                errorMessage = firebaseResult.errorMessage
+                                errorMessage = firebaseResult.errorMessage,
                             )
                         } else {
                             SignInResult(null, "Unexpected credential type")
@@ -136,8 +137,14 @@ class SignInViewModel @Inject constructor(
 
                     else -> SignInResult(null, "Unexpected credential")
                 }
-            } catch (e: Exception) {
-                SignInResult(null, e.message)
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: GetCredentialCancellationException) {
+                SignInResult(null, null)
+            } catch (e: NoCredentialException) {
+                SignInResult(null, "No Google account found on this device. Add one in Settings.")
+            } catch (e: GetCredentialException) {
+                SignInResult(null, "Google sign-in unavailable. Please try again.")
             }
 
             _state.update { it.copy(isLoading = false) }
