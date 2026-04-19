@@ -40,7 +40,8 @@ fun SettingScreen(
     onNavigateBack: () -> Unit,
     onNavigateToNight: () -> Unit,
     onNavigateToPowerSavingMode: () -> Unit,
-    onNavigateToTemperature: () -> Unit
+    onNavigateToTemperature: () -> Unit,
+    onNavigateToNotifications: () -> Unit = {}
 ) {
     val viewModel: ReadingModeViewModel = hiltViewModel()
     var swipeAction by remember { mutableStateOf(SwipeGestureAction.DISABLE) }
@@ -99,8 +100,14 @@ fun SettingScreen(
                         title = stringResource(R.string.device_temperature),
                         description = stringResource(R.string.device_temperature_desc),
                         icon = painterResource(R.drawable.device_thermostat),
-                        isLast = true,
                         onClick = { onNavigateToTemperature() }
+                    )
+                    SettingsItem(
+                        title = "Notifications",
+                        description = "Reminders, vibration, sound and lead time",
+                        icon = painterResource(R.drawable.outline_notifications_24),
+                        isLast = true,
+                        onClick = { onNavigateToNotifications() }
                     )
                     SettingWithSwitch(
                         title = stringResource(R.string.rich_text_editor),

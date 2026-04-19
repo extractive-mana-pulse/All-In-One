@@ -13,6 +13,7 @@ dependencies {
         implementation(auth.domain)
         implementation(core.domain)
         implementation(main.domain)
+        implementation(calendar.presentation)
     }
     implementation(libs.androidx.compose.material3)
     implementation(libs.gson)
