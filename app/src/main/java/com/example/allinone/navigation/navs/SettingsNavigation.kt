@@ -8,6 +8,8 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
+import com.example.allinone.calendar.presentation.screens.NotificationSettingsScreen
+import com.example.allinone.calendar.presentation.screens.RemindersScreen
 import com.example.allinone.navigation.graph.Graph
 import com.example.allinone.navigation.screens.HomeScreens
 import com.example.allinone.navigation.screens.SettingsScreens
@@ -49,7 +51,21 @@ internal fun NavGraphBuilder.settingsNavigation(
                 },
                 onNavigateToTemperature = {
                     navController.navigate(SettingsScreens.Temperature)
+                },
+                onNavigateToNotifications = {
+                    navController.navigate(SettingsScreens.Notifications)
                 }
+            )
+        }
+        composable<SettingsScreens.Notifications> {
+            NotificationSettingsScreen(
+                onNavigateBack = { navController.navigateUp() },
+                onNavigateToReminders = { navController.navigate(SettingsScreens.Reminders) }
+            )
+        }
+        composable<SettingsScreens.Reminders> {
+            RemindersScreen(
+                onNavigateBack = { navController.navigateUp() }
             )
         }
         composable<SettingsScreens.Night> {

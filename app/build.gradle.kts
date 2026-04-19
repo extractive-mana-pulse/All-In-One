@@ -174,6 +174,11 @@ dependencies {
             implementation(domain)
             implementation(data)
         }
+        with(calendar) {
+            implementation(presentation)
+            implementation(domain)
+            implementation(data)
+        }
     }
     // retrofit
     implementation(libs.retrofit)

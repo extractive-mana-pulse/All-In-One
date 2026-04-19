@@ -15,6 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import com.example.allinone.calendar.presentation.components.RemindMeLaterAction
 import com.example.allinone.core.presentation.R
 import com.example.domain.model.CourseDetails
 import com.example.presentation.components.AppTopBar
@@ -53,6 +54,11 @@ fun DetailsScreenTopBar(
                             contentDescription = null
                         )
                     }
+                    RemindMeLaterAction(
+                        title = courseDetails.title ?: "Reminder",
+                        description = courseDetails.description,
+                        sourceId = courseDetails.title,
+                    )
                     IconButton(
                         onClick = {
                             toastMessage(

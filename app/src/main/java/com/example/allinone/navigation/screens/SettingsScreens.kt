@@ -25,4 +25,10 @@ sealed interface SettingsScreens {
 
     @Serializable
     object AllSensors: SettingsScreens
+
+    @Serializable
+    object Notifications: SettingsScreens
+
+    @Serializable
+    object Reminders: SettingsScreens
 }

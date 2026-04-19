@@ -33,6 +33,10 @@
             <option value="$PROJECT_DIR$/blogs/presentation" />
             <option value="$PROJECT_DIR$/build-logic" />
             <option value="$PROJECT_DIR$/build-logic/convention" />
+            <option value="$PROJECT_DIR$/calendar" />
+            <option value="$PROJECT_DIR$/calendar/data" />
+            <option value="$PROJECT_DIR$/calendar/domain" />
+            <option value="$PROJECT_DIR$/calendar/presentation" />
             <option value="$PROJECT_DIR$/codelabs" />
             <option value="$PROJECT_DIR$/codelabs/data" />
             <option value="$PROJECT_DIR$/codelabs/domain" />
