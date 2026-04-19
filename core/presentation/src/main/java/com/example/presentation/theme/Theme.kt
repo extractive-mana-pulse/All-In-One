@@ -87,7 +87,7 @@ fun AllInOneTheme(
 
     MaterialTheme(
         colorScheme = colorScheme,
-        typography = Typography,
+        typography = if (readingTheme) ReadingTypography else Typography,
         content = content
     )
 }
