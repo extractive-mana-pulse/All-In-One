@@ -21,10 +21,12 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.allinone.core.presentation.R
 import com.example.domain.model.SwipeGestureAction
 import com.example.presentation.components.SettingWithSwitch
 import com.example.presentation.components.AppTopBar
+import com.example.presentation.rich_text_editor.RteViewModel
 import com.example.presentation.components.SettingsItem
 import com.example.presentation.components.SettingsItemWithSheet
 import com.example.presentation.swipe.SwipeActionAppearance
@@ -43,8 +45,8 @@ fun SettingScreen(
     val viewModel: ReadingModeViewModel = hiltViewModel()
     var swipeAction by remember { mutableStateOf(SwipeGestureAction.DISABLE) }
 
-    val cardBackground = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.4f)
-    val cardShape = RoundedCornerShape(16.dp)
+    val rteViewModel: RteViewModel = hiltViewModel()
+    val isRteEnabled by rteViewModel.isRteEnabled.collectAsStateWithLifecycle()
 
     Scaffold(
         modifier = Modifier
@@ -66,8 +68,8 @@ fun SettingScreen(
             item {
                 Column(
                     modifier = Modifier
-                        .clip(cardShape)
-                        .background(cardBackground)
+                        .clip(RoundedCornerShape(16.dp))
+                        .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.4f))
                 ) {
                     SettingsItem(
                         title = stringResource(R.string.auto_nigt_mode),
@@ -100,6 +102,13 @@ fun SettingScreen(
                         isLast = true,
                         onClick = { onNavigateToTemperature() }
                     )
+                    SettingWithSwitch(
+                        title = stringResource(R.string.rich_text_editor),
+                        description = stringResource(R.string.rte_desc),
+                        icon = painterResource(R.drawable.rte),
+                        checked = isRteEnabled,
+                        onCheckedChange = { rteViewModel.toggleRteMode(it) }
+                    )
                 }
             }
 
@@ -107,8 +116,8 @@ fun SettingScreen(
                 Column(
                     modifier = Modifier
                         .padding(top = 16.dp)
-                        .clip(cardShape)
-                        .background(cardBackground)
+                        .clip(RoundedCornerShape(16.dp))
+                        .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.4f))
                         .padding(16.dp)
                 ) {
                     ChatListSwipeGestureSelector(
