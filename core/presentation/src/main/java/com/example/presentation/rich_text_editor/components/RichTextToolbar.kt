@@ -48,7 +48,7 @@ import androidx.compose.ui.text.font.toFontFamily
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.presentation.R
+import com.example.allinone.core.presentation.R
 import com.example.presentation.rich_text_editor.RichTextEditorAction
 import com.example.presentation.rich_text_editor.RichTextEditorState
 import com.example.presentation.rich_text_editor.util.TextColor

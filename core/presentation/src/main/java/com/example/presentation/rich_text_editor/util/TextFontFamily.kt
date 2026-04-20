@@ -1,6 +1,6 @@
 package com.example.presentation.rich_text_editor.util
 
-import com.example.presentation.R
+import com.example.allinone.core.presentation.R
 
 enum class TextFontFamily(
     val fontResource: Int
