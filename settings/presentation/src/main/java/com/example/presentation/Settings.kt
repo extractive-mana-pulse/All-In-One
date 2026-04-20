@@ -24,11 +24,11 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.allinone.core.presentation.R
 import com.example.domain.model.SwipeGestureAction
-import com.example.presentation.components.SettingWithSwitch
 import com.example.presentation.components.AppTopBar
-import com.example.presentation.rich_text_editor.RteViewModel
+import com.example.presentation.components.SettingWithSwitch
 import com.example.presentation.components.SettingsItem
 import com.example.presentation.components.SettingsItemWithSheet
+import com.example.presentation.rich_text_editor.RteViewModel
 import com.example.presentation.swipe.SwipeActionAppearance
 import com.example.presentation.swipe.components.ChatListSwipeGestureSelector
 import com.example.presentation.vm.ReadingModeViewModel
