@@ -11,6 +11,8 @@ dependencies {
     implementation(libs.androidx.appcompat)
     implementation(projects.core.domain)
 
+    implementation(libs.androidx.compose.material3)
+
     // Hilt
     implementation(libs.hilt.android)
     implementation(libs.hilt.navigation.compose)
